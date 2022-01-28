@@ -16,4 +16,10 @@
   - `pip3 install pyscss`
   - `pip3 install configparser`
   - `pip3 install requests`
+- Complete app.cfg
+  - Log in to the shared Strava account. The app API tokens/etc. are in the [API dashboard](https://www.strava.com/settings/api).
+  - In `AUTH_URL`: replace `{ID}` with the Client ID from the dashboard
+  - Replace `CLIENT_ID` with the Client ID from the dashboard
+  - Replace `CLIENT_SECRET` with the Client Secret from the dashboard
+  - Replace `SECRET_KEY` with a random string, whatever you like. 
 - Run web server: `flask run`
