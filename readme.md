@@ -1,6 +1,6 @@
 # KSU Activity Art
  
-# Environemnt Setup
+# Environmnt Setup
 - Clone repo: `git clone https://github.com/joemuzina/capstone`
 - Install Python dependencies
   - Python3 venv: `apt install python3.8-venv`
