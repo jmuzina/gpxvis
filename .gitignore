@@ -1,5 +1,5 @@
 # sensitive auth data
-#app.cfg
+app.cfg
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
