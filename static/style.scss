@@ -1,0 +1,33 @@
+// Make body take full vertical space and hide overflow
+body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+// Login button styles for each supported login network
+$app_themes: (
+    "strava" : (
+        "background-color": #fc4c02,
+        "color": white
+    )
+);
+
+// Apply configured styles for each login button
+@each $name, $data in $app_themes {
+    ##{$name}-login > a {
+        @each $property, $val in $data {
+            #{$property}: #{$val};
+        }
+    }
+} 
+
+#login-buttons {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+}
+
+#login-buttons .row {
+    display: flex;
+    align-self: center;
+}
