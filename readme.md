@@ -43,6 +43,5 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
   - Replace `CLIENT_ID` with the Client ID from the dashboard
   - Replace `CLIENT_SECRET` with the Client Secret from the dashboard
   - Replace `SECRET_KEY` with a random string, whatever you like. 
-- Run web server: `flask run`
 - Open Capstone project folder: `cd Capstone`
 - Run web server using the flask executable. In my case, this was at `C:\Users\JoeMuzina\AppData\Roaming\Python\Python37\Scripts\flask.exe`: `C:\Users\JoeMuzina\AppData\Roaming\Python\Python37\Scripts\flask.exe run` < should start the webserver.
