@@ -29,6 +29,7 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
 - Download [Python](https://www.python.org/downloads/).
 - Download virtualenv: `pip3 install --user virtualenv`
 - Create virtual environment: `python -m virtualenv CapstoneVenv`
+- If the previous step opens the Microsoft Store, follow the instructions [here](https://stackoverflow.com/questions/58754860/cmd-opens-window-store-when-i-type-python) to make a command exception for Python and repeat the previous step.
 - Activate virtual environment: `CapstoneVenv/Scripts/activate.bat`
 - Clone repo: `git clone https://github.com/joemuzina/capstone`
 - Install Flask & its dependencies
