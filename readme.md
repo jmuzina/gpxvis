@@ -28,7 +28,7 @@
 Terminal commands in this section can be executed in Windows Powershell or Microsoft Visual Studio Code.
 - Download [Python](https://www.python.org/downloads/).
 - Download virtualenv: `pip3 install --user virtualenv`
-- Create virtual environment: python -m virtualenv CapstoneVenv
+- Create virtual environment: `python -m virtualenv CapstoneVenv`
 - Activate virtual environment: `CapstoneVenv/Scripts/activate.bat`
 - Clone repo: `git clone https://github.com/joemuzina/capstone`
 - Install Flask & its dependencies
