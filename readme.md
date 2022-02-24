@@ -2,8 +2,8 @@
  
 # Windows Environment Setup
 Terminal commands in this section can be executed in Windows Powershell or Microsoft Visual Studio Code.
-- Download [Python](https://www.python.org/downloads/).
-- Download virtualenv: `pip3 install --user virtualenv`
+- Install [Python](https://www.python.org/downloads/).
+- Install virtualenv: `pip3 install --user virtualenv`
 - Create virtual environment: `python -m virtualenv CapstoneVenv`
   - If this command opens the Microsoft Store, follow the instructions [here](https://stackoverflow.com/a/58773979) to make a command exception for Python and repeat the command.
   - If this command returns an error result stating that the python command could not be found, follow the instructions [here](https://www.geeksforgeeks.org/how-to-add-python-to-windows-path/).
