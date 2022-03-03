@@ -47,3 +47,8 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
   - Replace `CLIENT_SECRET` with the Client Secret from the dashboard
   - Replace `SECRET_KEY` with a random string, whatever you like. 
 - Run web server: `flask run`
+
+# KSU VM Production Server Running
+- Attach to the TMUX session : `tmux a`
+- Launch webserver: `sudo python3 app.py`
+- Detach from TMUX session: Press CTRL+B, then press D.
