@@ -10,7 +10,7 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
 - Activate virtual environment: `CapstoneVenv/Scripts/activate.bat`
 - Clone repo: `git clone https://github.com/joemuzina/capstone`
 - Install Flask & its dependencies
-  - `pip3 install flask` (MAKE NOTE of where the command window says this package is installed).
+  - `pip3 install flask`
   - `pip3 install Flask-Assets`
   - `pip3 install pyscss`
   - `pip3 install configparser`
@@ -34,7 +34,6 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
   - `python3 -m venv venv/`
   - `.venv/bin/activate`
 - Install Flask & its dependencies
-  - `pip3 install flask`
   - `pip3 install flask`
   - `pip3 install Flask-Assets`
   - `pip3 install pyscss`
