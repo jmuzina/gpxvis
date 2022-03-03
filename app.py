@@ -32,11 +32,35 @@ configFilePath = r'./app.cfg'
 configParser.read(configFilePath)
 
 config = ConfigParser()
-#config.readfp(open(r'./app.cfg'))
 config.read_file(open(r'./app.cfg'))
 # -------------------------------------------- #
 
 session = {} # Clear session on server reboot
+
+class StravaApi:
+    def __init__(self):
+        self.configCode = 'strava'
+        self.configDetails = config[self.configCode]
+        @app.route('/' + self.configCode + '-login')
+        def auth():
+            # Assemble POST headers using auth code returned from API
+            params = {    
+                "client_id": self.configDetails['CLIENT_ID'].strip('\''),    
+                "client_secret": self.configDetails['CLIENT_SECRET'].strip('\''),    
+                "code": request.args.get('code'),
+                "grant_type" : "authorization_code"
+            }
+                
+            query_string = urllib.parse.urlencode( params )    
+            data = query_string.encode( "ascii" )    
+            
+            # Send user auth code, app credentials to API to request their details
+            with urllib.request.urlopen( self.configDetails['TOKEN_URL'].strip('\''), data ) as response:     
+                response = json.loads(response.read())
+                session['userData'] = response['athlete'] # Store session data
+            return redirect(url_for('render_index'))
+            
+stravaApiHandler = StravaApi()
 
 # Index page
 @app.route('/')
@@ -52,31 +76,9 @@ def logout():
     session.pop('userData') # Clear user session data
     return redirect(url_for('render_index'))
 
-# Load every supported login network and define routes for them based on cfg file
-for cfgSectionName in config:
-    if cfgSectionName != "DEFAULT":
-        @app.route('/'+cfgSectionName+'-login')
-        def login():
-            # Assemble POST headers using auth code returned from API
-            params = {    
-                "client_id": config[cfgSectionName]['CLIENT_ID'].strip('\''),    
-                "client_secret": config[cfgSectionName]['CLIENT_SECRET'].strip('\''),    
-                "code": request.args.get('code'),
-                "grant_type" : "authorization_code"
-            }
-                
-            query_string = urllib.parse.urlencode( params )    
-            data = query_string.encode( "ascii" )    
-            
-            # Send user auth code, app credentials to API to request their details
-            with urllib.request.urlopen( config[cfgSectionName]['TOKEN_URL'].strip('\''), data ) as response:     
-                response = json.loads(response.read())
-                session['userData'] = response['athlete'] # Store session data
-                return redirect(url_for('render_index'))
-    else:
-        # Store any config items not related to API logins under app.config
-        for x in config[cfgSectionName]:
-            app.config[x] = config[cfgSectionName]
+# Store any config items not related to API logins under app.config
+for key in config["DEFAULT"]:
+    app.config[key] = config["DEFAULT"][key]
 
 if IS_SERVER:
     print("Starting KSU VM server...")
