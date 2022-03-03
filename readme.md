@@ -35,7 +35,6 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
   - `.venv/bin/activate`
 - Install Flask & its dependencies
   - `pip3 install flask`
-  - `pip3 install flask`
   - `pip3 install Flask-Assets`
   - `pip3 install pyscss`
   - `pip3 install configparser`
