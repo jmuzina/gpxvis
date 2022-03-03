@@ -7,7 +7,9 @@ import urllib.request
 import urllib.parse
 from flask_assets import Environment, Bundle
 from configparser import RawConfigParser, ConfigParser
+from os.path import exists
 # ---------------------------- #
+IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -30,7 +32,8 @@ configFilePath = r'./app.cfg'
 configParser.read(configFilePath)
 
 config = ConfigParser()
-config.readfp(open(r'./app.cfg'))
+#config.readfp(open(r'./app.cfg'))
+config.read_file(open(r'./app.cfg'))
 # -------------------------------------------- #
 
 session = {} # Clear session on server reboot
@@ -74,3 +77,9 @@ for cfgSectionName in config:
         # Store any config items not related to API logins under app.config
         for x in config[cfgSectionName]:
             app.config[x] = config[cfgSectionName]
+
+if IS_SERVER:
+    print("Starting KSU VM server...")
+    app.run(host='capstone3.cs.kent.edu', port=443, ssl_context=('/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem', '/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem'))
+elif (__name__ == "__main__"):
+    print("[ERROR]: Running from local copy, please launch the webserver with python -m flask run.")
