@@ -5,9 +5,12 @@ from flask import Flask, request, render_template, session, redirect, url_for
 import json
 import urllib.request
 import urllib.parse
+import requests
 from flask_assets import Environment, Bundle
 from configparser import RawConfigParser, ConfigParser
 from os.path import exists
+import time
+import math
 # ---------------------------- #
 IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
 
@@ -37,28 +40,48 @@ config.read_file(open(r'./app.cfg'))
 
 session = {} # Clear session on server reboot
 
+def fetchApi(url, authCode = "", params = {}):        
+    query_string = urllib.parse.urlencode( params )    
+    data = query_string.encode( "ascii" )    
+    
+    if (authCode != ""):
+        with requests.get(url, data = data, headers = {"Authorization": "Bearer " + authCode}) as response:
+            return response
+    else:
+        with urllib.request.urlopen( url, data ) as response:     
+            return json.loads(response.read())
+
 class StravaApi:
     def __init__(self):
         self.configCode = 'strava'
         self.configDetails = config[self.configCode]
+        self.tokenUrl = self.configDetails['TOKEN_URL'].strip('\'')
+        self.clientId = self.configDetails['CLIENT_ID'].strip('\'')
+        self.clientSecret = self.configDetails['CLIENT_SECRET'].strip('\'')
+
+        # Strava Login route
         @app.route('/' + self.configCode + '-login')
         def auth():
-            # Assemble POST headers using auth code returned from API
-            params = {    
-                "client_id": self.configDetails['CLIENT_ID'].strip('\''),    
-                "client_secret": self.configDetails['CLIENT_SECRET'].strip('\''),    
-                "code": request.args.get('code'),
-                "grant_type" : "authorization_code"
-            }
-                
-            query_string = urllib.parse.urlencode( params )    
-            data = query_string.encode( "ascii" )    
+            # Get user data and access token
+            authResponse = fetchApi(url = self.tokenUrl, params = {
+                "client_id": self.clientId, 
+                "client_secret": self.clientSecret, 
+                "code": request.args.get('code')
+            })
+            session['userData'] = authResponse['athlete']
+            session['userData']['authCode'] = request.args.get('code')
+            session['userData']['accessKey'] = authResponse['access_token']
+
+            # Testing: get user activities
+            getActivities()
             
-            # Send user auth code, app credentials to API to request their details
-            with urllib.request.urlopen( self.configDetails['TOKEN_URL'].strip('\''), data ) as response:     
-                response = json.loads(response.read())
-                session['userData'] = response['athlete'] # Store session data
             return redirect(url_for('render_index'))
+            
+        @app.route('/' + self.configCode + '-getActivities')
+        def getActivities():
+            activitiesResponse = fetchApi(url = "https://www.strava.com/api/v3/athlete/activities?before=" + str(math.floor(time.time())), authCode = session['userData']['accessKey'])
+            print(activitiesResponse.content)
+            
             
 stravaApiHandler = StravaApi()
 
