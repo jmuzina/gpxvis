@@ -40,11 +40,17 @@ config.read_file(open(r'./app.cfg'))
 
 session = {} # Clear session on server reboot
 
-def fetchApi(url, authCode = "", params = {}):        
+# Return the results of an HTTP GET request to a specified URL
+# authCode (str): an API access key for inclusion in the request header
+# params (list): a list of items to be included in the request `data` section required by some API endpoints
+def getAPI(url, authCode = "", params = {}):     
+    # convert parameters into a query string. I.E. {"id": 2, "index": 5} -> ?id=2&index=5   
     query_string = urllib.parse.urlencode( params )    
+
     data = query_string.encode( "ascii" )    
     
     if (authCode != ""):
+        # Send authorization token for requests requiring authentication
         with requests.get(url, data = data, headers = {"Authorization": "Bearer " + authCode}) as response:
             return response
     else:
@@ -53,33 +59,39 @@ def fetchApi(url, authCode = "", params = {}):
 
 class StravaApi:
     def __init__(self):
+        # Configure strava-specific connection details
         self.configCode = 'strava'
         self.configDetails = config[self.configCode]
         self.tokenUrl = self.configDetails['TOKEN_URL'].strip('\'')
         self.clientId = self.configDetails['CLIENT_ID'].strip('\'')
         self.clientSecret = self.configDetails['CLIENT_SECRET'].strip('\'')
 
-        # Strava Login route
+        # Handle Strava authentication. When users successfully log in to Strava, they are sent to {site-url}/strava-login
         @app.route('/' + self.configCode + '-login')
         def auth():
             # Get user data and access token
-            authResponse = fetchApi(url = self.tokenUrl, params = {
+            authResponse = getAPI(url = self.tokenUrl, params = {
                 "client_id": self.clientId, 
                 "client_secret": self.clientSecret, 
                 "code": request.args.get('code')
             })
+            # Store user data as session for future use
             session['userData'] = authResponse['athlete']
             session['userData']['authCode'] = request.args.get('code')
             session['userData']['accessKey'] = authResponse['access_token']
 
             # Testing: get user activities
-            #getActivities()
+            getActivities()
             
+            # Render homepage
             return redirect(url_for('render_index'))
 
+        # TESTING FUNCTION: prints out list of a user's activities
         @app.route('/' + self.configCode + '-getActivities')
         def getActivities():
-            activitiesResponse = fetchApi(url = "https://www.strava.com/api/v3/athlete/activities?before=" + str(math.floor(time.time())), authCode = session['userData']['accessKey'])
+            # Endpoint: https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
+            # Strava requires that a "before" timestamp is included to filter activities. All activities logged before calltime will be printed.
+            activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities", authCode = session['userData']['accessKey'], params = {"before": str(math.floor(time.time()))})
             print(activitiesResponse.content)
             
             
@@ -91,7 +103,7 @@ def render_index():
     # Render homepage with userdata if it exists
     try:
         return render_template("index.html", cfg=config, userData = session['userData'])
-    except:
+    except: # No userdata, render guest homepage
         return render_template("index.html", cfg=config)
 
 @app.route('/logout')
@@ -103,6 +115,7 @@ def logout():
 for key in config["DEFAULT"]:
     app.config[key] = config["DEFAULT"][key]
 
+# Launch VM server if applicable
 if IS_SERVER:
     print("Starting KSU VM server...")
     app.run(host='capstone3.cs.kent.edu', port=443, ssl_context=('/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem', '/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem'))
