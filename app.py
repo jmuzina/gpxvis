@@ -73,10 +73,10 @@ class StravaApi:
             session['userData']['accessKey'] = authResponse['access_token']
 
             # Testing: get user activities
-            getActivities()
+            #getActivities()
             
             return redirect(url_for('render_index'))
-            
+
         @app.route('/' + self.configCode + '-getActivities')
         def getActivities():
             activitiesResponse = fetchApi(url = "https://www.strava.com/api/v3/athlete/activities?before=" + str(math.floor(time.time())), authCode = session['userData']['accessKey'])
