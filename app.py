@@ -100,11 +100,15 @@ class StravaApi:
             for activityIndex in range(len(activities)):
                 print(activityIndex, "\t", activities[activityIndex]['id']),
                 #activityGPX = getAPI(url = "https://www.strava.com/api/v3/routes/" + str(activities[activityIndex]['id']) + "/export_gpx", authCode = session['userData']['accessKey'])
-                activityGPX = json.loads(getAPI(url = "https://www.strava.com/api/v3/activities/" + str(activities[activityIndex]['id']), authCode = session['userData']['accessKey'], params = {"include_all_efforts": True}).content)
-                print("GPX:")
-                print(activityGPX)
-                polyline = activityGPX["map"]
-                print("polyline", polyline)
+                try:
+                    activityResponse = getAPI(url = "https://www.strava.com/api/v3/activities/" + str(activities[activityIndex]['id']), authCode = session['userData']['accessKey'], params = {"include_all_efforts": True})
+                    activity = json.loads(activityResponse.json())
+                    print("Activity: ", activity)
+                    polyline = activity["map"]
+                    print("polyline", polyline)
+                except Exception as e:
+                    print(e)
+                    pass
                    
 stravaApiHandler = StravaApi()
 
