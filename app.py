@@ -44,7 +44,8 @@ session = {} # Clear session on server reboot
 # authCode (str): an API access key for inclusion in the request header
 # params (list): a list of items to be included in the request `data` section required by some API endpoints
 def getAPI(url, authCode = "", params = {}):     
-    # convert parameters into a query string. I.E. {"id": 2, "index": 5} -> ?id=2&index=5   
+    # convert parameters into a query string. I.E. {"id": 2, "index": 5} -> ?id=2&index=5
+    # /strava-login?client_id=4732184&client_secret=xxxxx&code=5435789345   
     query_string = urllib.parse.urlencode( params )    
 
     data = query_string.encode( "ascii" )    
@@ -92,9 +93,19 @@ class StravaApi:
             # Endpoint: https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
             # Strava requires that a "before" timestamp is included to filter activities. All activities logged before calltime will be printed.
             activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities", authCode = session['userData']['accessKey'], params = {"before": str(math.floor(time.time()))})
-            print(activitiesResponse.content)
-            
-            
+
+            # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
+            activities = json.loads(activitiesResponse.content)
+            print("Index", "\t", "Activity ID")
+            for activityIndex in range(len(activities)):
+                print(activityIndex, "\t", activities[activityIndex]['id']),
+                #activityGPX = getAPI(url = "https://www.strava.com/api/v3/routes/" + str(activities[activityIndex]['id']) + "/export_gpx", authCode = session['userData']['accessKey'])
+                activityGPX = json.loads(getAPI(url = "https://www.strava.com/api/v3/activities/" + str(activities[activityIndex]['id']), authCode = session['userData']['accessKey'], params = {"include_all_efforts": True}).content)
+                print("GPX:")
+                print(activityGPX)
+                polyline = activityGPX["map"]
+                print("polyline", polyline)
+                   
 stravaApiHandler = StravaApi()
 
 # Index page
