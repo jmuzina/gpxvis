@@ -46,15 +46,21 @@ session = {} # Clear session on server reboot
 def getAPI(url, authCode = "", params = {}):     
     # convert parameters into a query string. I.E. {"id": 2, "index": 5} -> ?id=2&index=5
     # /strava-login?client_id=4732184&client_secret=xxxxx&code=5435789345   
+    print(url)
+    if (authCode != ""):
+        print("Authorization: Bearer " + authCode)
     query_string = urllib.parse.urlencode( params )    
 
     data = query_string.encode( "ascii" )    
     
     if (authCode != ""):
+        print("using bearer token")
         # Send authorization token for requests requiring authentication
         with requests.get(url, data = data, headers = {"Authorization": "Bearer " + authCode}) as response:
             return response
     else:
+        print("no bearer token")
+        print(data)
         with urllib.request.urlopen( url, data ) as response:     
             return json.loads(response.read())
 
@@ -93,22 +99,19 @@ class StravaApi:
             # Endpoint: https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
             # Strava requires that a "before" timestamp is included to filter activities. All activities logged before calltime will be printed.
             activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities", authCode = session['userData']['accessKey'], params = {"before": str(math.floor(time.time()))})
-
+            print(activitiesResponse.text)
             # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
-            activities = json.loads(activitiesResponse.content)
             print("Index", "\t", "Activity ID")
-            for activityIndex in range(len(activities)):
-                print(activityIndex, "\t", activities[activityIndex]['id']),
+            #for activityIndex in range(len(activitiesResponse.content)):
+                #print(activityIndex, "\t", activitiesResponse.content[activityIndex]['id']),
                 #activityGPX = getAPI(url = "https://www.strava.com/api/v3/routes/" + str(activities[activityIndex]['id']) + "/export_gpx", authCode = session['userData']['accessKey'])
-                try:
-                    activityResponse = getAPI(url = "https://www.strava.com/api/v3/activities/" + str(activities[activityIndex]['id']), authCode = session['userData']['accessKey'], params = {"include_all_efforts": True})
-                    activity = json.loads(activityResponse.json())
-                    print("Activity: ", activity)
-                    polyline = activity["map"]
-                    print("polyline", polyline)
-                except Exception as e:
-                    print(e)
-                    pass
+                #try:
+                    #print("hello")
+                    #streams = getAPI(url = "https://strava.com/api/v3/activities/" + str(activities[activityIndex]['id']) + "/streams/", authCode = session['userData']['accessKey'], params = {"keys": ["latlng", "time", "altitude"], "key_by_type": True})
+                    #print(streams.content)
+                #except Exception as e:
+                    #print(e)
+                    #pass
                    
 stravaApiHandler = StravaApi()
 
