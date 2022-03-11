@@ -8,7 +8,6 @@ import os
 import gpxpy 
 from PIL import Image as pil_image
 from PIL import ImageDraw as pil_draw
-import glob
 
 #resolution of drawn tracks
 osm_tile_res = 65
@@ -139,16 +138,12 @@ class Track:
                         y_from = y_to
                     idx += 1
     
-    
-
-if (__name__ == '__main__'):
-    """ Program entry point """
-    gpx_files = glob.glob (r"*.gpx") #get all GPX files in same directory
-    #print(gpx_files)
+def getVis(gpxXMLs):
     tracks = []
-    for gpx_file in gpx_files:
+    for xml in gpxXMLs:
+        #print("------visualizing---------\n\n", xml)
         try:
-            gpx = gpxpy.parse(open(gpx_file))
+            gpx = gpxpy.parse(xml)
             start_time, end_time = gpx.get_time_bounds()
             min_lat, max_lat, min_lon, max_lon = gpx.get_bounds()
             zoom = osm_get_auto_zoom_level (min_lat, max_lat, min_lon, max_lon, 6)
@@ -177,10 +172,11 @@ if (__name__ == '__main__'):
         except Exception as e:
 
             logging.exception(e)
-            print('Error processing: %s' % gpx_file)
+            print('Error processing: ')
             sys.exit(1)
     
     image_creator = ImageCreator(tracks)
     #image_creator.draw_grid() #useful for debugging and positioning
     image_creator.draw_facets()
     image_creator.save_image('facets' + '.png')
+    print("saved img")

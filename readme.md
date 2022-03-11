@@ -15,6 +15,8 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
   - `pip3 install pyscss`
   - `pip3 install configparser`
   - `pip3 install requests`
+  - `pip3 install gpxpy`
+  - `pip3 install pandas`
 - Complete app.cfg
   - Log in to the shared Strava account. The app API tokens/etc. are in the [API dashboard](https://www.strava.com/settings/api).
   - In `AUTH_URL`: replace `{ID}` with the Client ID from the dashboard
@@ -39,6 +41,8 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
   - `pip3 install pyscss`
   - `pip3 install configparser`
   - `pip3 install requests`
+  - `pip3 install gpxpy`
+  - `pip3 install pandas`
 - Complete app.cfg
   - Log in to the shared Strava account. The app API tokens/etc. are in the [API dashboard](https://www.strava.com/settings/api).
   - In `AUTH_URL`: replace `{ID}` with the Client ID from the dashboard
