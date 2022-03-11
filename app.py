@@ -14,6 +14,7 @@ import math
 import pandas as pd
 import gpxpy.gpx
 from datetime import datetime, timedelta
+import gpxTesting
 # ---------------------------- #
 IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
 
@@ -86,8 +87,8 @@ class StravaApi:
             session['userData']['authCode'] = request.args.get('code')
             session['userData']['accessKey'] = authResponse['access_token']
 
-            # Testing: get user activities
-            getActivities()
+            allGPX = getAllGPX()
+            gpxTesting.getVis(allGPX)
             
             # Render homepage
             return redirect(url_for('render_index'))
@@ -112,25 +113,24 @@ class StravaApi:
                 gpx_track.segments.append(gpx_segment)
 
                 for segmentIndex in range(len(dataStream["latlng"]["data"])):
-                    gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(dataStream["latlng"]["data"][segmentIndex][0], dataStream["latlng"]["data"][segmentIndex][1], dataStream["altitude"]["data"][segmentIndex], time=dataFrame["time"][segmentIndex]))
+                    segment = gpxpy.gpx.GPXTrackPoint(dataStream["latlng"]["data"][segmentIndex][0], dataStream["latlng"]["data"][segmentIndex][1], dataStream["altitude"]["data"][segmentIndex], time=dataFrame["time"][segmentIndex])
+                    if segment != None:
+                        gpx_segment.points.append(segment)
 
-
-                print('Created GPX:', gpx.to_xml())
                 return gpx.to_xml()
-
-        # TESTING FUNCTION: prints out list of a user's activities
-        @app.route('/' + self.configCode + '-getActivities')
-        def getActivities():
+        
+        def getAllGPX():
+            result = []
             # Endpoint: https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
             # Strava requires that a "before" timestamp is included to filter activities. All activities logged before calltime will be printed.
             activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + str(math.floor(time.time())), authCode = session['userData']['accessKey']).json()
             # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
             for activityIndex in range(len(activitiesResponse)):
-                print(GPXFromDataStream(activitiesResponse[activityIndex]['id'], datetime.strptime(activitiesResponse[activityIndex]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")))
-                                        
-
-
-                   
+                xml = GPXFromDataStream(activitiesResponse[activityIndex]['id'], datetime.strptime(activitiesResponse[activityIndex]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ"))
+                if xml != None:
+                    result.append(xml)
+            return result
+                     
 stravaApiHandler = StravaApi()
 
 # Index page
