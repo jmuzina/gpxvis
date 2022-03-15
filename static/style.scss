@@ -43,3 +43,11 @@ $app_themes: (
     width: auto;
     align-self: center;
 }
+
+.network-unavailable {
+    opacity: 0.4 !important;
+}
+
+.network-unavailable:hover {
+    cursor: not-allowed !important;
+}
