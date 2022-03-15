@@ -87,8 +87,8 @@ class StravaApi:
             session['userData']['authCode'] = request.args.get('code')
             session['userData']['accessKey'] = authResponse['access_token']
 
-            allGPX = getAllGPX()
-            gpxTesting.getVis(allGPX)
+            # Store debugging visualization result as B64 string to display it without storing
+            session['userData']['imageBytes'] = "data:image/png;base64," + gpxTesting.getVis(getAllGPX())
             
             # Render homepage
             return redirect(url_for('render_index'))

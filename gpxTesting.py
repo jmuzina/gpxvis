@@ -5,6 +5,8 @@ import math
 import logging 
 import urllib
 import os 
+import io
+import base64
 import gpxpy 
 from PIL import Image as pil_image
 from PIL import ImageDraw as pil_draw
@@ -44,10 +46,9 @@ def osm_get_auto_zoom_level ( min_lat, max_lat, min_lon, max_lon, max_n_tiles):
 ##this class is the canvas that the activities(tracks) will be drawn on.
 class ImageCreator:
     def __init__(self, tracks):
-        #print(tracks)
         self.tracks = tracks
-        self.width = 10000
-        self.height = 10000
+        self.width = 2000
+        self.height = 2000
         self.image = pil_image.new ("RGB", (self.width, self.height), (255,255,255))
         
     def draw_facets(self):
@@ -62,10 +63,15 @@ class ImageCreator:
             track.draw_track(0+gridSize*column,0+gridSize*row,self.image)
             column+=1
             
-    def save_image(self, filename):
-        #print("Saving " + filename) 
-        self.image.save (filename)
-        self.image.show()
+    def save_image(self, filename = ""):
+        if filename != "":
+            self.image.save (filename)
+            self.image.show()
+        # no file name provided, return image as base64-encoded string for displaying without saving on server
+        else:
+            imgArray = io.BytesIO()
+            self.image.save(imgArray, format="PNG")
+            return str(base64.b64encode(imgArray.getvalue()), 'utf-8')
         
     def draw_grid(self):
         step_count = 10
@@ -178,5 +184,8 @@ def getVis(gpxXMLs):
     image_creator = ImageCreator(tracks)
     #image_creator.draw_grid() #useful for debugging and positioning
     image_creator.draw_facets()
-    image_creator.save_image('facets' + '.png')
-    print("saved img")
+
+    #image_creator.save_image('facets' + '.png')
+    #print("saved img")
+    #print(image_creator.save_image())
+    return image_creator.save_image()
