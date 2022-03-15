@@ -65,8 +65,10 @@ def getAPI(url, authCode = "", params = {}):
             #raise timeout() # throw timeout error for debugging
             with urllib.request.urlopen( url, data, timeout = 3 ) as response:     
                 return json.loads(response.read())
+        # Used for checking network availability: If generic HTTP error returned, network is available
         except urllib.error.HTTPError as e:
             return True
+        # Network API did not respond in time
         except timeout:
             return False
 
