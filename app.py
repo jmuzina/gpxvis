@@ -1,20 +1,24 @@
 # App launch-point
 
 # ---- Dependency imports ---- #
-from flask import Flask, request, render_template, session, redirect, url_for
 import json
-import urllib.request
-import urllib.parse
-import requests
-from flask_assets import Environment, Bundle
-from configparser import RawConfigParser, ConfigParser
-from os.path import exists
-import time
 import math
-import pandas as pd
-import gpxpy.gpx
+import time
+import urllib.parse
+import urllib.request
+from configparser import ConfigParser, RawConfigParser
 from datetime import datetime, timedelta
+from os.path import exists
+from socket import timeout
+
+import gpxpy.gpx
+import pandas as pd
+import requests
+from flask import Flask, redirect, render_template, request, session, url_for
+from flask_assets import Bundle, Environment
+
 import gpxTesting
+
 # ---------------------------- #
 IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
 
@@ -50,19 +54,23 @@ session = {} # Clear session on server reboot
 def getAPI(url, authCode = "", params = {}):     
     # convert parameters into a query string. I.E. {"id": 2, "index": 5} -> ?id=2&index=5 
     query_string = urllib.parse.urlencode( params )    
-
     data = query_string.encode( "ascii" )    
     
     if (authCode != ""):
-        #print("using bearer token")
         # Send authorization token for requests requiring authentication
         with requests.get(url, data = data, headers = {"Authorization": "Bearer " + authCode}) as response:
             return response
     else:
-        #print("no bearer token")
-        #print(data)
-        with urllib.request.urlopen( url, data ) as response:     
-            return json.loads(response.read())
+        try:
+            #raise timeout() # throw timeout error for debugging
+            with urllib.request.urlopen( url, data, timeout = 3 ) as response:     
+                return json.loads(response.read())
+        # Used for checking network availability: If generic HTTP error returned, network is available
+        except urllib.error.HTTPError as e:
+            return True
+        # Network API did not respond in time
+        except timeout:
+            return False
 
 class StravaApi:
     def __init__(self):
@@ -72,6 +80,7 @@ class StravaApi:
         self.tokenUrl = self.configDetails['TOKEN_URL'].strip('\'')
         self.clientId = self.configDetails['CLIENT_ID'].strip('\'')
         self.clientSecret = self.configDetails['CLIENT_SECRET'].strip('\'')
+        self.authUrl = self.configDetails['AUTH_URL'].strip('\'')
 
         # Handle Strava authentication. When users successfully log in to Strava, they are sent to {site-url}/strava-login
         @app.route('/' + self.configCode + '-login')
@@ -87,60 +96,73 @@ class StravaApi:
             session['userData']['authCode'] = request.args.get('code')
             session['userData']['accessKey'] = authResponse['access_token']
 
-            allGPX = getAllGPX()
-            gpxTesting.getVis(allGPX)
+            # Store debugging visualization result as B64 string to display it without storing
+            session['userData']['imageBytes'] = "data:image/png;base64," + gpxTesting.getVis(self.getAllGPX())
             
             # Render homepage
             return redirect(url_for('render_index'))
 
-        def GPXFromDataStream(activityID, startTime):
-            dataStream = getAPI(url = "https://www.strava.com/api/v3/activities/" + str(activityID) + "/streams?key_by_type=true&keys=time,distance,latlng,altitude", authCode = session['userData']['accessKey']).json()
-            # Only allow visualization of activities with coordinate data
-            if "latlng" in dataStream:
-                dataFrame = pd.DataFrame([*dataStream["latlng"]["data"]], columns=['lat','long'])
-                timestamps = []
-                for secondsPassed in dataStream["time"]["data"]:
-                    timestamps.append(startTime + timedelta(seconds=secondsPassed))          
+    def GPXFromDataStream(self, activityID, startTime):
+        dataStream = getAPI(url = "https://www.strava.com/api/v3/activities/" + str(activityID) + "/streams?key_by_type=true&keys=time,distance,latlng,altitude", authCode = session['userData']['accessKey']).json()
+        # Only allow visualization of activities with coordinate data
+        if "latlng" in dataStream:
+            dataFrame = pd.DataFrame([*dataStream["latlng"]["data"]], columns=['lat','long'])
+            timestamps = []
+            for secondsPassed in dataStream["time"]["data"]:
+                timestamps.append(startTime + timedelta(seconds=secondsPassed))          
 
-                dataFrame["time"] = timestamps
-                dataFrame["altitude"] = dataStream["altitude"]["data"]
+            dataFrame["time"] = timestamps
+            dataFrame["altitude"] = dataStream["altitude"]["data"]
 
-                gpx = gpxpy.gpx.GPX()
-                gpx_track = gpxpy.gpx.GPXTrack()
-                gpx.tracks.append(gpx_track)
+            gpx = gpxpy.gpx.GPX()
+            gpx_track = gpxpy.gpx.GPXTrack()
+            gpx.tracks.append(gpx_track)
 
-                gpx_segment = gpxpy.gpx.GPXTrackSegment()
-                gpx_track.segments.append(gpx_segment)
+            gpx_segment = gpxpy.gpx.GPXTrackSegment()
+            gpx_track.segments.append(gpx_segment)
 
-                for segmentIndex in range(len(dataStream["latlng"]["data"])):
-                    segment = gpxpy.gpx.GPXTrackPoint(dataStream["latlng"]["data"][segmentIndex][0], dataStream["latlng"]["data"][segmentIndex][1], dataStream["altitude"]["data"][segmentIndex], time=dataFrame["time"][segmentIndex])
-                    if segment != None:
-                        gpx_segment.points.append(segment)
+            for segmentIndex in range(len(dataStream["latlng"]["data"])):
+                segment = gpxpy.gpx.GPXTrackPoint(dataStream["latlng"]["data"][segmentIndex][0], dataStream["latlng"]["data"][segmentIndex][1], dataStream["altitude"]["data"][segmentIndex], time=dataFrame["time"][segmentIndex])
+                if segment != None:
+                    gpx_segment.points.append(segment)
 
-                return gpx.to_xml()
-        
-        def getAllGPX():
-            result = []
-            # Endpoint: https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
-            # Strava requires that a "before" timestamp is included to filter activities. All activities logged before calltime will be printed.
-            activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + str(math.floor(time.time())), authCode = session['userData']['accessKey']).json()
-            # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
-            for activityIndex in range(len(activitiesResponse)):
-                xml = GPXFromDataStream(activitiesResponse[activityIndex]['id'], datetime.strptime(activitiesResponse[activityIndex]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ"))
-                if xml != None:
-                    result.append(xml)
-            return result
-                     
-stravaApiHandler = StravaApi()
+            return gpx.to_xml()
+    
+    def getAllGPX(self):
+        result = []
+        # Endpoint: https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
+        # Strava requires that a "before" timestamp is included to filter activities. All activities logged before calltime will be printed.
+        activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + str(math.floor(time.time())), authCode = session['userData']['accessKey']).json()
+        # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
+        for activityIndex in range(len(activitiesResponse)):
+            xml = self.GPXFromDataStream(activitiesResponse[activityIndex]['id'], datetime.strptime(activitiesResponse[activityIndex]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ"))
+            if xml != None:
+                result.append(xml)
+        return result
+
+    def isAvailable(self):
+        return (getAPI(url = self.tokenUrl) != False)
+       
+apis = {
+    'strava': StravaApi()
+}
 
 # Index page
 @app.route('/')
 def render_index():
     # Render homepage with userdata if it exists
-    try:
-        return render_template("index.html", cfg=config, userData = session['userData'])
-    except: # No userdata, render guest homepage
-        return render_template("index.html", cfg=config)
+    if 'userData' in session:
+        return render_template("index.html", userData = session['userData'])
+    else: # No userdata, render guest homepage
+        networks = {}
+        for networkName in apis:
+            networkDetails = False
+            if apis[networkName].isAvailable():
+                networkDetails = apis[networkName].authUrl
+            
+            networks[networkName] = networkDetails
+
+        return render_template("index.html", networks = networks)
 
 @app.route('/logout')
 def logout():

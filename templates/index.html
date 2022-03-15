@@ -30,6 +30,7 @@
                 </div>
             </div>
         </nav>
+        {% if not userData %}
         <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
@@ -41,18 +42,28 @@
                 </div>
                 <div class="modal-body">
                   <div class="container" id="login-buttons">
-                    {% for networkName in cfg %}
-                        {% if networkName != 'DEFAULT' %}
-                            <div class="row" id="{{networkName}}-login">
-                                <a class="btn" href="https://{{cfg[networkName]['AUTH_URL'].strip('\"')}}">Login with {{networkName.title()}}</a>
-                            </div>
-                        {% endif %}
+                    {% for networkName, networkData in networks.items() %}
+                        <div class="row" id="{{networkName}}-login">
+                            {% if networkData != False %}
+                                <a class="btn" href="https://{{networkData.strip('\"')}}">Login with {{networkName.title()}}</a>
+                            {% else %}
+                                <a class="btn network-unavailable" disabled>{{networkName.title()}} unavailable</a>
+                            {% endif %}
+                        </div>
                     {% endfor %}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+        </div>
+        {% endif %}
+        {% if userData %}
+            {% if userData['imageBytes'] %}
+                <div class = "visualizedContainer container">
+                    <img class = "visualizedResult" src = "{{userData['imageBytes']}}" alt = "visualized image"> 
+                </div>
+            {% endif %}
+        {% endif %}
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

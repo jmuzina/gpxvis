@@ -31,3 +31,23 @@ $app_themes: (
     display: flex;
     align-self: center;
 }
+
+.visualizedContainer {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+}
+
+.visualizedResult {
+    max-height: 70vh;
+    width: auto;
+    align-self: center;
+}
+
+.network-unavailable {
+    opacity: 0.4 !important;
+}
+
+.network-unavailable:hover {
+    cursor: not-allowed !important;
+}
