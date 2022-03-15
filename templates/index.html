@@ -42,10 +42,10 @@
                 </div>
                 <div class="modal-body">
                   <div class="container" id="login-buttons">
-                    {% for networkName in networks %}
+                    {% for networkName, networkData in networks.items() %}
                         <div class="row" id="{{networkName}}-login">
-                            {% if networks[networkName] != False %}
-                                <a class="btn" href="{{networks[networkName]}}">Login with {{networkName.title()}}</a>
+                            {% if networkData != False %}
+                                <a class="btn" href="https://{{networkData.strip('\"')}}">Login with {{networkName.title()}}</a>
                             {% else %}
                                 <a class="btn network-unavailable" disabled>{{networkName.title()}} unavailable</a>
                             {% endif %}
