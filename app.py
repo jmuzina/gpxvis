@@ -17,7 +17,7 @@ import requests
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_assets import Bundle, Environment
 
-import gpxTesting
+import generateVis
 
 # ---------------------------- #
 IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
@@ -97,7 +97,7 @@ class StravaApi:
             session['userData']['accessKey'] = authResponse['access_token']
 
             # Store debugging visualization result as B64 string to display it without storing
-            session['userData']['imageBytes'] = "data:image/png;base64," + gpxTesting.getVis(self.getAllGPX())
+            session['userData']['imageBytes'] = "data:image/png;base64," + generateVis.getVis(self.getAllGPX(),5, False, (255,255,255), (0,0,0), (0,0,0), "") #GPX files, lineThickness, gridOn, backgroundColor, foregroundColor, grid color title
             
             # Render homepage
             return redirect(url_for('render_index'))
