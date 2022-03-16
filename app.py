@@ -132,12 +132,39 @@ class StravaApi:
         result = []
         # Endpoint: https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
         # Strava requires that a "before" timestamp is included to filter activities. All activities logged before calltime will be printed.
-        activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + str(math.floor(time.time())), authCode = session['userData']['accessKey']).json()
+        beforeTime = str(math.floor(time.time()))
+
+        pageNum = 1 # Current "page" of results
+        activitiesFound = 0 # Used to print number of activities found, could have more uses later?
+
         # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
-        for activityIndex in range(len(activitiesResponse)):
-            xml = self.GPXFromDataStream(activitiesResponse[activityIndex]['id'], datetime.strptime(activitiesResponse[activityIndex]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ"))
-            if xml != None:
-                result.append(xml)
+        # Get activities in batches of 100 until all have been found
+        activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=100&page=" + str(pageNum), authCode = session['userData']['accessKey']).json()
+        while activitiesResponse != None:
+            # Process batch if it is not empty
+            if len(activitiesResponse) != 0:
+                activitiesFound += len(activitiesResponse)
+                print(str(pageNum) + "\tID\t\tName")
+
+                # Process each activity in the batch
+                for activityIndex in range(len(activitiesResponse)):
+                    print("\t" + str(activitiesResponse[activityIndex]['id']) + "\t" + activitiesResponse[activityIndex]['name'])
+
+                    # Create an XML string in GPX format using the activitiy's data
+                    xml = self.GPXFromDataStream(activitiesResponse[activityIndex]['id'], datetime.strptime(activitiesResponse[activityIndex]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ"))
+                    # Process only valid XML activities
+                    if xml != None:
+                        result.append(xml)
+
+                # Advance to next page
+                pageNum += 1
+                activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=100&page=" + str(pageNum), authCode = session['userData']['accessKey']).json()
+
+            # No activities in the batch; exit the loop and return result
+            else:
+                activitiesResponse = None
+                
+        print("Activity API calls needed:\t" + str(pageNum - 1) + "\nActivities found:\t" + str(activitiesFound))
         return result
 
     def isAvailable(self):
