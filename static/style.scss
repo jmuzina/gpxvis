@@ -1,17 +1,85 @@
 // Make body take full vertical space and hide overflow
+/*
 body {
     height: 100vh;
     overflow: hidden;
 }
+*/
 
+body {
+    height: 100vh;
+    background-color: #f2f2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*
 // Login button styles for each supported login network
 $app_themes: (
+    /*
     "strava" : (
         "background-color": #fc4c02,
         "color": white
     )
+    
 );
+*/
 
+
+.button-custom {
+    background: #5E5DF0;
+    border-radius: 999px;
+    box-shadow: #5E5DF0 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 220px;
+    word-break: break-word;
+    border: 0;
+    display: inline;
+}
+
+#Strava {
+    background: #fc5200;
+}
+
+#Underarmour {
+    background: #1d1d1d;
+}
+
+.main-container {
+    background-color: white;
+    height: 60%;
+    min-height: 432px;
+    width: 60%;
+    min-width: 768px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-flow: column nowrap;
+}
+
+.main-title {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+
+/*
 // Apply configured styles for each login button
 @each $name, $data in $app_themes {
     ##{$name}-login > a {
@@ -20,6 +88,7 @@ $app_themes: (
         }
     }
 } 
+*/
 
 #login-buttons {
     display: flex;

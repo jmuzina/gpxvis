@@ -100,7 +100,7 @@ class StravaApi:
             session['userData']['imageBytes'] = "data:image/png;base64," + gpxTesting.getVis(self.getAllGPX())
             
             # Render homepage
-            return redirect(url_for('render_index'))
+            return redirect(url_for('render_parameters'))
 
     def GPXFromDataStream(self, activityID, startTime):
         dataStream = getAPI(url = "https://www.strava.com/api/v3/activities/" + str(activityID) + "/streams?key_by_type=true&keys=time,distance,latlng,altitude", authCode = session['userData']['accessKey']).json()
@@ -168,6 +168,17 @@ def render_index():
 def logout():
     session.pop('userData') # Clear user session data
     return redirect(url_for('render_index'))
+
+@app.route('/parameters')
+def render_parameters():
+    if 'userData' in session:
+        return render_template("parameters.html", userData = session['userData'])
+    else: # No userdata, render guest homepage
+        return render_template(url_for('render_errorPage'))
+
+@app.route('/errorPage')
+def render_errorPage(x="unknown error"):
+    return render_template("errorPage.html", errorMessage = x)
 
 # Store any config items not related to API logins under app.config
 for key in config["DEFAULT"]:
