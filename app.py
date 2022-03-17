@@ -22,7 +22,7 @@ import requests
 from flask import Flask, redirect, render_template, request, session, url_for, Response
 from flask_assets import Bundle, Environment
 
-import gpxTesting
+import generateVis
 
 # ---------------------------- #
 IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
@@ -114,7 +114,7 @@ class StravaApi:
             session[uniqueId]["activities"] = self.getAllActivities(uniqueId) # Must be called after session is set
 
             # Store debugging visualization result as B64 string to display it without storing
-            #session['userData']['imageBytes'] = "data:image/png;base64," + gpxTesting.getVis(self.getAllPolylines())
+            #session['userData']['imageBytes'] = "data:image/png;base64," + generateVis.getVis(self.getAllPolylines())
 
             #response.set_cookie("uid", uniqueUserId(self.configCode, authResponse['athlete']['id']), max_age=3600)
             
