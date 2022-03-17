@@ -26,8 +26,8 @@ import gpxTesting
 
 # ---------------------------- #
 IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
-APP_ADDRESS = urllib.request.urlopen('https://ident.me').read().decode('utf8')
-INTERNAL_ADDRESS = str(socket.gethostbyname(socket.gethostname()))
+#APP_ADDRESS = urllib.request.urlopen('https://ident.me').read().decode('utf8')
+#INTERNAL_ADDRESS = str(socket.gethostbyname(socket.gethostname()))
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -110,9 +110,9 @@ class StravaApi:
             session[uniqueId] = {
                 "userData": authResponse["athlete"],
                 #"authCode": request.args.get("code"),
-                "accessKey": authResponse["access_token"],
-                "activities": self.getAllActivities()
+                "accessKey": authResponse["access_token"]
             }
+            session[uniqueId]["activities"] = self.getAllActivities(uniqueId) # Must be called after session is set
 
             # Store debugging visualization result as B64 string to display it without storing
             #session['userData']['imageBytes'] = "data:image/png;base64," + gpxTesting.getVis(self.getAllPolylines())
@@ -120,7 +120,7 @@ class StravaApi:
             #response.set_cookie("uid", uniqueUserId(self.configCode, authResponse['athlete']['id']), max_age=3600)
             
             # Render homepage
-            return redirect(url_for('render_index', uniqueId))
+            return redirect(url_for('render_index', uid = uniqueId))
     
     def getAllPolylines(self):
         result = []
@@ -162,7 +162,7 @@ class StravaApi:
         print("Activity API calls needed:\t" + str(pageNum - 1) + "\nActivities found:\t" + str(activitiesFound))
         return decodedPolylines
 
-    def getAllActivities(self):
+    def getAllActivities(self, uid):
         result = {}
         # Endpoint: https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
         # Strava requires that a "before" timestamp is included to filter activities. All activities logged before calltime will be printed.
@@ -173,7 +173,7 @@ class StravaApi:
 
         # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
         # Get activities in batches of 100 until all have been found
-        activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=200&page=" + str(pageNum), authCode = session['userData']['accessKey']).json()
+        activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=200&page=" + str(pageNum), authCode = session[uid]['accessKey']).json()
         while activitiesResponse != None:
             # Process batch if it is not empty
             if len(activitiesResponse) != 0:
@@ -185,7 +185,7 @@ class StravaApi:
 
                 # Advance to next page
                 pageNum += 1
-                activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=100&page=" + str(pageNum), authCode = session['userData']['accessKey']).json()
+                activitiesResponse = getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=100&page=" + str(pageNum), authCode = session[uid]['accessKey']).json()
 
             # No activities in the batch; exit the loop and return result
             else:
@@ -203,12 +203,18 @@ apis = {
 
 # Index page
 @app.route('/')
-def render_index(uid=None):
-    print(uid)
+def render_index():
     # Render homepage with userdata if it exists
-    if 'userData' in session:
-        return render_template("index.html", userData = session['userData'])
-    else: # No userdata, render guest homepage
+    if request.args.get('uid') != None:
+        if request.args.get('uid') in session:
+            if 'userData' in session[request.args.get('uid')]:
+                print("userdata is", session[request.args.get('uid')]['userData'])
+                return render_template("index.html", userData = session[request.args.get('uid')]['userData'])
+            else: # userData not stored in session
+                return redirect(url_for("errorPage",  uid = request.args.get('uid'), errorMsg = "UserData was not found in session data."))
+        else: # UID supplied  but not in session
+            return redirect(url_for("errorPage", errorMsg = "Invalid User ID"))
+    else: # No user ID, not logged in
         networks = {}
         for networkName in apis:
             networkDetails = False
@@ -221,7 +227,9 @@ def render_index(uid=None):
 
 @app.route('/logout')
 def logout():
-    session.pop('userData') # Clear user session data
+    if request.args.get('uid') != None:
+        session.pop(request.args.get('uid')) # Clear user session data
+
     return redirect(url_for('render_index'))
 
 # Store any config items not related to API logins under app.config
