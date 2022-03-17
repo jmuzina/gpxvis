@@ -253,6 +253,10 @@ def render_parameters():
 def render_errorPage(errorMsg="Unknown error"):
     return render_template("errorPage.html", errorMessage = errorMsg)
 
+@app.route('/generatePage')
+def render_generatePage():
+    return render_template("generatePage.html")
+
 # Store any config items not related to API logins under app.config
 for key in config["DEFAULT"]:
     app.config[key] = config["DEFAULT"][key]

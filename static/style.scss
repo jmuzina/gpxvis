@@ -7,11 +7,12 @@ body {
 */
 
 body {
-    height: 100vh;
-    background-color: #f2f2f2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  font-family: "Open Sans", sans-serif;
+  height: 100vh;
+  background-color: #f2f2f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /*
@@ -26,58 +27,115 @@ $app_themes: (
 );
 */
 
+.button-custom:active {
+  background: grey !important;
+}
 
 .button-custom {
-    background: #5E5DF0;
-    border-radius: 999px;
-    box-shadow: #5E5DF0 0 10px 20px -10px;
-    box-sizing: border-box;
-    color: #FFFFFF;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 24px;
-    opacity: 1;
-    outline: 0 solid transparent;
-    padding: 8px 18px;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    width: 220px;
-    word-break: break-word;
-    border: 0;
-    display: inline;
+  background: white !important;
+  border-radius: 999px !important;
+  box-shadow: #5e5df0 0 10px 20px -10px;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 24px;
+  opacity: 1;
+  outline: 0 solid transparent;
+  padding: 8px 18px !important;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 220px;
+  word-break: break-word;
+  border: 0;
+  display: inline;
+  margin: 2.5px;
+}
+
+.button-custom:hover {
+  background: lightgray !important;
+  color: #333333 !important;
+}
+
+.hello-button:disabled {
+  cursor: pointer;
+  background: #47cd95;
+}
+
+.nav-pills .nav-link.active {
+  color: #333333;
+  background-color: lightgrey !important;
+}
+
+.fake-button {
+  border-radius: 999px;
+  box-sizing: border-box;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  opacity: 1;
+  outline: 0 solid transparent;
+  padding: 8px 18px !important;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 220px;
+  word-break: break-word;
+  border: 0;
+  display: inline;
+  margin: 2.5px;
+}
+
+.parameter-button {
+  color: #333333;
+  box-shadow: none;
+}
+
+.hello-button {
+  background: #47cd95 !important;
+  color: white !important;
+}
+
+.generate-button {
+  background: #5b81e5 !important;
+  color: white !important;
+}
+
+.generate-button:hover {
+  background: #1d58ec !important;
+  color: white !important;
 }
 
 #Strava {
-    background: #fc5200;
+  background: #fc5200 !important;
 }
 
 #Underarmour {
-    background: #1d1d1d;
+  background: #1d1d1d !important;
 }
 
 .main-container {
-    background-color: white;
-    height: 60%;
-    min-height: 432px;
-    width: 60%;
-    min-width: 768px;
-    border-radius: 10px;
-    box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    flex-flow: column nowrap;
+  background-color: white;
+  height: 60%;
+  min-height: 432px;
+  width: 60%;
+  min-width: 768px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-flow: column nowrap;
 }
 
 .main-title {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }
-
 
 /*
 // Apply configured styles for each login button
@@ -91,32 +149,32 @@ $app_themes: (
 */
 
 #login-buttons {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
 }
 
 #login-buttons .row {
-    display: flex;
-    align-self: center;
+  display: flex;
+  align-self: center;
 }
 
 .visualizedContainer {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
 }
 
 .visualizedResult {
-    max-height: 70vh;
-    width: auto;
-    align-self: center;
+  max-height: 70vh;
+  width: auto;
+  align-self: center;
 }
 
 .network-unavailable {
-    opacity: 0.4 !important;
+  opacity: 0.4 !important;
 }
 
 .network-unavailable:hover {
-    cursor: not-allowed !important;
+  cursor: not-allowed !important;
 }
