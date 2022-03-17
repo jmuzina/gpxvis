@@ -9,35 +9,7 @@
         <title>My Page</title>
     </head>
     <body>
-        <!--
-        <h1> this is the errorPage page </h1>
-        {% if not userData %}
-        <div class="main-container">
-            <div class="main-content-container">
-                <h1 class="main-title">GPX Visualizer</h1>
-                <div class="container" id="login-buttons"></div>
-                    {% for networkName, networkData in networks.items() %}
-                    <div class="row" id="{{networkName}}-login">
-                        {% if networkData != False %}
-
-                            <a button type="button" class="button-custom" id="Strava" href="https://{{networkData.strip('\"')}}">Login with {{networkName.title()}}</a>
-                        {% else %}
-                            <a button type="button" class="button-custom" id="Underarmour" disabled>{{networkName.title()}} unavailable</a>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        {% endif %}
-        {% if userData %}
-            {% if userData['imageBytes'] %}
-                <div class = "visualizedContainer container">
-                    <img class = "visualizedResult" src = "{{userData['imageBytes']}}" alt = "visualized image"> 
-                </div>
-            {% endif %}
-        {% endif %}
-            -->
+        <p>{{errorMessage}}</p>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

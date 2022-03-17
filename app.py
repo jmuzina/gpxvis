@@ -93,7 +93,6 @@ class StravaApi:
         self.clientId = self.configDetails['CLIENT_ID'].strip('\'')
         self.clientSecret = self.configDetails['CLIENT_SECRET'].strip('\'')
         self.authUrl = self.configDetails['AUTH_URL'].strip('\'')
-        self.subscribeUrl = self.configDetails['SUBSCRIBE_URL'].strip('\'')
         self.verifyToken = str(binascii.hexlify(os.urandom(24)))[2:-1]
 
         # Handle Strava authentication. When users successfully log in to Strava, they are sent to {site-url}/strava-login
@@ -201,20 +200,27 @@ apis = {
     'strava': StravaApi()
 }
 
+def validUserData(args):
+    if args.get('uid') != None:
+        if args.get('uid') in session:
+            if 'userData' in session[args.get('uid')]:
+                return True
+            else:
+                return redirect(url_for("render_errorPage",  uid = request.args.get('uid'), errorMsg = "UserData was not found in session data."))
+        else:
+            return redirect(url_for("render_errorPage", errorMsg = "Invalid User ID"))
+    return False
+
+
 # Index page
 @app.route('/')
 def render_index():
     # Render homepage with userdata if it exists
-    if request.args.get('uid') != None:
-        if request.args.get('uid') in session:
-            if 'userData' in session[request.args.get('uid')]:
-                print("userdata is", session[request.args.get('uid')]['userData'])
-                return render_template("index.html", userData = session[request.args.get('uid')]['userData'])
-            else: # userData not stored in session
-                return redirect(url_for("errorPage",  uid = request.args.get('uid'), errorMsg = "UserData was not found in session data."))
-        else: # UID supplied  but not in session
-            return redirect(url_for("errorPage", errorMsg = "Invalid User ID"))
-    else: # No user ID, not logged in
+    sessionDataValidationResult = validUserData(request.args)
+
+    if sessionDataValidationResult == True:
+        return render_template("index.html", userData = session[request.args.get('uid')]['userData'])
+    elif sessionDataValidationResult == False: # No user ID, not logged in
         networks = {}
         for networkName in apis:
             networkDetails = False
@@ -224,6 +230,8 @@ def render_index():
             networks[networkName] = networkDetails
 
         return render_template("index.html", networks = networks)
+    else:
+        return sessionDataValidationResult
 
 @app.route('/logout')
 def logout():
@@ -234,10 +242,12 @@ def logout():
 
 @app.route('/parameters')
 def render_parameters():
-    if 'userData' in session:
-        return render_template("parameters.html", userData = session['userData'])
+    sessionDataValidationResult = validUserData(request.args)
+
+    if sessionDataValidationResult == True:
+        return render_template("parameters.html", userData = session[request.args.get('uid')]['userData'])
     else: # No userdata, render guest homepage
-        return render_template(url_for('render_errorPage'))
+        return sessionDataValidationResult
 
 @app.route('/errorPage')
 def render_errorPage(errorMsg="Unknown error"):
