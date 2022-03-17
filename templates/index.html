@@ -9,51 +9,24 @@
         <title>My Page</title>
     </head>
     <body>
-        <nav class="navbar sticky-top navbar-dark bg-dark">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">KSU ActivityArt</a>
-                </div>
-                <div class="dropdown">
-                    {% if userData %}
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Welcome, {{userData['firstname'] + ' ' + userData['lastname']}}
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="/logout">Log Out</a>
-                    </div>
-                    {% else %}
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
-                            Log In
-                        </button>
-                    {% endif %}
-                </div>
-            </div>
-        </nav>
         {% if not userData %}
-        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Log In</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <div class="container" id="login-buttons">
+        <div class="main-container">
+            <div class="main-content-container">
+                <h1 class="main-title">GPX Visualizer</h1>
+                <div class="container" id="login-buttons"></div>
                     {% for networkName, networkData in networks.items() %}
-                        <div class="row" id="{{networkName}}-login">
-                            {% if networkData != False %}
-                                <a class="btn" href="https://{{networkData.strip('\"')}}">Login with {{networkName.title()}}</a>
-                            {% else %}
-                                <a class="btn network-unavailable" disabled>{{networkName.title()}} unavailable</a>
-                            {% endif %}
-                        </div>
+                    <div class="row" id="{{networkName}}-login">
+                        {% if networkData != False %}
+
+                            <!-- <a class="btn" href="https://{{networkData.strip('\"')}}">Login with {{networkName.title()}}</a> -->
+                            <a button type="button" class="button-custom" id="Strava" href="https://{{networkData.strip('\"')}}">Login with {{networkName.title()}}</a>
+                        {% else %}
+                            <a button type="button" class="button-custom" id="Underarmour" disabled>{{networkName.title()}} unavailable</a>
+                            <!-- <a class="btn network-unavailable" disabled>{{networkName.title()}} unavailable</a> -->
+                        {% endif %}
+                    </div>
                     {% endfor %}
-                  </div>
                 </div>
-              </div>
             </div>
         </div>
         {% endif %}
