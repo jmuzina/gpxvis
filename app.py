@@ -119,8 +119,8 @@ class StravaApi:
 
             #response.set_cookie("uid", uniqueUserId(self.configCode, authResponse['athlete']['id']), max_age=3600)
             
-            # Render homepage
-            return redirect(url_for('render_index', uid = uniqueId))
+            # Render parameters page
+            return redirect(url_for('render_parameters', uid = uniqueId))
     
     def getAllPolylines(self):
         result = []
@@ -231,6 +231,17 @@ def logout():
         session.pop(request.args.get('uid')) # Clear user session data
 
     return redirect(url_for('render_index'))
+
+@app.route('/parameters')
+def render_parameters():
+    if 'userData' in session:
+        return render_template("parameters.html", userData = session['userData'])
+    else: # No userdata, render guest homepage
+        return render_template(url_for('render_errorPage'))
+
+@app.route('/errorPage')
+def render_errorPage(errorMsg="Unknown error"):
+    return render_template("errorPage.html", errorMessage = errorMsg)
 
 # Store any config items not related to API logins under app.config
 for key in config["DEFAULT"]:
