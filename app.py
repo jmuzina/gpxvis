@@ -1,29 +1,16 @@
 # App launch-point
 
 # ---- Dependency imports ---- #
-import binascii
-import json
-import math
 import os
-import random
-import socket
-import time
-import urllib.parse
-import urllib.request
 from configparser import ConfigParser, RawConfigParser
-from datetime import datetime, timedelta
 from os.path import exists
-from socket import timeout
 
-import gpxpy.gpx
-import pandas as pd
-import polyline
-import requests
 from flask import (Flask, Response, redirect, render_template, request,
                    session, url_for)
 from flask_assets import Bundle, Environment
 
 import functions
+
 # ---------------------------- #
 
 IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
@@ -31,13 +18,13 @@ IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") 
 flaskApp = Flask(__name__)
 flaskApp.config['TEMPLATES_AUTO_RELOAD'] = True
 # Hex-encoded random 24 character string for session encryption
-flaskApp.config['SECRET_KEY'] = binascii.hexlify(os.urandom(24))
+flaskApp.secret_key = os.urandom(32)
 
 # ---- Bundle all scss files into all.css ---- #
 assets     = Environment(flaskApp)
 assets.url = flaskApp.static_url_path
 scss       = Bundle('style.scss', filters='pyscss', output='all.css')
-assets.config['SECRET_KEY'] = 'secret!'
+assets.config['SECRET_KEY'] = os.urandom(32)
 assets.config['PYSCSS_LOAD_PATHS'] = assets.load_path
 assets.config['PYSCSS_STATIC_URL'] = assets.url
 assets.config['PYSCSS_STATIC_ROOT'] = assets.directory
@@ -54,8 +41,8 @@ config = ConfigParser()
 config.read_file(open(r'./app.cfg'))
 # -------------------------------------------- #
 
-import networks.strava # Must be imported after config has been read
-       
+import networks.strava  # Must be imported after config has been read
+
 apis = {
     'strava': networks.strava.StravaApi()
 }
@@ -84,8 +71,7 @@ def render_index():
 @flaskApp.route('/logout')
 def logout():
     # Clear user session data
-    for k, v in session:
-        session.pop(k)
+    functions.wipeSession()
 
     return redirect(url_for('render_index'))
 
@@ -95,12 +81,18 @@ def render_parameters():
 
     if sessionDataValidationResult == True:
         return render_template("parameters.html", userData = session['userData'])
-    else: # No userdata, render guest homepage
+    elif sessionDataValidationResult == False: # No userdata, render guest homepage
+        return redirect(url_for("render_index"))
+    else: # error thrown
         return sessionDataValidationResult
 
 @flaskApp.route('/errorPage')
-def render_errorPage(errorMsg="Unknown error"):
-    return render_template("errorPage.html", errorMessage = errorMsg)
+def render_errorPage():
+    errorMessage = request.args.get("errorMsg")
+    if errorMessage == None:
+        errorMessage = "Unknown Error"
+
+    return render_template("errorPage.html", errorMessage = errorMessage)
 
 @flaskApp.route('/generatePage')
 def render_generatePage():
