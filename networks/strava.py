@@ -4,14 +4,13 @@ import math
 import os
 import time
 from flask import Flask, redirect, render_template, request, session, url_for, Response
-import app
 import functions
 # ---------------------------- #
 class StravaApi:
-    def __init__(self):
+    def __init__(self, cfg, app):
         # Configure strava-specific connection details
         self.configCode = 'strava'
-        self.configDetails = app.config[self.configCode]
+        self.configDetails = cfg[self.configCode]
         self.tokenUrl = self.configDetails['TOKEN_URL'].strip('\'')
         self.clientId = self.configDetails['CLIENT_ID'].strip('\'')
         self.clientSecret = self.configDetails['CLIENT_SECRET'].strip('\'')
@@ -19,7 +18,7 @@ class StravaApi:
         self.verifyToken = str(binascii.hexlify(os.urandom(24)))[2:-1]
 
         # Handle Strava authentication. When users successfully log in to Strava, they are sent to {site-url}/strava-login
-        @app.flaskApp.route('/' + self.configCode + '-login')
+        @app.route('/' + self.configCode + '-login')
         def auth():
             # Get user data and access token
             authResponse = functions.getAPI(url = self.tokenUrl, params = {
@@ -27,7 +26,6 @@ class StravaApi:
                 "client_secret": self.clientSecret, 
                 "code": request.args.get('code')
             })
-            #uniqueId = uniqueUserId(self.configCode, authResponse['athlete']['id'])
             # Store user data as session for future use
             session["userData"] = authResponse["athlete"]
             session["accessKey"] = authResponse["access_token"]
@@ -35,12 +33,9 @@ class StravaApi:
 
             # Store debugging visualization result as B64 string to display it without storing
             #session['imageBytes'] = "data:image/png;base64," + gpxTesting.getVis(self.getAllPolylines())
-
-            #response.set_cookie("uid", uniqueUserId(self.configCode, authResponse['athlete']['id']), max_age=3600)
             
             # Render parameters page
             return redirect(url_for('render_parameters'))
-            #return redirect(url_for('render_parameters', uid = uniqueId))
     
     def getAllPolylines(self):
         result = []

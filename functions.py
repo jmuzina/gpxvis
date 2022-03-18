@@ -9,8 +9,6 @@ import requests
 from flask import (Flask, Response, redirect, render_template, request,
                    session, url_for)
 
-import app
-
 # ---------------------------- #
 
 def uniqueUserId(networkName, idNum):
@@ -43,15 +41,15 @@ def getAPI(url, authCode = "", params = {}):
 def throwError(msg):
     return redirect(url_for("render_errorPage", errorMsg = msg))
 
-def validUserData():
-    if 'userData' in app.session:
-        if 'accessKey' in app.session:
+def validUserData(session):
+    if 'userData' in session:
+        if 'accessKey' in session:
                 return True
         else:
             return throwError(msg = "Access key was not found in session data.")
 
     return False
 
-def wipeSession():
-    for k, v in app.session:
-        app.session.pop(k)
+def wipeSession(session):
+    for k, v in session:
+        session.pop(k)

@@ -10,7 +10,7 @@ from flask import (Flask, Response, redirect, render_template, request,
 from flask_assets import Bundle, Environment
 
 import functions
-import gpxVis
+import generateVis
 # ---------------------------- #
 
 IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
@@ -44,18 +44,18 @@ config.read_file(open(r'./app.cfg'))
 import networks.strava  # Must be imported after config has been read
 
 apis = {
-    'strava': networks.strava.StravaApi()
+    'strava': networks.strava.StravaApi(config, flaskApp)
 }
 
 # Index page
 @flaskApp.route('/')
 def render_index():
     # Render homepage with userdata if it exists
-    sessionDataValidationResult = functions.validUserData()
+    sessionDataValidationResult = functions.validUserData(session)
 
-    if sessionDataValidationResult == True:
-        return render_template("index.html", userData = session['userData'])
-    elif sessionDataValidationResult == False: # No user ID, not logged in
+    if sessionDataValidationResult == True: # User already logged in, redirect to parameters page
+	    return redirect(url_for("render_parameters"))
+    elif sessionDataValidationResult == False: # No user ID, not logged in.
         networks = {}
         for networkName in apis:
             networkDetails = False
@@ -71,13 +71,13 @@ def render_index():
 @flaskApp.route('/logout')
 def logout():
     # Clear user session data
-    functions.wipeSession()
+    functions.wipeSession(session)
 
     return redirect(url_for('render_index'))
 
 @flaskApp.route('/parameters')
 def render_parameters():
-    sessionDataValidationResult = functions.validUserData()
+    sessionDataValidationResult = functions.validUserData(session)
 
     if sessionDataValidationResult == True:
         return render_template("parameters.html", userData = session['userData'])
