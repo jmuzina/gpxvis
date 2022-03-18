@@ -10,7 +10,7 @@ from flask import (Flask, Response, redirect, render_template, request,
 from flask_assets import Bundle, Environment
 
 import functions
-
+import gpxVis
 # ---------------------------- #
 
 IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
