@@ -11,6 +11,9 @@ from flask import (Flask, Response, redirect, render_template, request,
 
 # ---------------------------- #
 
+def getImageBase64String(imageData):
+    return "data:image/png;base64," + str(imageData)
+
 def uniqueUserId(networkName, idNum):
     return networkName + "-" + str(idNum)
 

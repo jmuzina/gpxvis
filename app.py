@@ -42,6 +42,7 @@ config.read_file(open(r'./app.cfg'))
 # -------------------------------------------- #
 
 import networks.strava  # Must be imported after config has been read
+userImages = {}
 
 apis = {
     'strava': networks.strava.StravaApi(config, flaskApp)
@@ -73,6 +74,10 @@ def logout():
     # Clear user session data
     functions.wipeSession(session)
 
+    # Wipe user image
+    if "userData" in session and "id" in session["userData"] and "networkName" in session:
+        userImages[functions.uniqueUserId(session["networkName"], session["userData"]["id"])] = None
+
     return redirect(url_for('render_index'))
 
 @flaskApp.route('/parameters')
@@ -96,7 +101,13 @@ def render_errorPage():
 
 @flaskApp.route('/generatePage')
 def render_generatePage():
-    return render_template("generatePage.html")
+    if "userData" in session:
+        if "id" in session["userData"]:
+            if "networkName" in session:
+                uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
+                if uniqueId in userImages:
+                    return render_template("generatePage.html", visualization = userImages[uniqueId])
+    return functions.throwError("Could not display visualized image.")
 
 # Store any config items not related to API logins under app.config
 for key in config["DEFAULT"]:

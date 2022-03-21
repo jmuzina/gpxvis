@@ -33,9 +33,10 @@ class StravaApi:
             main.session["userData"] = authResponse["athlete"]
             main.session["accessKey"] = authResponse["access_token"]
             main.session["activities"] = self.getAllActivities() # Must be called after session is set
+            main.session["networkName"] = self.configCode
 
             # Store debugging visualization result as B64 string to display it without storing
-            #main.session['imageBytes'] = "data:image/png;base64," + generateVis.getVis(self.getAllPolylines())
+            main.userImages[functions.uniqueUserId(self.configCode, authResponse["athlete"]["id"])] = functions.getImageBase64String(generateVis.getVis(data=self.getAllPolylines()))
             
             # Render parameters page
             return redirect(url_for('render_parameters'))
