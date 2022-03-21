@@ -1,3 +1,7 @@
+
+##generateVis
+##code sources: https://github.com/pavel-perina/gpx_to_png
+
 import sys  
 import math 
 import logging 
@@ -9,13 +13,7 @@ import gpxpy
 from PIL import Image as pil_image
 from PIL import ImageDraw as pil_draw
 
-def format_time(time_s):
-    if not time_s:
-        return 'n/a'
-    minutes = math.floor(time_s / 60.)
-    hours = math.floor(minutes / 60.)
-    return '%s:%s:%s' % (str(int(hours)).zfill(2), str(int(minutes % 60)).zfill(2), str(int(time_s % 60)).zfill(2)) 
-
+####osm functions taken from https://github.com/pavel-perina/gpx_to_png
 def osm_lat_lon_to_x_y_tile (lat_deg, lon_deg, zoom):
     """ Gets tile containing given coordinate at given zoom level """
     ## taken from http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames, works for OSM maps and mapy.cz
@@ -41,8 +39,8 @@ def osm_get_auto_zoom_level ( min_lat, max_lat, min_lon, max_lon, max_n_tiles):
 def get_dimensions(n):
     for x in range(0,100): #100 is maximum amount of rows and columns allowed
         if(n <= (x+1)**2):
-            print("x: " + str(x))
-            print("maxRows: " + str((x+1)**2))
+            #print("x: " + str(x))
+            #print("maxRows: " + str((x+1)**2))
             return(x+1)
     print("failed to get dimensions")
     return(0)
@@ -55,7 +53,7 @@ class ImageCreator:
         self.tracks = tracks
         
         ##sizing##
-        resolution = 2000
+        resolution = 4000
         self.maxTileWidth = resolution/(self.get_max_track_width())
         self.maxRows = get_dimensions(len(tracks))
         self.width = resolution #500 * self.maxRows
@@ -123,16 +121,16 @@ class ImageCreator:
             width = track.get_width()
             if (width > maxWidth):
                 maxWidth = width
-        print("max width of track: " + str(maxWidth))
+        #print("max width of track: " + str(maxWidth))
         return maxWidth
         
             
 
 #activity. only stores GPX data at the moment. eventually should also have data such as activity name, time, distance, etc....          
 class Track:
-    def __init__(self, gpx, min_lat, max_lat, min_lon, max_lon, zoom):
+    def __init__(self, activity, min_lat, max_lat, min_lon, max_lon, zoom):
         """ constructor """
-        self.gpx = gpx
+        self.activity = activity # list of coordinates
         x1, y1 = osm_lat_lon_to_x_y_tile (min_lat, min_lon, zoom)
         x2, y2 = osm_lat_lon_to_x_y_tile (max_lat, max_lon, zoom)
         self.x1 = min (x1, x2)
@@ -163,44 +161,95 @@ class Track:
         self.x_offset = new_x_offset #(self.width*tile_res)/2 
         self.y_offset = new_y_offset 
         draw = pil_draw.Draw(image)
+
+        x_from = 0
+        y_from = 0
+        linePointIdx = 0 #a line requires 2 points to draw. if this is 0, then it sets the first point, if this is 1, then it sets the second point
         
-        for gpxTrack in self.gpx.tracks:
-            for segment in gpxTrack.segments:
-                idx = 0
-                x_from = 0
-                y_from = 0
-                for point in segment.points:
-                    if (idx == 0):
-                        x_from, y_from = self.lat_lon_to_image_xy (point.latitude, point.longitude, tile_res)
-                    else:
-                        x_to, y_to = self.lat_lon_to_image_xy (point.latitude, point.longitude, tile_res)
-                        draw.line ((x_from ,y_from,x_to, y_to), lineColor, lineThickness) #coordinates, color, thickness
-                        x_from = x_to
-                        y_from = y_to
-                    idx += 1
+        for coordinate in self.activity:
+            #coordinate[0] is latitude. coordinate[1] is longitude
+            if (linePointIdx == 0):
+                x_from, y_from = self.lat_lon_to_image_xy (coordinate[0], coordinate[1], tile_res) #set first coordinate
+            else:    
+                x_to, y_to = self.lat_lon_to_image_xy (coordinate[0], coordinate[1], tile_res)
+                #draw.line ((x_from,y_from,x_to,y_to), (255,0,trk), 2)
+                draw.line ((x_from ,y_from,x_to, y_to), lineColor, lineThickness) #coordinates, color, thickness
+                x_from = x_to
+                y_from = y_to
+               
+            linePointIdx +=1
+        # (41.14569, -81.34207), (41.14564, -81.34187), (41.14556, -81.34178) 
+            
     def get_width(self):
         return(self.width)
     def get_height(self):
         return(self.height)
 
-def getVis(gpxXMLs, lineThickness, gridOn, backgroundColor, foregroundColor, gridColor, title): 
+def get_latlon_bounds(activity):
+    minLat = activity[0][0]
+    maxLat = activity[0][0]
+    minLon = activity[0][1]
+    maxLon = activity[0][1]
+    for coordinate in activity:
+        lat = coordinate[0]
+        long = coordinate[1]
+        if (lat<minLat): minLat = lat
+        if (lat>maxLat): maxLat = lat
+        if (long<minLon): minLong = lat
+        if (long>maxLon): maxLong = lat
+    return(minLat,maxLat,minLon,maxLon)
+
+def gpx_to_list(gpx):
+    activity = []
+    for gpxTrack in gpx.tracks:
+        for segment in gpxTrack.segments:
+            for point in segment.points:
+                activity.append((point.latitude,point.longitude))
+    return(activity)
+            
+
+
+def getVis(data, lineThickness, gridOn, backgroundColor, foregroundColor, gridColor, title): 
+    """ Program entry point """
     tracks = []
-    for xml in gpxXMLs:
-        #print("------visualizing---------\n\n", xml)
-        try:
-            gpx = gpxpy.parse(xml)
-            start_time, end_time = gpx.get_time_bounds()
-            min_lat, max_lat, min_lon, max_lon = gpx.get_bounds()
-            zoom = osm_get_auto_zoom_level (min_lat, max_lat, min_lon, max_lon, 6)
-            track = Track(gpx, min_lat, max_lat, min_lon, max_lon, zoom)
-            tracks.append(track)
 
-        except Exception as e:
 
-            logging.exception(e)
-            print('Error processing: ')
-            sys.exit(1)
-    
+    #####POLYLINE LIST####
+    if (type(data[0][0]) is tuple): #very rough way to check if it is a polyline list or a GPX file
+        for activity in data:
+            try:
+                min_lat, max_lat, min_lon, max_lon = get_latlon_bounds(activity)
+                zoom = osm_get_auto_zoom_level (min_lat, max_lat, min_lon, max_lon, 6)
+                track = Track(activity, min_lat, max_lat, min_lon, max_lon, zoom)
+                tracks.append(track)
+            except Exception as e:
+                logging.exception(e)
+                print("Error processing polyline")
+                sys.exit(1)
+                
+    #####GPX FILE#####
+    ##convert GPX file to list
+    else:
+        
+        for gpx_file in data:
+            try:
+                gpx = gpxpy.parse(open(gpx_file))
+                
+                #start_time, end_time = gpx.get_time_bounds()
+                min_lat, max_lat, min_lon, max_lon = gpx.get_bounds()
+                zoom = osm_get_auto_zoom_level (min_lat, max_lat, min_lon, max_lon, 6)
+                activity = gpx_to_list(gpx)
+                track = Track(activity, min_lat, max_lat, min_lon, max_lon, zoom)
+                tracks.append(track)
+
+            except Exception as e:
+
+                logging.exception(e)
+                print('Error processing: %s' % gpx_file)
+                sys.exit(1)
+
+        
     image_creator = ImageCreator(tracks, lineThickness, gridOn, backgroundColor, foregroundColor, gridColor, title)
     image_creator.draw_facets()
-    return image_creator.save_image()
+    return(image_creator.save_image())
+

@@ -114,7 +114,7 @@ class StravaApi:
             session[uniqueId]["activities"] = self.getAllActivities(uniqueId) # Must be called after session is set
 
             # Store debugging visualization result as B64 string to display it without storing
-            #session['userData']['imageBytes'] = "data:image/png;base64," + generateVis.getVis(self.getAllPolylines())
+            session['userData']['imageBytes'] = "data:image/png;base64," + generateVis.getVis(self.getAllPolylines(), 10, False, (255,255,255), (0,0,0), (0,0,0), "") #data,lineThickness, gridOn, backgroundColor, foregroundColor, title)
 
             #response.set_cookie("uid", uniqueUserId(self.configCode, authResponse['athlete']['id']), max_age=3600)
             
