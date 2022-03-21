@@ -1,10 +1,11 @@
+# ---- Dependency imports ---- #
 import binascii
 import math
 import os
 import time
 from flask import Flask, redirect, render_template, request, session, url_for, Response
 import functions
-
+# ---------------------------- #
 class StravaApi:
     def __init__(self, cfg, app):
         # Configure strava-specific connection details
