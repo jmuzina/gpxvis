@@ -209,44 +209,40 @@ def gpx_to_list(gpx):
             
 
 
-def getVis(data, lineThickness, gridOn, backgroundColor, foregroundColor, gridColor, title): 
+def getVis(data = [], lineThickness = 10, gridOn = False, backgroundColor = (255,255,255), foregroundColor = (0,0,0), gridColor = (0,0,0), title = ""): 
     """ Program entry point """
     tracks = []
-
-
     #####POLYLINE LIST####
-    if (type(data[0][0]) is tuple): #very rough way to check if it is a polyline list or a GPX file
-        for activity in data:
-            try:
-                min_lat, max_lat, min_lon, max_lon = get_latlon_bounds(activity)
-                zoom = osm_get_auto_zoom_level (min_lat, max_lat, min_lon, max_lon, 6)
-                track = Track(activity, min_lat, max_lat, min_lon, max_lon, zoom)
-                tracks.append(track)
-            except Exception as e:
-                logging.exception(e)
-                print("Error processing polyline")
-                sys.exit(1)
-                
-    #####GPX FILE#####
-    ##convert GPX file to list
-    else:
-        
-        for gpx_file in data:
-            try:
-                gpx = gpxpy.parse(open(gpx_file))
-                
-                #start_time, end_time = gpx.get_time_bounds()
-                min_lat, max_lat, min_lon, max_lon = gpx.get_bounds()
-                zoom = osm_get_auto_zoom_level (min_lat, max_lat, min_lon, max_lon, 6)
-                activity = gpx_to_list(gpx)
-                track = Track(activity, min_lat, max_lat, min_lon, max_lon, zoom)
-                tracks.append(track)
-
-            except Exception as e:
-
-                logging.exception(e)
-                print('Error processing: %s' % gpx_file)
-                sys.exit(1)
+    if len(data) > 0:
+        if 0 in data[0] and (type(data[0][0]) is tuple): #very rough way to check if it is a polyline list or a GPX file
+            for activity in data:
+                try:
+                    min_lat, max_lat, min_lon, max_lon = get_latlon_bounds(activity)
+                    zoom = osm_get_auto_zoom_level (min_lat, max_lat, min_lon, max_lon, 6)
+                    track = Track(activity, min_lat, max_lat, min_lon, max_lon, zoom)
+                    tracks.append(track)
+                except Exception as e:
+                    logging.exception(e)
+                    print("Error processing polyline")
+                    sys.exit(1)
+                    
+        #####GPX FILE#####
+        ##convert GPX file to list
+        else:
+            for gpx_file in data:
+                try:
+                    gpx = gpxpy.parse(open(gpx_file))
+                    
+                    #start_time, end_time = gpx.get_time_bounds()
+                    min_lat, max_lat, min_lon, max_lon = gpx.get_bounds()
+                    zoom = osm_get_auto_zoom_level (min_lat, max_lat, min_lon, max_lon, 6)
+                    activity = gpx_to_list(gpx)
+                    track = Track(activity, min_lat, max_lat, min_lon, max_lon, zoom)
+                    tracks.append(track)
+                except Exception as e:
+                    logging.exception(e)
+                    print('Error processing: %s' % gpx_file)
+                    sys.exit(1)
 
         
     image_creator = ImageCreator(tracks, lineThickness, gridOn, backgroundColor, foregroundColor, gridColor, title)
