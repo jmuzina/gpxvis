@@ -210,11 +210,10 @@ def gpx_to_list(gpx):
 
 
 def getVis(data = [], lineThickness = 10, gridOn = False, backgroundColor = (255,255,255), foregroundColor = (0,0,0), gridColor = (0,0,0), title = ""): 
-    """ Program entry point """
     tracks = []
     #####POLYLINE LIST####
     if len(data) > 0:
-        if 0 in data[0] and (type(data[0][0]) is tuple): #very rough way to check if it is a polyline list or a GPX file
+        if (type(data[0][0]) is tuple): #very rough way to check if it is a polyline list or a GPX file
             for activity in data:
                 try:
                     min_lat, max_lat, min_lon, max_lon = get_latlon_bounds(activity)
@@ -229,6 +228,7 @@ def getVis(data = [], lineThickness = 10, gridOn = False, backgroundColor = (255
         #####GPX FILE#####
         ##convert GPX file to list
         else:
+            print(data, len(data))
             for gpx_file in data:
                 try:
                     gpx = gpxpy.parse(open(gpx_file))
