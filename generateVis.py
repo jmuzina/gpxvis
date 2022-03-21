@@ -210,7 +210,6 @@ def gpx_to_list(gpx):
 
 
 def getVis(data = [], lineThickness = 10, gridOn = False, backgroundColor = (255,255,255), foregroundColor = (0,0,0), gridColor = (0,0,0), title = ""): 
-    """ Program entry point """
     tracks = []
     #####POLYLINE LIST####
     if len(data) > 0:
