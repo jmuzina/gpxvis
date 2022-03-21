@@ -3,8 +3,11 @@ import binascii
 import math
 import os
 import time
-from flask import Flask, redirect, render_template, request, session, url_for, Response
+from flask import Flask, redirect, render_template, request, url_for, Response
 import functions
+import generateVis
+import polyline
+import app as main
 # ---------------------------- #
 class StravaApi:
     def __init__(self, cfg, app):
@@ -27,12 +30,12 @@ class StravaApi:
                 "code": request.args.get('code')
             })
             # Store user data as session for future use
-            session["userData"] = authResponse["athlete"]
-            session["accessKey"] = authResponse["access_token"]
-            session["activities"] = self.getAllActivities() # Must be called after session is set
+            main.session["userData"] = authResponse["athlete"]
+            main.session["accessKey"] = authResponse["access_token"]
+            main.session["activities"] = self.getAllActivities() # Must be called after session is set
 
             # Store debugging visualization result as B64 string to display it without storing
-            #session['imageBytes'] = "data:image/png;base64," + gpxTesting.getVis(self.getAllPolylines())
+            #main.session['imageBytes'] = "data:image/png;base64," + generateVis.getVis(self.getAllPolylines())
             
             # Render parameters page
             return redirect(url_for('render_parameters'))
@@ -50,7 +53,7 @@ class StravaApi:
 
         # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
         # Get activities in batches of 100 until all have been found
-        activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=200&page=" + str(pageNum), authCode = session['accessKey']).json()
+        activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=200&page=" + str(pageNum), authCode = main.session['accessKey']).json()
         while activitiesResponse != None:
             # Process batch if it is not empty
             if len(activitiesResponse) != 0:
@@ -66,7 +69,7 @@ class StravaApi:
 
                 # Advance to next page
                 pageNum += 1
-                activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=100&page=" + str(pageNum), authCode = session['accessKey']).json()
+                activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=100&page=" + str(pageNum), authCode = main.session['accessKey']).json()
 
             # No activities in the batch; exit the loop and return result
             else:
@@ -88,7 +91,7 @@ class StravaApi:
 
         # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
         # Get activities in batches of 100 until all have been found
-        activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=200&page=" + str(pageNum), authCode = session['accessKey']).json()
+        activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=200&page=" + str(pageNum), authCode = main.session['accessKey']).json()
         while activitiesResponse != None:
             # Process batch if it is not empty
             if len(activitiesResponse) != 0:
@@ -100,7 +103,7 @@ class StravaApi:
 
                 # Advance to next page
                 pageNum += 1
-                activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=100&page=" + str(pageNum), authCode = session['accessKey']).json()
+                activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=100&page=" + str(pageNum), authCode = main.session['accessKey']).json()
 
             # No activities in the batch; exit the loop and return result
             else:
