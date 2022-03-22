@@ -43,6 +43,7 @@ config.read_file(open(r'./app.cfg'))
 
 import networks.strava  # Must be imported after config has been read
 userImages = {}
+userActivities = {}
 
 apis = {
     'strava': networks.strava.StravaApi(config, flaskApp)
@@ -76,7 +77,9 @@ def logout():
 
     # Wipe user image
     if "userData" in session and "id" in session["userData"] and "networkName" in session:
-        userImages[functions.uniqueUserId(session["networkName"], session["userData"]["id"])] = None
+        uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
+        userImages[uniqueId] = None
+        userActivities[uniqueId] = None
 
     return redirect(url_for('render_index'))
 
@@ -85,7 +88,12 @@ def render_parameters():
     sessionDataValidationResult = functions.validUserData(session)
 
     if sessionDataValidationResult == True:
-        return render_template("parameters.html", userData = session['userData'])
+        uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
+        if uniqueId in userActivities:
+            print(userActivities[uniqueId])
+            return render_template("parameters.html", userData = session['userData'], activities = userActivities[uniqueId])
+        else:
+            return functions.throwError("No activities found in your account.")
     elif sessionDataValidationResult == False: # No userdata, render guest homepage
         return redirect(url_for("render_index"))
     else: # error thrown

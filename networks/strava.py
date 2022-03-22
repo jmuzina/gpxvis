@@ -8,6 +8,7 @@ import functions
 import generateVis
 import polyline
 import app as main
+from datetime import datetime
 # ---------------------------- #
 class StravaApi:
     def __init__(self, cfg, app):
@@ -35,8 +36,11 @@ class StravaApi:
             #main.session["activities"] = self.getAllActivities() # Must be called after session is set
             main.session["networkName"] = self.configCode
 
+            uniqueId = functions.uniqueUserId(self.configCode, authResponse["athlete"]["id"])
+
             # Store debugging visualization result as B64 string to display it without storing
-            main.userImages[functions.uniqueUserId(self.configCode, authResponse["athlete"]["id"])] = functions.getImageBase64String(generateVis.getVis(data=self.getAllPolylines()))
+            main.userImages[uniqueId] = functions.getImageBase64String(generateVis.getVis(data=self.getAllPolylines()))
+            main.userActivities[uniqueId] = self.getAllActivities()
             
             # Render parameters page
             return redirect(url_for('render_parameters'))
@@ -94,11 +98,16 @@ class StravaApi:
         while activitiesResponse != None:
             # Process batch if it is not empty
             if len(activitiesResponse) != 0:
-                activitiesFound += len(activitiesResponse)
                 print(str(pageNum) + "\tID\t\tName")
 
                 for activityIndex in range(len(activitiesResponse)):
-                    result[activitiesResponse[activityIndex]['id']] = activitiesResponse[activityIndex]
+                    if activitiesResponse[activityIndex]["map"]["summary_polyline"] != None: 
+                        activitiesFound += 1
+                        result[activitiesResponse[activityIndex]['id']] = activitiesResponse[activityIndex]
+                        dto = datetime.strptime(activitiesResponse[activityIndex]["start_date_local"],'%Y-%m-%dT%H:%M:%SZ')
+                        result[activitiesResponse[activityIndex]['id']]["displayTime"] = dto.strftime('%m/%d/%Y %I:%M %p')
+                        result[activitiesResponse[activityIndex]['id']]["distance"] = round(functions.metersToMiles(result[activitiesResponse[activityIndex]['id']]["distance"]), 2)
+                        #%-I:%-M %p
 
                 # Advance to next page
                 pageNum += 1

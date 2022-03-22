@@ -17,6 +17,9 @@ def getImageBase64String(imageData):
 def uniqueUserId(networkName, idNum):
     return networkName + "-" + str(idNum)
 
+def metersToMiles(meters):
+    return meters / 1609.344
+
 # Return the results of an HTTP GET request to a specified URL
 # authCode (str): an API access key for inclusion in the request header
 # params (list): a list of items to be included in the request `data` section required by some API endpoints
