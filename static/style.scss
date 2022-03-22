@@ -1,11 +1,4 @@
 // Make body take full vertical space and hide overflow
-/*
-body {
-    height: 100vh;
-    overflow: hidden;
-}
-*/
-
 body {
   font-family: "Open Sans", sans-serif;
   height: 100vh;
@@ -15,22 +8,78 @@ body {
   justify-content: center;
 }
 
-/*
-// Login button styles for each supported login network
-$app_themes: (
-    /*
-    "strava" : (
-        "background-color": #fc4c02,
-        "color": white
-    )
-    
-);
-*/
-
-.button-custom:active {
-  background: grey !important;
+// this is used for the centered inner box in the main page, and parameters page
+.main-container {
+  background-color: white;
+  height: 60%;
+  min-height: 432px;
+  width: 60%;
+  min-width: 768px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-flow: column nowrap;
 }
 
+//// This section is used for code only for main page ////
+////                                                  ////
+////                                                  ////
+////                                                  ////
+////                                                  ////
+
+//This is only used for the title of the project on the main page
+.main-title {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+// I believe these visualized classes are used in main page
+.visualizedContainer {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+
+.visualizedResult {
+  max-height: 70vh;
+  width: auto;
+  align-self: center;
+}
+
+////        This is the section for buttons          ////
+////                                                 ////
+////                                                 ////
+////                                                 ////
+
+/* not sure what these were used for
+#login-buttons {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+
+#login-buttons .row {
+  display: flex;
+  align-self: center;
+}
+*/
+
+/* used for underarmour button that has been removed
+.network-unavailable {
+  opacity: 0.4 !important;
+}
+
+.network-unavailable:hover {
+  cursor: not-allowed !important;
+}
+*/
+
+// these are the base properties of buttons for login in main page
+// and for left buttons in parameters page
 .button-custom {
   background: white !important;
   border-radius: 999px !important;
@@ -53,21 +102,20 @@ $app_themes: (
   margin: 2.5px;
 }
 
+// this changes the color of these buttons when clicked
+.button-custom:active {
+  background: grey !important;
+}
+
+// this changes the color of these buttons when the mouse is over them
 .button-custom:hover {
   background: lightgray !important;
   color: #333333 !important;
 }
 
-.hello-button:disabled {
-  cursor: pointer;
-  background: #47cd95;
-}
-
-.nav-pills .nav-link.active {
-  color: #333333;
-  background-color: lightgrey !important;
-}
-
+// fake button and hello button are used to create the object on
+//  the parameters page that displays the user's name
+// given the same properties as button-custom - superfluous?
 .fake-button {
   border-radius: 999px;
   box-sizing: border-box;
@@ -88,14 +136,26 @@ $app_themes: (
   margin: 2.5px;
 }
 
-.parameter-button {
-  color: #333333;
-  box-shadow: none;
-}
-
+// this is used in parameters page to change appearance of display with user's name
 .hello-button {
   background: #47cd95 !important;
   color: white !important;
+}
+
+// this makes the button displaying the user's name unclickable
+.hello-button:disabled {
+  cursor: pointer;
+  background: #47cd95;
+}
+
+.nav-pills .nav-link.active {
+  color: #333333;
+  background-color: lightgrey !important;
+}
+
+.parameter-button {
+  color: #333333;
+  box-shadow: none;
 }
 
 .generate-button {
@@ -116,26 +176,82 @@ $app_themes: (
   background: #1d1d1d !important;
 }
 
-.main-container {
-  background-color: white;
-  height: 60%;
-  min-height: 432px;
-  width: 60%;
-  min-width: 768px;
-  border-radius: 10px;
-  box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.25);
+//// This section is for divs in the PARAMETERS page ////
+////                                                 ////
+////                                                 ////
+////                                                 ////
+
+//container ID
+//used in parameters page with container class
+//setting nowrap ensures that the right div isn't placed under the nav pills
+/*
+.sideBySide {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  flex-flow: column nowrap;
+  flex-wrap: nowrap;
+}
+*/
+
+//Setting flex to one makes the two boxes take up all of the space within the container.
+//Even though parameter-column inherits display: flex from the container it's in, we set
+// it again so that the content within parameter-column can use flexbox properties.
+.parameter-column {
+  display: flex;
+  flex: 1;
+  border: 2px solid yellow;
+  align-content: center;
 }
 
-.main-title {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
+//this sets the parameters buttons to only 1/3 of the space and places a slight gap between the div with buttons
+//and the div with options
+.parameter-column:first-child {
+  max-width: 36%;
+  margin-right: 20px;
 }
+
+#customize {
+  max-width: 60;
+}
+
+.sidebyside {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+/* these are experimental and may be deleted if still unused
+
+.tab-pane {
+  flex:1;
+  justify-content: center;
+  align-items: center;
+}
+
+#customize {
+  width:60%;
+  justify-content:right;
+
+}
+
+#categories {
+  width: 30%;
+  justify-content: left;
+  //
+}
+
+#v-pills-tab {
+  //padding-left: 10%;
+}
+
+
+#v-pills-tabContent {
+  padding-left: 30%;
+  justify-content:center;
+}
+
+
+*/
+
+// this code was used to give the strava button it's appearance but
+// is superfluous until we get the dev account for underarmour
 
 /*
 // Apply configured styles for each login button
@@ -148,33 +264,14 @@ $app_themes: (
 } 
 */
 
-#login-buttons {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-}
-
-#login-buttons .row {
-  display: flex;
-  align-self: center;
-}
-
-.visualizedContainer {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-}
-
-.visualizedResult {
-  max-height: 70vh;
-  width: auto;
-  align-self: center;
-}
-
-.network-unavailable {
-  opacity: 0.4 !important;
-}
-
-.network-unavailable:hover {
-  cursor: not-allowed !important;
-}
+/*
+// Login button styles for each supported login network
+$app_themes: (
+    /*
+    "strava" : (
+        "background-color": #fc4c02,
+        "color": white
+    )
+    
+);
+*/

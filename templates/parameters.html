@@ -11,156 +11,252 @@
     ASSET_URL }}"> {% endassets %}
     <meta charset="UTF-8" />
     <title>My Page</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap"
+      rel="stylesheet"
+    />
   </head>
+
   <body>
+    <!-- center white box-->
     <div class="main-container">
-        <div class="main-content-container"></div>
-    <div
-      class="nav flex-column nav-pills"
-      id="v-pills-tab"
-      role="tablist"
-      aria-orientation="vertical"
-    >
-    <div class="fake-button hello-button">Hello, {{userData['firstname']}} </div>
-      <a
-        class="nav-link button-custom parameter-button active show"
-        id="v-pills-activities-tab"
-        data-toggle="pill"
-        href="#v-pills-activities"
-        role="tab"
-        aria-controls="v-pills-activities"
-        aria-selected="false"
-        >Activities</a
-      >
-      <a
-        class="nav-link button-custom parameter-button"
-        id="v-pills-profile-tab"
-        data-toggle="pill"
-        href="#v-pills-metric"
-        role="tab"
-        aria-controls="v-pills-metric"
-        aria-selected="false"
-        >Metric</a
-      >
-      <a
-        class="nav-link button-custom parameter-button"
-        id="v-pills-visualtype-tab"
-        data-toggle="pill"
-        href="#v-pills-visualtype"
-        role="tab"
-        aria-controls="v-pills-visualtype"
-        aria-selected="false"
-        >Visualtype</a
-      >
-      <a
-        class="nav-link button-custom parameter-button"
-        id="v-pills-color-tab"
-        data-toggle="pill"
-        href="#v-pills-color"
-        role="tab"
-        aria-controls="v-pills-color"
-        aria-selected="false"
-        >Color</a
-      >
-      <a
-        class="nav-link button-custom parameter-button"
-        id="v-pills-size-tab"
-        data-toggle="pill"
-        href="#v-pills-size"
-        role="tab"
-        aria-controls="v-pills-size"
-        aria-selected="false"
-        >Size</a
-      >
-      <a
-        class="nav-link button-custom parameter-button"
-        id="v-pills-title-tab"
-        data-toggle="pill"
-        href="#v-pills-title"
-        role="tab"
-        aria-controls="v-pills-title"
-        aria-selected="false"
-        >Title</a
-      >
-      <a
-    class="nav-link button-custom parameter-button generate-button" href="/generatePage"
-    >Generate</a
-  >
-    </div>
-    <form>
-      <div class="tab-content" id="v-pills-tabContent">
-        <div
-          class="tab-pane fade show active"
-          id="v-pills-activities"
-          role="tabpanel"
-          aria-labelledby="v-pills-activities-tab"
-        >
-          <table>
-            <thead>
-              <trow>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Distance</th>
-              </trow>
-            </thead>
-            <tbody>
-              {% for activityID in activities %}                
-                <tr>
-                  <td>{{activities[activityID]["name"][:25]}}</td>
-                  <td>{{activities[activityID]["displayTime"]}}</td>
-                  <td>{{activities[activityID]["type"]}}</td>
-                  <td>{{activities[activityID]["distance"]}} mi</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+      <!-- div within white box that columns sit in id="testcont123"-->
+      <div class="container sidebyside">
+        <!-- left column with parameter buttons-->
+        <div class="parameter-column" id="categories">
+          <div
+            class="nav flex-column nav-pills"
+            id="v-pills-tab"
+            role="tablist"
+            aria-orientation="vertical"
+          >
+            <!-- green pill that says users name-->
+            <div class="fake-button hello-button">
+              Hello, {{userData['firstname']}}
+            </div>
+
+            <!-- Activities tab-->
+            <a
+              class="nav-link button-custom parameter-button"
+              id="v-pills-activities-tab"
+              data-toggle="pill"
+              href="#v-pills-activities"
+              role="tab"
+              aria-controls="v-pills-activities"
+              aria-selected="false"
+              >Activities</a
+            >
+
+            <!-- Metrics tab-->
+            <a
+              class="nav-link button-custom parameter-button"
+              id="v-pills-profile-tab"
+              data-toggle="pill"
+              href="#v-pills-metric"
+              role="tab"
+              aria-controls="v-pills-metric"
+              aria-selected="false"
+              >Metric</a
+            >
+
+            <!-- Visualtype tab-->
+            <a
+              class="nav-link button-custom parameter-button"
+              id="v-pills-visualtype-tab"
+              data-toggle="pill"
+              href="#v-pills-visualtype"
+              role="tab"
+              aria-controls="v-pills-visualtype"
+              aria-selected="false"
+              >Visualtype</a
+            >
+
+            <!-- Color tab-->
+            <a
+              class="nav-link button-custom parameter-button"
+              id="v-pills-color-tab"
+              data-toggle="pill"
+              href="#v-pills-color"
+              role="tab"
+              aria-controls="v-pills-color"
+              aria-selected="false"
+              >Color</a
+            >
+
+            <!-- Size tab-->
+            <a
+              class="nav-link button-custom parameter-button"
+              id="v-pills-size-tab"
+              data-toggle="pill"
+              href="#v-pills-size"
+              role="tab"
+              aria-controls="v-pills-size"
+              aria-selected="false"
+              >Size</a
+            >
+
+            <!-- Extra tab-->
+            <a
+              class="nav-link button-custom parameter-button"
+              id="v-pills-title-tab"
+              data-toggle="pill"
+              href="#v-pills-title"
+              role="tab"
+              aria-controls="v-pills-title"
+              aria-selected="false"
+              >Title</a
+            >
+
+            <!-- Generate button-->
+            <a
+              class="nav-link button-custom parameter-button generate-button"
+              href="/generatePage"
+              >Generate</a
+            >
+          </div>
         </div>
-        <div
-          class="tab-pane fade"
-          id="v-pills-metric"
-          role="tabpanel"
-          aria-labelledby="v-pills-metric-tab"
-        >
-          metric
-        </div>
-        <div
-          class="tab-pane fade"
-          id="v-pills-visualtype"
-          role="tabpanel"
-          aria-labelledby="v-pills-visualtype-tab"
-        >
-          visualtype
-        </div>
-        <div
-          class="tab-pane fade"
-          id="v-pills-color"
-          role="tabpanel"
-          aria-labelledby="v-pills-color-tab"
-        >
-          color
-        </div>
-        <div
-          class="tab-pane fade"
-          id="v-pills-size"
-          role="tabpanel"
-          aria-labelledby="v-pills-size-tab"
-        >
-          size
-        </div>
-        <div
-          class="tab-pane fade"
-          id="v-pills-title"
-          role="tabpanel"
-          aria-labelledby="v-pills-title-tab"
-        >
-          title
+
+        <!-- the following section is all the contents of each category-->
+        <div class="parameter-column" id="customize">
+          <!-- <div class="tab-content flex-column" id="v-pills-tabContent"> -->
+          <!-- activities options-->
+          <div
+            class="tab-pane fade show active"
+            id="v-pills-activities"
+            role="tabpanel"
+            aria-labelledby="v-pills-activities-tab"
+          >
+            <div class="container">
+              activities
+              <form>
+                <div class="tab-content" id="v-pills-tabContent">
+                  <div
+                    class="tab-pane fade show active"
+                    id="v-pills-activities"
+                    role="tabpanel"
+                    aria-labelledby="v-pills-activities-tab"
+                  >
+                    <table>
+                      <thead>
+                        <trow>
+                          <th>Name</th>
+                          <th>Date</th>
+                          <th>Type</th>
+                          <th>Distance</th>
+                        </trow>
+                      </thead>
+                      <tbody>
+                        {% for activityID in activities %}
+                        <tr>
+                          <td>{{activities[activityID]["name"][:25]}}</td>
+                          <td>{{activities[activityID]["displayTime"]}}</td>
+                          <td>{{activities[activityID]["type"]}}</td>
+                          <td>{{activities[activityID]["distance"]}} mi</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="v-pills-metric"
+                    role="tabpanel"
+                    aria-labelledby="v-pills-metric-tab"
+                  >
+                    metric
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="v-pills-visualtype"
+                    role="tabpanel"
+                    aria-labelledby="v-pills-visualtype-tab"
+                  >
+                    visualtype
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="v-pills-color"
+                    role="tabpanel"
+                    aria-labelledby="v-pills-color-tab"
+                  >
+                    color
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="v-pills-size"
+                    role="tabpanel"
+                    aria-labelledby="v-pills-size-tab"
+                  >
+                    size
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="v-pills-title"
+                    role="tabpanel"
+                    aria-labelledby="v-pills-title-tab"
+                  >
+                    title
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- metric selection-->
+          <div
+            class="tab-pane fade"
+            id="v-pills-metric"
+            role="tabpanel"
+            aria-labelledby="v-pills-metric-tab"
+          >
+            metric
+          </div>
+
+          <!-- visual selection-->
+          <div
+            class="tab-pane fade"
+            id="v-pills-visualtype"
+            role="tabpanel"
+            aria-labelledby="v-pills-visualtype-tab"
+          >
+            visualtype
+          </div>
+
+          <!-- color selection-->
+          <div
+            class="tab-pane fade"
+            id="v-pills-color"
+            role="tabpanel"
+            aria-labelledby="v-pills-color-tab"
+          >
+            color
+          </div>
+
+          <!-- size selection-->
+          <div
+            class="tab-pane fade"
+            id="v-pills-size"
+            role="tabpanel"
+            aria-labelledby="v-pills-size-tab"
+          >
+            size
+          </div>
+
+          <!-- extra selection-->
+          <div
+            class="tab-pane fade"
+            id="v-pills-title"
+            role="tabpanel"
+            aria-labelledby="v-pills-title-tab"
+          >
+            title
+          </div>
+          <!-- </div> -->
         </div>
       </div>
-    </form>
+    </div>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

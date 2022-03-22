@@ -17,12 +17,9 @@
                     {% for networkName, networkData in networks.items() %}
                     <div class="row" id="{{networkName}}-login">
                         {% if networkData != False %}
-
-                            <!-- <a class="btn" href="https://{{networkData.strip('\"')}}">Login with {{networkName.title()}}</a> -->
                             <a button type="button" class="button-custom" id="Strava" href="https://{{networkData.strip('\"')}}">Login with {{networkName.title()}}</a>
                         {% else %}
                             <a button type="button" class="button-custom" id="Underarmour" disabled>{{networkName.title()}} unavailable</a>
-                            <!-- <a class="btn network-unavailable" disabled>{{networkName.title()}} unavailable</a> -->
                         {% endif %}
                     </div>
                     {% endfor %}
