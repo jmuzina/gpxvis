@@ -89,7 +89,7 @@ def render_parameters():
 
     if sessionDataValidationResult == True:
         uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
-        if uniqueId in userActivities:
+        if uniqueId in userActivities and len(userActivities[uniqueId]) > 0:
             print(userActivities[uniqueId])
             return render_template("parameters.html", userData = session['userData'], activities = userActivities[uniqueId])
         else:

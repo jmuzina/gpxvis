@@ -40,8 +40,10 @@ class StravaApi:
 
             # Store user activities
             main.userActivities[uniqueId] = self.getAllActivities()
-             # Store debugging visualization result as B64 string 
-            main.userImages[uniqueId] = functions.getImageBase64String(generateVis.getVis(data=self.getAllPolylines(activities = main.userActivities[uniqueId])))
+
+            if len(main.userActivities[uniqueId]) > 0:
+                # Store debugging visualization result as B64 string 
+                main.userImages[uniqueId] = functions.getImageBase64String(generateVis.getVis(data=self.getAllPolylines(activities = main.userActivities[uniqueId])))
             
             # Render parameters page
             return redirect(url_for('render_parameters'))
