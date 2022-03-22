@@ -186,18 +186,24 @@ class Track:
         return(self.height)
 
 def get_latlon_bounds(activity):
-    minLat = activity[0][0]
-    maxLat = activity[0][0]
-    minLon = activity[0][1]
-    maxLon = activity[0][1]
+    min_lat = None
+    max_lat = None
+    min_lon = None
+    max_lon = None
+
     for coordinate in activity:
-        lat = coordinate[0]
-        long = coordinate[1]
-        if (lat<minLat): minLat = lat
-        if (lat>maxLat): maxLat = lat
-        if (long<minLon): minLong = lat
-        if (long>maxLon): maxLong = lat
-    return(minLat,maxLat,minLon,maxLon)
+        if min_lat is None or coordinate[0] < min_lat:
+            min_lat = coordinate[0]
+        if max_lat is None or coordinate[0] > max_lat:
+            max_lat = coordinate[0]
+        if min_lon is None or coordinate[1] < min_lon:
+            min_lon = coordinate[1]
+        if max_lon is None or coordinate[1] > max_lon:
+            max_lon = coordinate[1]
+
+    if min_lat and max_lat and min_lon and max_lon:
+        return (min_lat, max_lat, min_lon, max_lon)
+    return None
 
 def gpx_to_list(gpx):
     activity = []

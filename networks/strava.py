@@ -32,7 +32,7 @@ class StravaApi:
             # Store user data as session for future use
             main.session["userData"] = authResponse["athlete"]
             main.session["accessKey"] = authResponse["access_token"]
-            main.session["activities"] = self.getAllActivities() # Must be called after session is set
+            #main.session["activities"] = self.getAllActivities() # Must be called after session is set
             main.session["networkName"] = self.configCode
 
             # Store debugging visualization result as B64 string to display it without storing
@@ -75,8 +75,6 @@ class StravaApi:
             # No activities in the batch; exit the loop and return result
             else:
                 activitiesResponse = None
-
-        print(decodedPolylines)
 
         print("Activity API calls needed:\t" + str(pageNum - 1) + "\nActivities found:\t" + str(activitiesFound))
         return decodedPolylines
