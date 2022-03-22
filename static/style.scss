@@ -195,7 +195,7 @@ body {
 //Even though parameter-column inherits display: flex from the container it's in, we set
 // it again so that the content within parameter-column can use flexbox properties.
 .parameter-column {
-  display: flex;
+  //display: ;
   flex: 1;
   border: 2px solid yellow;
   align-content: center;

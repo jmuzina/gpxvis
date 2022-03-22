@@ -49,19 +49,7 @@
               >Activities</a
             >
 
-            <!-- Metrics tab-->
-            <a
-              class="nav-link button-custom parameter-button"
-              id="v-pills-profile-tab"
-              data-toggle="pill"
-              href="#v-pills-metric"
-              role="tab"
-              aria-controls="v-pills-metric"
-              aria-selected="false"
-              >Metric</a
-            >
-
-            <!-- Visualtype tab-->
+            <!-- Visual Type tab-->
             <a
               class="nav-link button-custom parameter-button"
               id="v-pills-visualtype-tab"
@@ -70,31 +58,43 @@
               role="tab"
               aria-controls="v-pills-visualtype"
               aria-selected="false"
-              >Visualtype</a
+              >Visual Type</a
             >
 
-            <!-- Color tab-->
+            <!-- Background tab-->
             <a
               class="nav-link button-custom parameter-button"
-              id="v-pills-color-tab"
+              id="v-pills-background-tab"
               data-toggle="pill"
-              href="#v-pills-color"
+              href="#v-pills-background"
               role="tab"
-              aria-controls="v-pills-color"
+              aria-controls="v-pills-background"
               aria-selected="false"
-              >Color</a
+              >Background</a
             >
 
-            <!-- Size tab-->
+            <!-- Draw Style tab-->
             <a
               class="nav-link button-custom parameter-button"
-              id="v-pills-size-tab"
+              id="v-pills-drawstyle-tab"
               data-toggle="pill"
-              href="#v-pills-size"
+              href="#v-pills-drawstyle"
               role="tab"
-              aria-controls="v-pills-size"
+              aria-controls="v-pills-drawstyle"
               aria-selected="false"
-              >Size</a
+              >Draw Style</a
+            >
+
+            <!-- Text tab-->
+            <a
+              class="nav-link button-custom parameter-button"
+              id="v-pills-text-tab"
+              data-toggle="pill"
+              href="#v-pills-text"
+              role="tab"
+              aria-controls="v-pills-text"
+              aria-selected="false"
+              >Text</a
             >
 
             <!-- Extra tab-->
@@ -120,16 +120,15 @@
 
         <!-- the following section is all the contents of each category-->
         <div class="parameter-column" id="customize">
-          <!-- <div class="tab-content flex-column" id="v-pills-tabContent"> -->
+          <!--  <div class="tab-content flex-column" id="v-pills-tabContent"> -->
           <!-- activities options-->
-          <div
+          <!--  <div
             class="tab-pane fade show active"
             id="v-pills-activities"
             role="tabpanel"
             aria-labelledby="v-pills-activities-tab"
-          >
+          > -->
             <div class="container">
-              activities
               <form>
                 <div class="tab-content" id="v-pills-tabContent">
                   <div
@@ -138,6 +137,7 @@
                     role="tabpanel"
                     aria-labelledby="v-pills-activities-tab"
                   >
+                    <h1>Select Activities</h1>
                     <table>
                       <thead>
                         <trow>
@@ -161,35 +161,35 @@
                   </div>
                   <div
                     class="tab-pane fade"
-                    id="v-pills-metric"
-                    role="tabpanel"
-                    aria-labelledby="v-pills-metric-tab"
-                  >
-                    metric
-                  </div>
-                  <div
-                    class="tab-pane fade"
                     id="v-pills-visualtype"
                     role="tabpanel"
                     aria-labelledby="v-pills-visualtype-tab"
                   >
-                    visualtype
+                    <h1>Select Visual Type</h1>
                   </div>
                   <div
                     class="tab-pane fade"
-                    id="v-pills-color"
+                    id="v-pills-background"
                     role="tabpanel"
-                    aria-labelledby="v-pills-color-tab"
+                    aria-labelledby="v-pills-background-tab"
                   >
-                    color
+                    <h1>Select Background</h1>
                   </div>
                   <div
                     class="tab-pane fade"
-                    id="v-pills-size"
+                    id="v-pills-drawstyle"
                     role="tabpanel"
-                    aria-labelledby="v-pills-size-tab"
+                    aria-labelledby="v-pills-drawstyle-tab"
                   >
-                    size
+                    <h1>Select Draw Style</h1>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="v-pills-text"
+                    role="tabpanel"
+                    aria-labelledby="v-pills-text-tab"
+                  >
+                    <h1>Select Text Options</h1>
                   </div>
                   <div
                     class="tab-pane fade"
