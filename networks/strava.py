@@ -38,49 +38,23 @@ class StravaApi:
 
             uniqueId = functions.uniqueUserId(self.configCode, authResponse["athlete"]["id"])
 
-            # Store debugging visualization result as B64 string to display it without storing
-            main.userImages[uniqueId] = functions.getImageBase64String(generateVis.getVis(data=self.getAllPolylines()))
+            # Store user activities
             main.userActivities[uniqueId] = self.getAllActivities()
+             # Store debugging visualization result as B64 string 
+            main.userImages[uniqueId] = functions.getImageBase64String(generateVis.getVis(data=self.getAllPolylines(activities = main.userActivities[uniqueId])))
             
             # Render parameters page
             return redirect(url_for('render_parameters'))
     
-    def getAllPolylines(self):
-        result = []
-        # Endpoint: https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
-        # Strava requires that a "before" timestamp is included to filter activities. All activities logged before calltime will be printed.
-        beforeTime = str(math.floor(time.time()))
-
-        pageNum = 1 # Current "page" of results
-        activitiesFound = 0 # Used to print number of activities found, could have more uses later?
-
+    def getAllPolylines(self, activities):
         decodedPolylines = []
+        if activities == None:
+            activities = self.getAllActivities()
 
-        # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
-        # Get activities in batches of 100 until all have been found
-        activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=200&page=" + str(pageNum), authCode = main.session['accessKey']).json()
-        while activitiesResponse != None:
-            # Process batch if it is not empty
-            if len(activitiesResponse) != 0:
-                activitiesFound += len(activitiesResponse)
-                print(str(pageNum) + "\tID\t\tName")
+        for activityID in activities:
+            if activities[activityID]["polyline"] != None and activities[activityID]["polyline"] != "":
+                decodedPolylines.append(polyline.decode(activities[activityID]["polyline"]))
 
-                for activityIndex in range(len(activitiesResponse)):
-                    summary_polyline = activitiesResponse[activityIndex]["map"]["summary_polyline"]
-                    if summary_polyline != None:
-                        #print("summary for ", activitiesResponse[activityIndex]['name'])
-                        #print(summary_polyline)
-                        decodedPolylines.append(polyline.decode(summary_polyline))
-
-                # Advance to next page
-                pageNum += 1
-                activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=100&page=" + str(pageNum), authCode = main.session['accessKey']).json()
-
-            # No activities in the batch; exit the loop and return result
-            else:
-                activitiesResponse = None
-
-        print("Activity API calls needed:\t" + str(pageNum - 1) + "\nActivities found:\t" + str(activitiesFound))
         return decodedPolylines
 
     def getAllActivities(self):
@@ -103,10 +77,16 @@ class StravaApi:
                 for activityIndex in range(len(activitiesResponse)):
                     if activitiesResponse[activityIndex]["map"]["summary_polyline"] != None: 
                         activitiesFound += 1
-                        result[activitiesResponse[activityIndex]['id']] = activitiesResponse[activityIndex]
+                        #result[activitiesResponse[activityIndex]['id']] = activitiesResponse[activityIndex]
                         dto = datetime.strptime(activitiesResponse[activityIndex]["start_date_local"],'%Y-%m-%dT%H:%M:%SZ')
-                        result[activitiesResponse[activityIndex]['id']]["displayTime"] = dto.strftime('%m/%d/%Y %I:%M %p')
-                        result[activitiesResponse[activityIndex]['id']]["distance"] = round(functions.metersToMiles(result[activitiesResponse[activityIndex]['id']]["distance"]), 2)
+                        result[activitiesResponse[activityIndex]["id"]] = {
+                            "name":  activitiesResponse[activityIndex]["name"],
+                            "polyline": activitiesResponse[activityIndex]["map"]["summary_polyline"],
+                            "displayTime": dto.strftime('%m/%d/%Y %I:%M %p'),
+                            "type": activitiesResponse[activityIndex]["type"],
+                            "distance": round(functions.metersToMiles(activitiesResponse[activityIndex]["distance"]), 2)
+                        }
+                        print("\t" + str(activitiesResponse[activityIndex]["id"]) + "\t" +  result[activitiesResponse[activityIndex]["id"]]["name"])
                         #%-I:%-M %p
 
                 # Advance to next page
