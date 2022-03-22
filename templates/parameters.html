@@ -138,6 +138,32 @@
                     aria-labelledby="v-pills-activities-tab"
                   >
                     <h1>Select Activities</h1>
+
+                    <form> 
+                    <fieldset>
+                      <label for="start">Start date:</label>
+                      <input type="date" id="start-date" name="trip-start" value="2018-07-22" min="2018-01-01" max="2022-12-31">
+                      <label for="end">End date:</label>
+                      <input type="date" id="end-date" name="trip-start" value="2022-04-22" min="2018-01-01" max="2022-12-31">
+
+                      <label for="activity">Activity Type:</label>
+
+                        <select name="activity" id="activity-type">
+                          <option value="all">All</option>
+                          <option value="ride">Ride</option>
+                          <option value="run">Run</option>
+                          <option value="swim">Swim</option>
+                          <option value="walk">Walk</option>
+                          <option value="hike">Hike</option>
+                          <option value="ski">Ski</option>
+                        </select>
+
+                        <br><label for="fname">Keyword:</label>
+                        <input type="text" id="keyword" name="keyword" value=""><br>
+                        <input type="submit" value="Submit">
+                      </fieldset>
+                    </form>
+
                     <table>
                       <thead>
                         <trow>
@@ -174,6 +200,11 @@
                     aria-labelledby="v-pills-background-tab"
                   >
                     <h1>Select Background</h1>
+                    <div>
+                      <input type="color" id="BackgroundColor" name="BackgroundColor"
+                             value="#e66465">
+                      <label for="BackgroundColor">BackgroundColor</label>
+                    </div>
                   </div>
                   <div
                     class="tab-pane fade"
@@ -182,6 +213,16 @@
                     aria-labelledby="v-pills-drawstyle-tab"
                   >
                     <h1>Select Draw Style</h1>
+                    <div>
+                      <input type="color" id="GridColor" name="GridColor"
+                              value="#f6b73c">
+                      <label for="GridColor">GridColor</label>
+                    </div>
+                    <div>
+                      <input type="color" id="LineColor" name="LineColor"
+                            value="#e66465">
+                      <label for="LineColor">LineColor</label>
+                    </div>
                   </div>
                   <div
                     class="tab-pane fade"

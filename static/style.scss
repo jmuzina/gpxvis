@@ -217,6 +217,14 @@ body {
   flex-wrap: nowrap;
 }
 
+.tab-pane.fade {
+  display: none;
+}
+
+.tab-pane.fade.show {
+  display: block !important;
+}
+
 /* these are experimental and may be deleted if still unused
 
 .tab-pane {
