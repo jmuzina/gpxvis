@@ -258,7 +258,9 @@
                                 nameCell.innerHTML = activity["name"];
                                 dateCell.innerHTML = activity["displayTime"];
                                 typeCell.innerHTML = activity["type"];
+                                typeCell.style = "text-align:right;"
                                 distanceCell.innerHTML = activity["distance"] + " mi";
+                                distanceCell.style = "text-align:right;"
 
                                 selectedIDs[i] = filterMatches[i][0];
                               }
@@ -288,12 +290,18 @@
                           document.getElementById("getActivitiesButton").addEventListener ("click", searchActivities, false);
                         </script>
                          <table id = "activitiesTable" hidden>
+                          <colgroup>
+                              <col span="1" style="width: 40%;">
+                              <col span="1" style="width: 20%;">
+                              <col span="1" style="width: 20%;">
+                              <col span="1" style="width: 20%;">
+                            </colgroup>
                           <thead>
                             <trow>
                               <th>Name</th>
                               <th>Date</th>
-                              <th>Type</th>
-                              <th>Distance</th>
+                              <th style="text-align:right;">Type</th>
+                              <th style="text-align:right;">Distance</th>
                             </trow>
                           </thead>
                           <tbody id = "matchedActivities">

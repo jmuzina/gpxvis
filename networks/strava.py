@@ -83,7 +83,7 @@ class StravaApi:
                         result[activitiesResponse[activityIndex]["id"]] = {
                             "name":  activitiesResponse[activityIndex]["name"],
                             "polyline": activitiesResponse[activityIndex]["map"]["summary_polyline"],
-                            "displayTime": dto.strftime('%m/%d/%Y %I:%M %p'),
+                            "displayTime": dto.strftime('%m/%d/%Y'),
                             "type": activitiesResponse[activityIndex]["type"],
                             "distance": round(functions.metersToMiles(activitiesResponse[activityIndex]["distance"]), 2)
                         }
