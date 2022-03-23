@@ -131,8 +131,6 @@ def render_generatePage():
         "selectedActivities": ""
     }
 
-    print(request.form, "\n", formArgs)
-
     # Set form args to received form submission
     for key in formArgs:
         if key in request.form:
@@ -155,11 +153,3 @@ def render_generatePage():
 # Store any config items not related to API logins under app.config
 for key in config["DEFAULT"]:
     flaskApp.config[key] = config["DEFAULT"][key]
-
-# Launch VM server if applicable
-if IS_SERVER:
-    print("Starting KSU VM server...")
-    flaskApp.run(host='capstone3.cs.kent.edu', port=443, ssl_context=('/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem', '/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem'))
-# elif (__name__ == "__main__"):
-#     print("[ERROR]\tRunning from local copy, please launch the webserver with 'python -m flask run --host=" + INTERNAL_ADDRESS + "'")
-#     print("\tWe now need to specify --host for Strava webhooks to function properly.\n\tYou may also need to open port 5000 on your router.\n")
