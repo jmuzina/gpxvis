@@ -168,6 +168,11 @@ body {
   color: white !important;
 }
 
+.disabled-button {
+  opacity:0.5;
+  cursor: not-allowed;
+}
+
 #Strava {
   background: #fc5200 !important;
 }
@@ -226,6 +231,7 @@ body {
 .tab-pane.fade.show {
   display: block !important;
 }
+
 
 /* these are experimental and may be deleted if still unused
 
