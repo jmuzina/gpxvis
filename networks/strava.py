@@ -39,11 +39,11 @@ class StravaApi:
             uniqueId = functions.uniqueUserId(self.configCode, authResponse["athlete"]["id"])
 
             # Store user activities
-            main.userActivities[uniqueId] = self.getAllActivities()
+            #main.userActivities[uniqueId] = self.getAllActivities()
 
-            if len(main.userActivities[uniqueId]) > 0:
+            #if len(main.userActivities[uniqueId]) > 0:
                 # Store debugging visualization result as B64 string 
-                main.userImages[uniqueId] = functions.getImageBase64String(generateVis.getVis(data=self.getAllPolylines(activities = main.userActivities[uniqueId])))
+                #main.userImages[uniqueId] = functions.getImageBase64String(generateVis.getVis(data=self.getAllPolylines(activities = main.userActivities[uniqueId])))
             
             # Render parameters page
             return redirect(url_for('render_parameters'))
@@ -59,18 +59,17 @@ class StravaApi:
 
         return decodedPolylines
 
-    def getAllActivities(self):
+    def getActivitiesInRange(self, beforeTime = str(math.floor(time.time())), endTime = str(0)):
         result = {}
         # Endpoint: https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
         # Strava requires that a "before" timestamp is included to filter activities. All activities logged before calltime will be printed.
-        beforeTime = str(math.floor(time.time()))
 
         pageNum = 1 # Current "page" of results
         activitiesFound = 0 # Used to print number of activities found, could have more uses later?
 
         # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
         # Get activities in batches of 100 until all have been found
-        activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=200&page=" + str(pageNum), authCode = main.session['accessKey']).json()
+        activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&after=" + endTime + "&per_page=200&page=" + str(pageNum), authCode = main.session['accessKey']).json()
         while activitiesResponse != None:
             # Process batch if it is not empty
             if len(activitiesResponse) != 0:
@@ -96,7 +95,7 @@ class StravaApi:
 
                 # Advance to next page
                 pageNum += 1
-                activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&per_page=100&page=" + str(pageNum), authCode = main.session['accessKey']).json()
+                activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&after=" + endTime + "&per_page=100&page=" + str(pageNum), authCode = main.session['accessKey']).json()
 
             # No activities in the batch; exit the loop and return result
             else:
