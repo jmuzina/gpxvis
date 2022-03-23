@@ -209,7 +209,9 @@ body {
 }
 
 #customize {
-  max-width: 60;
+  //max-width: 60;
+  padding-right: 0 !important;
+  max-width: 100% !important;
 }
 
 .sidebyside {

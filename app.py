@@ -11,6 +11,7 @@ from flask_assets import Bundle, Environment
 
 import math
 import time
+from datetime import datetime, timedelta
 
 import functions
 import generateVis
@@ -92,10 +93,14 @@ def render_parameters():
 
     if sessionDataValidationResult == True:
         uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
-        #if len(userActivities[uniqueId]) > 0:
-        return render_template("parameters.html", userData = session['userData'])
-        #else:
-            #return functions.throwError("No activities found in your account.")
+        if len(userActivities[uniqueId]) > 0:
+            currentDate = datetime.now()
+            currentDateStr = datetime.strftime(currentDate, "%Y-%m-%d")
+            yearAgoTime = currentDate- timedelta(days = 365)
+            yearAgoStr = datetime.strftime(yearAgoTime, "%Y-%m-%d")
+            return render_template("parameters.html", userData = session['userData'], activities = userActivities[uniqueId], startDate = yearAgoStr, endDate = currentDateStr)
+        else:
+            return functions.throwError("No activities found in your account.")
     elif sessionDataValidationResult == False: # No userdata, render guest homepage
         return redirect(url_for("render_index"))
     else: # error thrown

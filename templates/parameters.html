@@ -132,12 +132,11 @@
                       aria-labelledby="v-pills-activities-tab"
                     >
                       <h1>Select Activities</h1>
-
                       <fieldset>
                         <label for="start">Start date:</label>
-                        <input type="date" id="start-date" name="trip-start" value="2018-07-22" min="2018-01-01" max="2022-12-31">
+                        <input type="date" id="start-date" name="trip-start" value="2018-07-22" min="1970-01-01" max="2022-12-31">
                         <label for="end">End date:</label>
-                        <input type="date" id="end-date" name="trip-start" value="2022-04-22" min="2018-01-01" max="2022-12-31">
+                        <input type="date" id="end-date" name="trip-start" value="2022-04-22" min="1970-01-01" max="2022-12-31">
 
                         <label for="activity">Activity Type:</label>
 
@@ -153,8 +152,135 @@
 
                           <br><label for="fname">Keyword:</label>
                           <input type="text" id="keyword" name="keyword" value=""><br>
-                          <input type="submit" value="Submit">
+                          <button id="getActivitiesButton" type="button" class="btn btn-warning">Get Activities</button>
                         </fieldset>
+                        <script type="text/javascript">
+                          // Allows jinja2 template values from flask to be read into JavaScript
+                          // credit https://stackoverflow.com/questions/37259740/passing-variables-from-flask-to-javascript
+                          function pythonBridge(vars) {
+                            return vars
+                          }
+
+                          activities = pythonBridge({{activities|tojson}});
+                          const activitiesAsArray = Object.entries(activities);
+                          const startDate = pythonBridge({{startDate|tojson}});
+                          const endDate = pythonBridge({{endDate|tojson}});
+
+                          // HTML elements for filter inputs
+                          var startDateField = document.getElementById("start-date");
+                          var endDateField = document.getElementById("end-date");
+                          var activityTypeField = document.getElementById("activity-type");
+                          var keywordField = document.getElementById("keyword")
+
+
+                          // Set date field values and maximums
+                          startDateField.setAttribute("value", startDate);
+                          startDateField.setAttribute("max", endDate);
+
+                          endDateField.setAttribute("value", endDate);
+                          endDateField.setAttribute("max", endDate);
+
+
+                          // Returns all activities that contain the provided string in their name
+                          function getKeywordMatches(inputStr) {
+                            inputStr = inputStr.toLowerCase();
+                            return activitiesAsArray.filter(([key, value]) => value["name"].toLowerCase().includes(inputStr))
+                          }
+                          
+                          // Returns all activities that were recorded between the specified start and end dates
+                          // credit https://stackoverflow.com/questions/2488313/javascripts-getdate-returns-wrong-date
+                          function getDateMatches(startDate, endDate) {
+                            const splitStartDate = startDate.match(/(\d+)/g);
+                            const filterStartDate = new Date(splitStartDate[0], splitStartDate[1]-1, splitStartDate[2]);
+
+                            const splitEndDate = endDate.match(/(\d+)/g);
+                            const filterEndDate = new Date(splitEndDate[0], splitEndDate[1]-1, splitEndDate[2]);
+
+                            return activitiesAsArray.filter(([key, value]) => {
+                              const splitActivityDate = value["displayTime"].match(/(\d+)/g);
+                              const filterActivityDate = new Date(splitActivityDate[2], splitActivityDate[0] - 1, splitActivityDate[1])
+                              return filterActivityDate >= filterStartDate && filterActivityDate <= filterEndDate;
+                            });
+                          }
+
+                          // Returns all activities that match the provided activity type
+                          function getActivityTypeMatches(activityType) {
+                            activityType = activityType.toLowerCase();
+
+                            // If activity type is all, we should return all activities
+                            if (activityType == "all") {
+                              return activitiesAsArray;
+                            }
+                            else {
+                              return activitiesAsArray.filter(([key, value]) => value["type"].toLowerCase() == activityType);
+                            }
+                          }
+                          
+                          // Returns all activities that match all three filters
+                          // Gets the intersection of the three filter results and returns it
+                          // credit https://stackoverflow.com/questions/1885557/simplest-code-for-array-intersection-in-javascript
+                          function getFilterMatches() {
+                            const keywordMatches = getKeywordMatches(keywordField["value"]);
+                            const dateMatches = getDateMatches(startDateField["value"], endDateField["value"]);
+                            const activityTypeMatches = getActivityTypeMatches(activityTypeField["value"]);
+
+                            // Intersection of keyword and date matches
+                            const keywordDateMatches = keywordMatches.filter((dateMatch) => {
+                              return dateMatches.indexOf(dateMatch) !== -1;
+                            });
+                            // Intersection of keyword-date matches and activity type matches
+                            return keywordDateMatches.filter((keywordDateMatch) => {
+                              return activityTypeMatches.indexOf(keywordDateMatch) !== -1;
+                            });
+                          }
+
+                          // Find all activities that match the provided inputs and displays them on-screen.
+                          // Called every time "get activities" is clicked.
+                          function searchActivities() {
+                            const filterMatches = getFilterMatches();
+
+                            const oldTableBody = document.getElementById("matchedActivities");
+                            const table = document.getElementById("activitiesTable");
+                            if (filterMatches.length > 0) {
+                              var newTableBody = document.createElement('tbody');
+                              newTableBody.id = "matchedActivities";
+                              // credit https://codedec.com/tutorials/how-to-add-new-row-in-table-using-javascript/
+                              for (var i = 0; i < filterMatches.length; ++i) {
+                                const activity = filterMatches[i][1];
+                                var row = newTableBody.insertRow(i);
+                                var nameCell = row.insertCell(0);
+                                var dateCell = row.insertCell(1);
+                                var typeCell = row.insertCell(2);
+                                var distanceCell = row.insertCell(3);
+
+                                nameCell.innerHTML = activity["name"];
+                                dateCell.innerHTML = activity["displayTime"];
+                                typeCell.innerHTML = activity["type"];
+                                distanceCell.innerHTML = activity["distance"] + " mi";
+                              }
+
+                              oldTableBody.parentNode.replaceChild(newTableBody, oldTableBody);
+                              if (table.hidden) table.hidden = false;
+                            }
+                            else {
+                              table.hidden = true;
+                            }
+                          }
+                          
+                          document.getElementById("getActivitiesButton").addEventListener ("click", searchActivities, false);
+                        </script>
+                         <table id = "activitiesTable" hidden>
+                          <thead>
+                            <trow>
+                              <th>Name</th>
+                              <th>Date</th>
+                              <th>Type</th>
+                              <th>Distance</th>
+                            </trow>
+                          </thead>
+                          <tbody id = "matchedActivities">
+                          </tbody>
+                        </table>
                     </div>
                     <div
                       class="tab-pane fade"
