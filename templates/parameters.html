@@ -11,134 +11,267 @@
     ASSET_URL }}"> {% endassets %}
     <meta charset="UTF-8" />
     <title>My Page</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap"
+      rel="stylesheet"
+    />
   </head>
+
   <body>
+    <!-- center white box-->
     <div class="main-container">
-        <div class="main-content-container"></div>
-    <div
-      class="nav flex-column nav-pills"
-      id="v-pills-tab"
-      role="tablist"
-      aria-orientation="vertical"
-    >
-    <div class="fake-button hello-button">Hello, {{userData['firstname']}} </div>
-      <a
-        class="nav-link button-custom parameter-button"
-        id="v-pills-activities-tab"
-        data-toggle="pill"
-        href="#v-pills-activities"
-        role="tab"
-        aria-controls="v-pills-activities"
-        aria-selected="false"
-        >Activities</a
-      >
-      <a
-        class="nav-link button-custom parameter-button"
-        id="v-pills-profile-tab"
-        data-toggle="pill"
-        href="#v-pills-metric"
-        role="tab"
-        aria-controls="v-pills-metric"
-        aria-selected="false"
-        >Metric</a
-      >
-      <a
-        class="nav-link button-custom parameter-button"
-        id="v-pills-visualtype-tab"
-        data-toggle="pill"
-        href="#v-pills-visualtype"
-        role="tab"
-        aria-controls="v-pills-visualtype"
-        aria-selected="false"
-        >Visualtype</a
-      >
-      <a
-        class="nav-link button-custom parameter-button"
-        id="v-pills-color-tab"
-        data-toggle="pill"
-        href="#v-pills-color"
-        role="tab"
-        aria-controls="v-pills-color"
-        aria-selected="false"
-        >Color</a
-      >
-      <a
-        class="nav-link button-custom parameter-button"
-        id="v-pills-size-tab"
-        data-toggle="pill"
-        href="#v-pills-size"
-        role="tab"
-        aria-controls="v-pills-size"
-        aria-selected="false"
-        >Size</a
-      >
-      <a
-        class="nav-link button-custom parameter-button"
-        id="v-pills-title-tab"
-        data-toggle="pill"
-        href="#v-pills-title"
-        role="tab"
-        aria-controls="v-pills-title"
-        aria-selected="false"
-        >Title</a
-      >
-    </div>
-    <form action = "/generatePage" method="POST">
-      <div class="tab-content" id="v-pills-tabContent">
-        <div
-          class="tab-pane fade show active"
-          id="v-pills-activities"
-          role="tabpanel"
-          aria-labelledby="v-pills-activities-tab"
-        >
-         
-        </div>
-        <div
-          class="tab-pane fade"
-          id="v-pills-metric"
-          role="tabpanel"
-          aria-labelledby="v-pills-metric-tab"
-        >
-          metric
-        </div>
-        <div
-          class="tab-pane fade"
-          id="v-pills-visualtype"
-          role="tabpanel"
-          aria-labelledby="v-pills-visualtype-tab"
-        >
-          visualtype
-        </div>
-        <div
-          class="tab-pane fade"
-          id="v-pills-color"
-          role="tabpanel"
-          aria-labelledby="v-pills-color-tab"
-        >
-          color
-        </div>
-        <div
-          class="tab-pane fade"
-          id="v-pills-size"
-          role="tabpanel"
-          aria-labelledby="v-pills-size-tab"
-        >
-          size
-        </div>
-        <div
-          class="tab-pane fade"
-          id="v-pills-title"
-          role="tabpanel"
-          aria-labelledby="v-pills-title-tab"
-        >
-          title
-        </div>
+      <!-- div within white box that columns sit in id="testcont123"-->
+      <div class="container sidebyside">
+        <form action = "/generatePage" method="POST">
+          <div class="row">
+            <!-- left column with parameter buttons-->
+            <div class="col-md-6 parameter-column" id="categories">
+              <div
+                class="nav flex-column nav-pills"
+                id="v-pills-tab"
+                role="tablist"
+                aria-orientation="vertical"
+              >
+                <!-- green pill that says users name-->
+                <div class="fake-button hello-button">
+                  Hello, {{userData['firstname']}}
+                </div>
+
+                <!-- Activities tab-->
+                <a
+                  class="nav-link button-custom parameter-button active show"
+                  id="v-pills-activities-tab"
+                  data-toggle="pill"
+                  href="#v-pills-activities"
+                  role="tab"
+                  aria-controls="v-pills-activities"
+                  aria-selected="false"
+                  >Activities</a
+                >
+
+                <!-- Visual Type tab-->
+                <a
+                  class="nav-link button-custom parameter-button"
+                  id="v-pills-visualtype-tab"
+                  data-toggle="pill"
+                  href="#v-pills-visualtype"
+                  role="tab"
+                  aria-controls="v-pills-visualtype"
+                  aria-selected="false"
+                  >Visual Type</a
+                >
+
+                <!-- Background tab-->
+                <a
+                  class="nav-link button-custom parameter-button"
+                  id="v-pills-background-tab"
+                  data-toggle="pill"
+                  href="#v-pills-background"
+                  role="tab"
+                  aria-controls="v-pills-background"
+                  aria-selected="false"
+                  >Background</a
+                >
+
+                <!-- Draw Style tab-->
+                <a
+                  class="nav-link button-custom parameter-button"
+                  id="v-pills-drawstyle-tab"
+                  data-toggle="pill"
+                  href="#v-pills-drawstyle"
+                  role="tab"
+                  aria-controls="v-pills-drawstyle"
+                  aria-selected="false"
+                  >Draw Style</a
+                >
+
+                <!-- Text tab-->
+                <a
+                  class="nav-link button-custom parameter-button"
+                  id="v-pills-text-tab"
+                  data-toggle="pill"
+                  href="#v-pills-text"
+                  role="tab"
+                  aria-controls="v-pills-text"
+                  aria-selected="false"
+                  >Text</a
+                >
+
+                <!-- Extra tab-->
+                <a
+                  class="nav-link button-custom parameter-button"
+                  id="v-pills-title-tab"
+                  data-toggle="pill"
+                  href="#v-pills-title"
+                  role="tab"
+                  aria-controls="v-pills-title"
+                  aria-selected="false"
+                  >Title</a
+                >
+              </div>
+          </div>
+          <!-- the following section is all the contents of each category-->
+          <div class="col-md-6 parameter-column" id="customize">
+            <!--  <div class="tab-content flex-column" id="v-pills-tabContent"> -->
+            <!-- activities options-->
+            <!--  <div
+              class="tab-pane fade show active"
+              id="v-pills-activities"
+              role="tabpanel"
+              aria-labelledby="v-pills-activities-tab"
+            > -->
+              <div class="container">
+                
+                  <div class="tab-content" id="v-pills-tabContent">
+                    <div
+                      class="tab-pane fade show active"
+                      id="v-pills-activities"
+                      role="tabpanel"
+                      aria-labelledby="v-pills-activities-tab"
+                    >
+                      <h1>Select Activities</h1>
+
+                      <fieldset>
+                        <label for="start">Start date:</label>
+                        <input type="date" id="start-date" name="trip-start" value="2018-07-22" min="2018-01-01" max="2022-12-31">
+                        <label for="end">End date:</label>
+                        <input type="date" id="end-date" name="trip-start" value="2022-04-22" min="2018-01-01" max="2022-12-31">
+
+                        <label for="activity">Activity Type:</label>
+
+                          <select name="activity" id="activity-type">
+                            <option value="all">All</option>
+                            <option value="ride">Ride</option>
+                            <option value="run">Run</option>
+                            <option value="swim">Swim</option>
+                            <option value="walk">Walk</option>
+                            <option value="hike">Hike</option>
+                            <option value="ski">Ski</option>
+                          </select>
+
+                          <br><label for="fname">Keyword:</label>
+                          <input type="text" id="keyword" name="keyword" value=""><br>
+                          <input type="submit" value="Submit">
+                        </fieldset>
+                    </div>
+                    <div
+                      class="tab-pane fade"
+                      id="v-pills-visualtype"
+                      role="tabpanel"
+                      aria-labelledby="v-pills-visualtype-tab"
+                    >
+                      <h1>Select Visual Type</h1>
+                    </div>
+                    <div
+                      class="tab-pane fade"
+                      id="v-pills-background"
+                      role="tabpanel"
+                      aria-labelledby="v-pills-background-tab"
+                    >
+                      <h1>Select Background</h1>
+                      <div>
+                        <input type="color" id="BackgroundColor" name="BackgroundColor"
+                              value="#e66465">
+                        <label for="BackgroundColor">BackgroundColor</label>
+                      </div>
+                    </div>
+                    <div
+                      class="tab-pane fade"
+                      id="v-pills-drawstyle"
+                      role="tabpanel"
+                      aria-labelledby="v-pills-drawstyle-tab"
+                    >
+                      <h1>Select Draw Style</h1>
+                      <div>
+                        <input type="color" id="GridColor" name="GridColor"
+                                value="#f6b73c">
+                        <label for="GridColor">GridColor</label>
+                      </div>
+                      <div>
+                        <input type="color" id="LineColor" name="LineColor"
+                              value="#e66465">
+                        <label for="LineColor">LineColor</label>
+                      </div>
+                    </div>
+                    <div
+                      class="tab-pane fade"
+                      id="v-pills-text"
+                      role="tabpanel"
+                      aria-labelledby="v-pills-text-tab"
+                    >
+                      <h1>Select Text Options</h1>
+                    </div>
+                    <div
+                      class="tab-pane fade"
+                      id="v-pills-title"
+                      role="tabpanel"
+                      aria-labelledby="v-pills-title-tab"
+                    >
+                      title
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <!-- metric selection-->
+            <div
+              class="tab-pane fade"
+              id="v-pills-metric"
+              role="tabpanel"
+              aria-labelledby="v-pills-metric-tab"
+            >
+              metric
+            </div>
+
+            <!-- visual selection-->
+            <div
+              class="tab-pane fade"
+              id="v-pills-visualtype"
+              role="tabpanel"
+              aria-labelledby="v-pills-visualtype-tab"
+            >
+              visualtype
+            </div>
+
+            <!-- color selection-->
+            <div
+              class="tab-pane fade"
+              id="v-pills-color"
+              role="tabpanel"
+              aria-labelledby="v-pills-color-tab"
+            >
+              color
+            </div>
+
+            <!-- size selection-->
+            <div
+              class="tab-pane fade"
+              id="v-pills-size"
+              role="tabpanel"
+              aria-labelledby="v-pills-size-tab"
+            >
+              size
+            </div>
+
+            <!-- extra selection-->
+            <div
+              class="tab-pane fade"
+              id="v-pills-title"
+              role="tabpanel"
+              aria-labelledby="v-pills-title-tab"
+            >
+              title
+            </div>
+            <!-- </div> -->
+          </div>
+          <input class = "nav-link button-custom parameter-button generate-button" type="submit" value="Generate"> 
+        </form>
       </div>
-      <input class = "nav-link button-custom parameter-button generate-button" type="submit"> 
-    </form>
+
+        </div>
+    </div>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
