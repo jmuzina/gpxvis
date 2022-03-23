@@ -75,11 +75,8 @@ class StravaApi:
             if len(activitiesResponse) != 0:
                 print(str(pageNum) + "\tID\t\tName")
 
-                TEMP_CAP = 0
-
                 for activityIndex in range(len(activitiesResponse)):
-                    if TEMP_CAP < 5 and activitiesResponse[activityIndex]["map"]["summary_polyline"] != None:
-                        TEMP_CAP +=1 
+                    if activitiesResponse[activityIndex]["map"]["summary_polyline"] != None:
                         activitiesFound += 1
                         #result[activitiesResponse[activityIndex]['id']] = activitiesResponse[activityIndex]
                         dto = datetime.strptime(activitiesResponse[activityIndex]["start_date_local"],'%Y-%m-%dT%H:%M:%SZ')
