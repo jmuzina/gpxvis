@@ -178,6 +178,12 @@ body {
   text-align: center;
 }
 
+#strava-login {
+  display:flex;
+  justify-content: center;
+  flex-flow: row wrap;
+}
+
 #Underarmour {
   background: #1d1d1d !important;
 }
