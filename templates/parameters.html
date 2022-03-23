@@ -258,16 +258,26 @@
                                 nameCell.innerHTML = activity["name"];
                                 dateCell.innerHTML = activity["displayTime"];
                                 typeCell.innerHTML = activity["type"];
+                                typeCell.style = "text-align:right;"
                                 distanceCell.innerHTML = activity["distance"] + " mi";
+                                distanceCell.style = "text-align:right;"
 
                                 selectedIDs[i] = filterMatches[i][0];
                               }
 
                               oldTableBody.parentNode.replaceChild(newTableBody, oldTableBody);
                               if (table.hidden) table.hidden = false;
+                              var generateButton = document.getElementById("generate-button");
+                              if (generateButton.disabled) { 
+                                generateButton.disabled = false;
+                                $("#generate-button").removeClass("disabled-button");
+                              }
                             }
                             else {
                               table.hidden = true;
+                              var generateButton =  document.getElementById("generate-button");
+                              generateButton.disabled = true;
+                              $("#generate-button").addClass("disabled-button");
                             }
 
                             const selectedActivitiesElement = document.getElementById("selectedActivities");
@@ -280,12 +290,18 @@
                           document.getElementById("getActivitiesButton").addEventListener ("click", searchActivities, false);
                         </script>
                          <table id = "activitiesTable" hidden>
+                          <colgroup>
+                              <col span="1" style="width: 40%;">
+                              <col span="1" style="width: 20%;">
+                              <col span="1" style="width: 20%;">
+                              <col span="1" style="width: 20%;">
+                            </colgroup>
                           <thead>
                             <trow>
                               <th>Name</th>
                               <th>Date</th>
-                              <th>Type</th>
-                              <th>Distance</th>
+                              <th style="text-align:right;">Type</th>
+                              <th style="text-align:right;">Distance</th>
                             </trow>
                           </thead>
                           <tbody id = "matchedActivities">
@@ -309,7 +325,7 @@
                       <h1>Select Background</h1>
                       <div>
                         <input type="color" id="backgroundColor" name="backgroundColor"
-                              value="#e66465">
+                              value="#FFFFFF">
                         <label for="backgroundColor">Background Color</label>
                       </div>
                     </div>
@@ -322,12 +338,12 @@
                       <h1>Select Draw Style</h1>
                       <div>
                         <input type="color" id="gridlineColor" name="gridlineColor"
-                                value="#f6b73c">
+                                value="#000000">
                         <label for="gridlineColor">Grid Color</label>
                       </div>
                       <div>
                         <input type="color" id="pathColor" name="pathColor"
-                              value="#e66465">
+                              value="#000000">
                         <label for="pathColor">Line Color</label>
                       </div>
                     </div>
@@ -351,7 +367,7 @@
               </div>
             </div>
           </div>
-          <input class = "nav-link button-custom parameter-button generate-button" type="submit" value="Generate"> 
+          <input class = "nav-link button-custom parameter-button generate-button disabled-button" id="generate-button" type="submit" value="Generate" disabled> 
         </form>
       </div>
 
