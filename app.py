@@ -45,7 +45,7 @@ config.read_file(open(r'./app.cfg'))
 # -------------------------------------------- #
 
 import networks.strava  # Must be imported after config has been read
-#userImages = {}
+
 userActivities = {}
 
 apis = {
@@ -134,9 +134,12 @@ def render_generatePage():
         if "id" in session["userData"]:
             if "networkName" in session:
                 uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
-                activities = apis[session["networkName"]].getActivitiesInRange(beforeTime = formArgs["beforeTime"], endTime = formArgs["afterTime"])
-                polylines = apis[session["networkName"]].getAllPolylines(activities)
-                return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=formArgs["pathThickness"], gridOn=formArgs["displayGridLines"], backgroundColor=formArgs["backgroundColor"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"])))
+                selected = dict([(activityID, userActivities[uniqueId][activityID]) for activityID in userActivities[uniqueId] if userActivities[uniqueId][activityID]["selected"] == True])
+                if len(selected) > 0:
+                    polylines = apis[session["networkName"]].getAllPolylines(selected)
+                    return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=formArgs["pathThickness"], gridOn=formArgs["displayGridLines"], backgroundColor=formArgs["backgroundColor"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"])))
+                else:
+                    return functions.throwError("No activities were selected.")
     else:
         print("FAILED")
     return functions.throwError("Could not display visualized image.")

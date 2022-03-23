@@ -39,19 +39,19 @@ class StravaApi:
             uniqueId = functions.uniqueUserId(self.configCode, authResponse["athlete"]["id"])
 
             # Store user activities
-            #main.userActivities[uniqueId] = self.getAllActivities()
+            main.userActivities[uniqueId] = self.getActivitiesInRange()
 
-            #if len(main.userActivities[uniqueId]) > 0:
-                # Store debugging visualization result as B64 string 
-                #main.userImages[uniqueId] = functions.getImageBase64String(generateVis.getVis(data=self.getAllPolylines(activities = main.userActivities[uniqueId])))
-            
-            # Render parameters page
-            return redirect(url_for('render_parameters'))
+            if len(main.userActivities[uniqueId]) > 0:            
+                # Render parameters page
+                return redirect(url_for('render_parameters'))
+            else:
+                main.userActivities[uniqueId] = None
+                return functions.throwError("There are no activities recorded on your Strava account.")
     
     def getAllPolylines(self, activities):
         decodedPolylines = []
         if activities == None:
-            activities = self.getAllActivities()
+            activities = self.getActivitiesInRange()
 
         for activityID in activities:
             if activities[activityID]["polyline"] != None and activities[activityID]["polyline"] != "":
@@ -73,22 +73,23 @@ class StravaApi:
         while activitiesResponse != None:
             # Process batch if it is not empty
             if len(activitiesResponse) != 0:
-                print(str(pageNum) + "\tID\t\tName")
+                print(str(pageNum) + "\tID\t\t", "Data")
 
                 for activityIndex in range(len(activitiesResponse)):
                     if activitiesResponse[activityIndex]["map"]["summary_polyline"] != None:
                         activitiesFound += 1
-                        #result[activitiesResponse[activityIndex]['id']] = activitiesResponse[activityIndex]
+
                         dto = datetime.strptime(activitiesResponse[activityIndex]["start_date_local"],'%Y-%m-%dT%H:%M:%SZ')
                         result[activitiesResponse[activityIndex]["id"]] = {
                             "name":  activitiesResponse[activityIndex]["name"],
                             "polyline": activitiesResponse[activityIndex]["map"]["summary_polyline"],
                             "displayTime": dto.strftime('%m/%d/%Y %I:%M %p'),
                             "type": activitiesResponse[activityIndex]["type"],
-                            "distance": round(functions.metersToMiles(activitiesResponse[activityIndex]["distance"]), 2)
+                            "distance": round(functions.metersToMiles(activitiesResponse[activityIndex]["distance"]), 2),
+                            "selected": False
                         }
-                        print("\t" + str(activitiesResponse[activityIndex]["id"]) + "\t" +  result[activitiesResponse[activityIndex]["id"]]["name"])
-                        #%-I:%-M %p
+
+                        print("\t" + str(activitiesResponse[activityIndex]["id"]) + "\t", result[activitiesResponse[activityIndex]["id"]])
 
                 # Advance to next page
                 pageNum += 1
