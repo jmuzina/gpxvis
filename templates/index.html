@@ -13,9 +13,9 @@
         <div class="main-container">
             <div class="main-content-container">
                 <h1 class="main-title">GPX Visualizer</h1>
-                <div class="container" id="login-buttons"></div>
+                <div class="container" id="login-buttons">
                     {% for networkName, networkData in networks.items() %}
-                    <div class="row" id="{{networkName}}-login">
+                    <div id="{{networkName}}-login">
                         {% if networkData != False %}
                             <a button type="button" class="button-custom" id="Strava" href="https://{{networkData.strip('\"')}}">Login with {{networkName.title()}}</a>
                         {% else %}
