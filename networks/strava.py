@@ -60,7 +60,6 @@ class StravaApi:
         return decodedPolylines
 
     def getActivitiesInRange(self, beforeTime = str(math.floor(time.time())), endTime = str(0)):
-        print("GACR", beforeTime, endTime)
         result = {}
         # Endpoint: https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
         # Strava requires that a "before" timestamp is included to filter activities. All activities logged before calltime will be printed.
@@ -71,10 +70,8 @@ class StravaApi:
         # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
         # Get activities in batches of 100 until all have been found
         activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&after=" + endTime + "&per_page=200&page=" + str(pageNum), authCode = main.session['accessKey']).json()
-        print("https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&after=" + endTime + "&per_page=200&page=" + str(pageNum))
         while activitiesResponse != None:
             # Process batch if it is not empty
-            print("https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&after=" + endTime + "&per_page=200&page=" + str(pageNum))
             if len(activitiesResponse) != 0:
                 print(str(pageNum) + "\tID\t\tName")
 

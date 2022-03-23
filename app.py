@@ -111,19 +111,7 @@ def render_errorPage():
 
 @flaskApp.route('/generatePage', methods = ["POST"])
 def render_generatePage():
-    # formArgs = {
-    #     "backgroundColor": request.form["backgroundColor"] or "#FFFFFF",
-    #     "backgroundImage": request.form["backgroundImage"],
-    #     "blurIntensity": request.form["blurIntensity"] or 5,
-    #     "pathThickness": request.form["pathThickness"] or 5,
-    #     "pathColor": request.form["pathColor"] or "#000000",
-    #     "displayGridLines": request.form["displayGridLines"] or False,
-    #     "gridlineThickness": request.form["gridlineThickness"] or 5,
-    #     "gridlineColor": request.form["gridlineColor"] or "#000000",
-    #     "beforeTime": request.form["beforeTime"] or str(math.floor(time.time())),
-    #     "afterTime": request.form["afterTime"] or str(0)
-    # }
-
+    # default values of form arguments
     formArgs = {
         "backgroundColor": (255,255,255),
         "backgroundImage": "",
@@ -136,6 +124,11 @@ def render_generatePage():
         "beforeTime": str(math.floor(time.time())),
         "afterTime": str(0)
     }
+
+    # Set form args to received form submission
+    for key in formArgs:
+        if key in request.form:
+            formArgs[key] = request.form[key]
     
     if "userData" in session:
         if "id" in session["userData"]:
