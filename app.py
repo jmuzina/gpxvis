@@ -9,6 +9,9 @@ from flask import (Flask, Response, redirect, render_template, request,
                    session, url_for)
 from flask_assets import Bundle, Environment
 
+import math
+import time
+
 import functions
 import generateVis
 # ---------------------------- #
@@ -42,7 +45,7 @@ config.read_file(open(r'./app.cfg'))
 # -------------------------------------------- #
 
 import networks.strava  # Must be imported after config has been read
-userImages = {}
+#userImages = {}
 userActivities = {}
 
 apis = {
@@ -78,7 +81,7 @@ def logout():
     # Wipe user image
     if "userData" in session and "id" in session["userData"] and "networkName" in session:
         uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
-        userImages[uniqueId] = None
+        #userImages[uniqueId] = None
         userActivities[uniqueId] = None
 
     return redirect(url_for('render_index'))
@@ -89,11 +92,10 @@ def render_parameters():
 
     if sessionDataValidationResult == True:
         uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
-        if uniqueId in userActivities and len(userActivities[uniqueId]) > 0:
-            print(userActivities[uniqueId])
-            return render_template("parameters.html", userData = session['userData'], activities = userActivities[uniqueId])
-        else:
-            return functions.throwError("No activities found in your account.")
+        #if len(userActivities[uniqueId]) > 0:
+        return render_template("parameters.html", userData = session['userData'])
+        #else:
+            #return functions.throwError("No activities found in your account.")
     elif sessionDataValidationResult == False: # No userdata, render guest homepage
         return redirect(url_for("render_index"))
     else: # error thrown
@@ -107,14 +109,43 @@ def render_errorPage():
 
     return render_template("errorPage.html", errorMessage = errorMessage)
 
-@flaskApp.route('/generatePage')
+@flaskApp.route('/generatePage', methods = ["POST"])
 def render_generatePage():
+    # formArgs = {
+    #     "backgroundColor": request.form["backgroundColor"] or "#FFFFFF",
+    #     "backgroundImage": request.form["backgroundImage"],
+    #     "blurIntensity": request.form["blurIntensity"] or 5,
+    #     "pathThickness": request.form["pathThickness"] or 5,
+    #     "pathColor": request.form["pathColor"] or "#000000",
+    #     "displayGridLines": request.form["displayGridLines"] or False,
+    #     "gridlineThickness": request.form["gridlineThickness"] or 5,
+    #     "gridlineColor": request.form["gridlineColor"] or "#000000",
+    #     "beforeTime": request.form["beforeTime"] or str(math.floor(time.time())),
+    #     "afterTime": request.form["afterTime"] or str(0)
+    # }
+
+    formArgs = {
+        "backgroundColor": (255,255,255),
+        "backgroundImage": "",
+        "blurIntensity": 5,
+        "pathThickness": 5,
+        "pathColor": (0,0,0),
+        "displayGridLines": False,
+        "gridlineThickness": 5,
+        "gridlineColor": (0,0,0),
+        "beforeTime": str(math.floor(time.time())),
+        "afterTime": str(0)
+    }
+    
     if "userData" in session:
         if "id" in session["userData"]:
             if "networkName" in session:
                 uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
-                if uniqueId in userImages:
-                    return render_template("generatePage.html", visualization = userImages[uniqueId])
+                activities = apis[session["networkName"]].getActivitiesInRange(beforeTime = formArgs["beforeTime"], endTime = formArgs["afterTime"])
+                polylines = apis[session["networkName"]].getAllPolylines(activities)
+                return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=formArgs["pathThickness"], gridOn=formArgs["displayGridLines"], backgroundColor=formArgs["backgroundColor"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"])))
+    else:
+        print("FAILED")
     return functions.throwError("Could not display visualized image.")
 
 # Store any config items not related to API logins under app.config

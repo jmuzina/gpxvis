@@ -26,7 +26,7 @@
     >
     <div class="fake-button hello-button">Hello, {{userData['firstname']}} </div>
       <a
-        class="nav-link button-custom parameter-button active show"
+        class="nav-link button-custom parameter-button"
         id="v-pills-activities-tab"
         data-toggle="pill"
         href="#v-pills-activities"
@@ -85,12 +85,8 @@
         aria-selected="false"
         >Title</a
       >
-      <a
-    class="nav-link button-custom parameter-button generate-button" href="/generatePage"
-    >Generate</a
-  >
     </div>
-    <form>
+    <form action = "/generatePage" method="POST">
       <div class="tab-content" id="v-pills-tabContent">
         <div
           class="tab-pane fade show active"
@@ -98,26 +94,7 @@
           role="tabpanel"
           aria-labelledby="v-pills-activities-tab"
         >
-          <table>
-            <thead>
-              <trow>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Distance</th>
-              </trow>
-            </thead>
-            <tbody>
-              {% for activityID in activities %}                
-                <tr>
-                  <td>{{activities[activityID]["name"][:25]}}</td>
-                  <td>{{activities[activityID]["displayTime"]}}</td>
-                  <td>{{activities[activityID]["type"]}}</td>
-                  <td>{{activities[activityID]["distance"]}} mi</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+         
         </div>
         <div
           class="tab-pane fade"
@@ -160,6 +137,7 @@
           title
         </div>
       </div>
+      <input class = "nav-link button-custom parameter-button generate-button" type="submit"> 
     </form>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
