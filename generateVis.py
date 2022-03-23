@@ -217,7 +217,6 @@ def gpx_to_list(gpx):
 
 def getVis(data = [], lineThickness = 10, gridOn = False, backgroundColor = (255,255,255), foregroundColor = (0,0,0), gridColor = (0,0,0), title = ""): 
     tracks = []
-    print(data)
     #####POLYLINE LIST####
     if len(data) > 0:
         if (type(data[0][0]) is tuple): #very rough way to check if it is a polyline list or a GPX file

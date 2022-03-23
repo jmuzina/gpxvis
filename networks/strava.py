@@ -85,8 +85,7 @@ class StravaApi:
                             "polyline": activitiesResponse[activityIndex]["map"]["summary_polyline"],
                             "displayTime": dto.strftime('%m/%d/%Y %I:%M %p'),
                             "type": activitiesResponse[activityIndex]["type"],
-                            "distance": round(functions.metersToMiles(activitiesResponse[activityIndex]["distance"]), 2)#,
-                            #"selected": False
+                            "distance": round(functions.metersToMiles(activitiesResponse[activityIndex]["distance"]), 2)
                         }
 
                         print("\t" + str(activitiesResponse[activityIndex]["id"]) + "\t", result[activitiesResponse[activityIndex]["id"]])

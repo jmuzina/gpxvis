@@ -127,8 +127,11 @@ def render_generatePage():
         "gridlineThickness": 5,
         "gridlineColor": (0,0,0),
         "beforeTime": str(math.floor(time.time())),
-        "afterTime": str(0)
+        "afterTime": str(0),
+        "selectedActivities": ""
     }
+
+    print(request.form, "\n", formArgs)
 
     # Set form args to received form submission
     for key in formArgs:
@@ -139,7 +142,7 @@ def render_generatePage():
         if "id" in session["userData"]:
             if "networkName" in session:
                 uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
-                selected = dict([(activityID, userActivities[uniqueId][activityID]) for activityID in userActivities[uniqueId] if userActivities[uniqueId][activityID]["selected"] == True])
+                selected = dict([(activityID, userActivities[uniqueId][activityID]) for activityID in userActivities[uniqueId] if str(activityID) in formArgs["selectedActivities"]])
                 if len(selected) > 0:
                     polylines = apis[session["networkName"]].getAllPolylines(selected)
                     return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=formArgs["pathThickness"], gridOn=formArgs["displayGridLines"], backgroundColor=formArgs["backgroundColor"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"])))
