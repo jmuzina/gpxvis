@@ -17,11 +17,34 @@ body {
   min-width: 768px;
   border-radius: 10px;
   box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.25);
+  margin: auto; /* this centers the main-container horizontally */
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  flex-flow: column nowrap;
+  /* flex-flow: column nowrap; */
+}
+
+.parameter-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 5%;
+}
+
+.parameter-button-container {
+  border-color: yellow;
+  width: 33%;
+  padding: 10px;
+  justify-content: space-between;
+}
+
+.parameter-content-container {
+  width: 66%;
+  border-color: yellow;
+  flex-grow: 1;
+  padding: 10px;
 }
 
 //// This section is used for code only for main page ////
@@ -48,6 +71,10 @@ body {
   max-height: 70vh;
   width: auto;
   align-self: center;
+}
+
+.row {
+  height: 90%;
 }
 
 ////        This is the section for buttons          ////
@@ -83,7 +110,6 @@ body {
 .button-custom {
   background: white !important;
   border-radius: 999px !important;
-  box-shadow: #5e5df0 0 10px 20px -10px;
   box-sizing: border-box;
   color: #ffffff;
   cursor: pointer;
@@ -137,15 +163,10 @@ body {
 }
 
 // this is used in parameters page to change appearance of display with user's name
-.hello-button {
+.hello-button,
+.hello-button:disabled {
   background: #47cd95 !important;
   color: white !important;
-}
-
-// this makes the button displaying the user's name unclickable
-.hello-button:disabled {
-  cursor: pointer;
-  background: #47cd95;
 }
 
 .nav-pills .nav-link.active {
@@ -194,6 +215,8 @@ body {
 //Setting flex to one makes the two boxes take up all of the space within the container.
 //Even though parameter-column inherits display: flex from the container it's in, we set
 // it again so that the content within parameter-column can use flexbox properties.
+
+/*
 .parameter-column {
   //display: ;
   flex: 1;
@@ -207,58 +230,11 @@ body {
   max-width: 36%;
   margin-right: 20px;
 }
-
-#customize {
-  //max-width: 60;
-  padding-right: 0 !important;
-  max-width: 100% !important;
-}
-
-.sidebyside {
-  display: flex;
-  flex-wrap: nowrap;
-}
-
-.tab-pane.fade {
-  display: none;
-}
+*/
 
 .tab-pane.fade.show {
   display: block !important;
 }
-
-/* these are experimental and may be deleted if still unused
-
-.tab-pane {
-  flex:1;
-  justify-content: center;
-  align-items: center;
-}
-
-#customize {
-  width:60%;
-  justify-content:right;
-
-}
-
-#categories {
-  width: 30%;
-  justify-content: left;
-  //
-}
-
-#v-pills-tab {
-  //padding-left: 10%;
-}
-
-
-#v-pills-tabContent {
-  padding-left: 30%;
-  justify-content:center;
-}
-
-
-*/
 
 // this code was used to give the strava button it's appearance but
 // is superfluous until we get the dev account for underarmour
