@@ -165,12 +165,6 @@
               </fieldset>
               <script src="activityFiltering.js"></script>
               <script type="text/javascript">
-                // Allows jinja2 template values from flask to be read into JavaScript
-                // credit https://stackoverflow.com/questions/37259740/passing-variables-from-flask-to-javascript
-                function pythonBridge(vars) {
-                  return vars
-                }
-
                 activities = pythonBridge({{activities|tojson}});
                 const activitiesAsArray = Object.entries(activities);
 

@@ -1,5 +1,7 @@
+// Allows jinja2 template values from flask to be read into JavaScript
+// credit https://stackoverflow.com/questions/37259740/passing-variables-from-flask-to-javascript
 function pythonBridge(vars) {
-    return vars
+  return vars
 }
 
 // Returns all activities that contain the provided string in their name
@@ -9,15 +11,15 @@ function getKeywordMatches(arr, inputStr) {
 }
 
 function configureDateFields(startDate, endDate) {
-    var startDateField = document.getElementById("start-date");
-    var endDateField = document.getElementById("end-date");
+  var startDateField = document.getElementById("start-date");
+  var endDateField = document.getElementById("end-date");
 
-    // Set date field values and maximums
-    startDateField.setAttribute("value", startDate);
-    startDateField.setAttribute("max", endDate);
+  // Set date field values and maximums
+  startDateField.setAttribute("value", startDate);
+  startDateField.setAttribute("max", endDate);
 
-    endDateField.setAttribute("value", endDate);
-    endDateField.setAttribute("max", endDate);
+  endDateField.setAttribute("value", endDate);
+  endDateField.setAttribute("max", endDate);
 }
 
 // Returns all activities that were recorded between the specified start and end dates
