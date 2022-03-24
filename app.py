@@ -6,7 +6,7 @@ from configparser import ConfigParser, RawConfigParser
 from os.path import exists
 
 from flask import (Flask, Response, redirect, render_template, request,
-                   session, url_for)
+                   session, url_for, send_file)
 from flask_assets import Bundle, Environment
 
 import math
@@ -153,6 +153,10 @@ def render_generatePage():
     else:
         print("FAILED")
     return functions.throwError("Could not display visualized image.")
+
+@flaskApp.route("/activityFiltering.js")
+def returnActivityFiltering():
+    return send_file("./static/activityFiltering.js")
 
 # Store any config items not related to API logins under app.config
 for key in config["DEFAULT"]:
