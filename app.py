@@ -1,20 +1,21 @@
 # App launch-point
 
 # ---- Dependency imports ---- #
+import logging
+import math
 import os
+import time
 from configparser import ConfigParser, RawConfigParser
+from datetime import datetime, timedelta
 from os.path import exists
 
 from flask import (Flask, Response, redirect, render_template, request,
-                   session, url_for, send_file)
+                   send_file, session, url_for)
 from flask_assets import Bundle, Environment
-
-import math
-import time
-from datetime import datetime, timedelta
 
 import functions
 import generateVis
+
 # ---------------------------- #
 
 IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
@@ -23,6 +24,23 @@ flaskApp = Flask(__name__)
 flaskApp.config['TEMPLATES_AUTO_RELOAD'] = True
 # Hex-encoded random 24 character string for session encryption
 flaskApp.secret_key = os.urandom(32)
+
+if not os.path.exists("logs"):
+    os.makedirs("logs")
+if not os.path.exists("logs/flask"):
+    os.makedirs("logs/flask")
+if not os.path.exists("logs/console"):
+    os.makedirs("logs/console")
+
+logFileName = str(datetime.utcnow()).replace(" ", "").replace(":", "").replace(".", "") + ".log"
+
+flaskLogFile = logging.FileHandler("logs/flask/" + logFileName)
+werkzeugLogger = logging.getLogger('werkzeug')
+werkzeugLogger.addHandler(flaskLogFile)
+
+consoleLogFile = logging.FileHandler("logs/console/" + logFileName)
+flaskApp.logger.addHandler(consoleLogFile)
+flaskApp.logger.setLevel(logging.DEBUG)
 
 # ---- Bundle all scss files into all.css ---- #
 assets     = Environment(flaskApp)

@@ -1,11 +1,13 @@
 # sensitive auth data
-
 *.cfg
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 static/all.css
+
+# logging data
+logs/
 
 # C extensions
 *.so
