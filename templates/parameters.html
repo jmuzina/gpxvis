@@ -23,17 +23,12 @@
     <!-- center white box-->
     <div class="main-container">
       <!-- div within white box that columns sit in id="testcont123"-->
-      <div class="container sidebyside">
-        <form action = "/generatePage" method="POST">
-          <div class="row">
+      <form class="container-fluid" action = "/generatePage" method="POST">
+        <div class = "row">
+
             <!-- left column with parameter buttons-->
-            <div class="col-md-6 parameter-column" id="categories">
-              <div
-                class="nav flex-column nav-pills"
-                id="v-pills-tab"
-                role="tablist"
-                aria-orientation="vertical"
-              >
+            <div class="col-md-4 nav nav-pills flex-column" id="categories">
+
                 <!-- green pill that says users name-->
                 <div class="fake-button hello-button">
                   Hello, {{userData['firstname']}}
@@ -50,8 +45,8 @@
                   aria-selected="false"
                   >Activities</a
                 >
-
-                <!-- Visual Type tab-->
+                
+                <!-- Visual Type tab
                 <a
                   class="nav-link button-custom parameter-button"
                   id="v-pills-visualtype-tab"
@@ -62,6 +57,7 @@
                   aria-selected="false"
                   >Visual Type</a
                 >
+                -->
 
                 <!-- Background tab-->
                 <a
@@ -87,7 +83,9 @@
                   >Draw Style</a
                 >
 
-                <!-- Text tab-->
+                <input class = "nav-link button-custom parameter-button generate-button disabled-button" id="generate-button" type="submit" value="Generate" disabled> 
+
+                <!-- Text tab
                 <a
                   class="nav-link button-custom parameter-button"
                   id="v-pills-text-tab"
@@ -98,8 +96,9 @@
                   aria-selected="false"
                   >Text</a
                 >
+                -->
 
-                <!-- Extra tab-->
+                <!-- Extra tab
                 <a
                   class="nav-link button-custom parameter-button"
                   id="v-pills-title-tab"
@@ -110,10 +109,11 @@
                   aria-selected="false"
                   >Title</a
                 >
-              </div>
+                -->
+              
           </div>
           <!-- the following section is all the contents of each category-->
-          <div class="col-md-6 parameter-column" id="customize">
+          <div class="col-md-8" id="customize">
             <!--  <div class="tab-content flex-column" id="v-pills-tabContent"> -->
             <!-- activities options-->
             <!--  <div
@@ -122,9 +122,8 @@
               role="tabpanel"
               aria-labelledby="v-pills-activities-tab"
             > -->
-              <div class="container">
                 
-                  <div class="tab-content" id="v-pills-tabContent">
+                  
                     <div
                       class="tab-pane fade show active"
                       id="v-pills-activities"
@@ -133,13 +132,20 @@
                     >
                       <h1>Select Activities</h1>
                       <fieldset>
-                        <label for="start">Start date:</label>
-                        <input type="date" id="start-date" name="trip-start" value="2018-07-22" min="1970-01-01" max="2022-12-31">
-                        <label for="end">End date:</label>
-                        <input type="date" id="end-date" name="trip-start" value="2022-04-22" min="1970-01-01" max="2022-12-31">
+                        <div class="row" id="dateFilters">
+                          <div class="col-md-5" style="padding-right:0;">
+                            <label for="start">Start date:
+                              <input type="date" id="start-date" name="trip-start" value="2018-07-22" min="1970-01-01" max="2022-12-31">
+                            </label>
+                          </div>
+                          <div class="col-md-5" style="padding-left:0;">
+                            <label for="end">End date: <span>&nbsp;</span>
+                              <input type="date" id="end-date" name="trip-start" value="2022-04-22" min="1970-01-01" max="2022-12-31">
+                            </label>
+                          </div>
+                        </div>
 
-                        <label for="activity">Activity Type:</label>
-
+                        <label for="activity">Activity Type:
                           <select name="activity" id="activity-type">
                             <option value="all">All</option>
                             <option value="ride">Ride</option>
@@ -149,165 +155,166 @@
                             <option value="hike">Hike</option>
                             <option value="ski">Ski</option>
                           </select>
+                        </label>
+                        <br>
 
-                          <br><label for="fname">Keyword:</label>
-                          <input type="text" id="keyword" name="keyword" value=""><br>
-                          <button id="getActivitiesButton" type="button" class="btn btn-warning">Get Activities</button>
-                          <input id="selectedActivities" type="hidden" name="selectedActivities" value="" hidden>
-                        </fieldset>
-                        <script type="text/javascript">
-                          // Allows jinja2 template values from flask to be read into JavaScript
-                          // credit https://stackoverflow.com/questions/37259740/passing-variables-from-flask-to-javascript
-                          function pythonBridge(vars) {
-                            return vars
+                        <label for="fname">Keyword:
+                          <input type="text" id="keyword" name="keyword" value="">
+                        </label>
+                        <br>
+                        <button id="getActivitiesButton" type="button" class="btn btn-warning">Get Activities</button>
+                        <input id="selectedActivities" type="hidden" name="selectedActivities" value="" hidden>
+                      </fieldset>
+                      <script type="text/javascript">
+                        // Allows jinja2 template values from flask to be read into JavaScript
+                        // credit https://stackoverflow.com/questions/37259740/passing-variables-from-flask-to-javascript
+                        function pythonBridge(vars) {
+                          return vars
+                        }
+
+                        activities = pythonBridge({{activities|tojson}});
+                        const activitiesAsArray = Object.entries(activities);
+                        const startDate = pythonBridge({{startDate|tojson}});
+                        const endDate = pythonBridge({{endDate|tojson}});
+
+                        // HTML elements for filter inputs
+                        var startDateField = document.getElementById("start-date");
+                        var endDateField = document.getElementById("end-date");
+                        var activityTypeField = document.getElementById("activity-type");
+                        var keywordField = document.getElementById("keyword")
+
+
+                        // Set date field values and maximums
+                        startDateField.setAttribute("value", startDate);
+                        startDateField.setAttribute("max", endDate);
+
+                        endDateField.setAttribute("value", endDate);
+                        endDateField.setAttribute("max", endDate);
+
+
+                        // Returns all activities that contain the provided string in their name
+                        function getKeywordMatches(inputStr) {
+                          inputStr = inputStr.toLowerCase();
+                          return activitiesAsArray.filter(([key, value]) => value["name"].toLowerCase().includes(inputStr))
+                        }
+                        
+                        // Returns all activities that were recorded between the specified start and end dates
+                        // credit https://stackoverflow.com/questions/2488313/javascripts-getdate-returns-wrong-date
+                        function getDateMatches(startDate, endDate) {
+                          const splitStartDate = startDate.match(/(\d+)/g);
+                          const filterStartDate = new Date(splitStartDate[0], splitStartDate[1]-1, splitStartDate[2]);
+
+                          const splitEndDate = endDate.match(/(\d+)/g);
+                          const filterEndDate = new Date(splitEndDate[0], splitEndDate[1]-1, splitEndDate[2]);
+
+                          return activitiesAsArray.filter(([key, value]) => {
+                            const splitActivityDate = value["displayTime"].match(/(\d+)/g);
+                            const filterActivityDate = new Date(splitActivityDate[2], splitActivityDate[0] - 1, splitActivityDate[1])
+                            return filterActivityDate >= filterStartDate && filterActivityDate <= filterEndDate;
+                          });
+                        }
+
+                        // Returns all activities that match the provided activity type
+                        function getActivityTypeMatches(activityType) {
+                          activityType = activityType.toLowerCase();
+
+                          // If activity type is all, we should return all activities
+                          if (activityType == "all") {
+                            return activitiesAsArray;
                           }
-
-                          activities = pythonBridge({{activities|tojson}});
-                          const activitiesAsArray = Object.entries(activities);
-                          const startDate = pythonBridge({{startDate|tojson}});
-                          const endDate = pythonBridge({{endDate|tojson}});
-
-                          // HTML elements for filter inputs
-                          var startDateField = document.getElementById("start-date");
-                          var endDateField = document.getElementById("end-date");
-                          var activityTypeField = document.getElementById("activity-type");
-                          var keywordField = document.getElementById("keyword")
-
-
-                          // Set date field values and maximums
-                          startDateField.setAttribute("value", startDate);
-                          startDateField.setAttribute("max", endDate);
-
-                          endDateField.setAttribute("value", endDate);
-                          endDateField.setAttribute("max", endDate);
-
-
-                          // Returns all activities that contain the provided string in their name
-                          function getKeywordMatches(inputStr) {
-                            inputStr = inputStr.toLowerCase();
-                            return activitiesAsArray.filter(([key, value]) => value["name"].toLowerCase().includes(inputStr))
+                          else {
+                            return activitiesAsArray.filter(([key, value]) => value["type"].toLowerCase() == activityType);
                           }
+                        }
+                        
+                        // Returns all activities that match all three filters
+                        // Gets the intersection of the three filter results and returns it
+                        // credit https://stackoverflow.com/questions/1885557/simplest-code-for-array-intersection-in-javascript
+                        function getFilterMatches() {
+                          const keywordMatches = getKeywordMatches(keywordField["value"]);
+                          const dateMatches = getDateMatches(startDateField["value"], endDateField["value"]);
+                          const activityTypeMatches = getActivityTypeMatches(activityTypeField["value"]);
+
+                          // Intersection of keyword and date matches
+                          const keywordDateMatches = keywordMatches.filter((dateMatch) => {
+                            return dateMatches.indexOf(dateMatch) !== -1;
+                          });
+                          // Intersection of keyword-date matches and activity type matches
+                          return keywordDateMatches.filter((keywordDateMatch) => {
+                            return activityTypeMatches.indexOf(keywordDateMatch) !== -1;
+                          });
+                        }
+
+                        // Find all activities that match the provided inputs and displays them on-screen.
+                        // Called every time "get activities" is clicked.
+                        function searchActivities() {
+                          const filterMatches = getFilterMatches();
                           
-                          // Returns all activities that were recorded between the specified start and end dates
-                          // credit https://stackoverflow.com/questions/2488313/javascripts-getdate-returns-wrong-date
-                          function getDateMatches(startDate, endDate) {
-                            const splitStartDate = startDate.match(/(\d+)/g);
-                            const filterStartDate = new Date(splitStartDate[0], splitStartDate[1]-1, splitStartDate[2]);
+                          const oldTableBody = document.getElementById("matchedActivities");
+                          var table = document.getElementById("activitiesTable");
+                          const tableHeader = document.getElementById("activitiesTableHeader");
+                          var selectedIDs = [];
+                          if (filterMatches.length > 0) {
+                            var newTableBody = document.createElement('tbody');
+                            newTableBody.id = "matchedActivities";
+                            // credit https://codedec.com/tutorials/how-to-add-new-row-in-table-using-javascript/
+                            for (var i = 0; i < filterMatches.length; ++i) {
+                              const activity = filterMatches[i][1];
+                              var row = newTableBody.insertRow(i);
+                              var nameCell = row.insertCell(0);
+                              var dateCell = row.insertCell(1);
+                              var typeCell = row.insertCell(2);
+                              var distanceCell = row.insertCell(3);
 
-                            const splitEndDate = endDate.match(/(\d+)/g);
-                            const filterEndDate = new Date(splitEndDate[0], splitEndDate[1]-1, splitEndDate[2]);
+                              nameCell.innerHTML = activity["name"];
+                              nameCell.className = "nameCell";
+                              dateCell.innerHTML = activity["displayTime"];
+                              dateCell.className = "dateCell";
+                              typeCell.innerHTML = activity["type"];
+                              typeCell.className = "typeCell";
+                              distanceCell.innerHTML = activity["distance"] + " mi";
+                              distanceCell.className = "distanceCell";
 
-                            return activitiesAsArray.filter(([key, value]) => {
-                              const splitActivityDate = value["displayTime"].match(/(\d+)/g);
-                              const filterActivityDate = new Date(splitActivityDate[2], splitActivityDate[0] - 1, splitActivityDate[1])
-                              return filterActivityDate >= filterStartDate && filterActivityDate <= filterEndDate;
-                            });
-                          }
-
-                          // Returns all activities that match the provided activity type
-                          function getActivityTypeMatches(activityType) {
-                            activityType = activityType.toLowerCase();
-
-                            // If activity type is all, we should return all activities
-                            if (activityType == "all") {
-                              return activitiesAsArray;
-                            }
-                            else {
-                              return activitiesAsArray.filter(([key, value]) => value["type"].toLowerCase() == activityType);
-                            }
-                          }
-                          
-                          // Returns all activities that match all three filters
-                          // Gets the intersection of the three filter results and returns it
-                          // credit https://stackoverflow.com/questions/1885557/simplest-code-for-array-intersection-in-javascript
-                          function getFilterMatches() {
-                            const keywordMatches = getKeywordMatches(keywordField["value"]);
-                            const dateMatches = getDateMatches(startDateField["value"], endDateField["value"]);
-                            const activityTypeMatches = getActivityTypeMatches(activityTypeField["value"]);
-
-                            // Intersection of keyword and date matches
-                            const keywordDateMatches = keywordMatches.filter((dateMatch) => {
-                              return dateMatches.indexOf(dateMatch) !== -1;
-                            });
-                            // Intersection of keyword-date matches and activity type matches
-                            return keywordDateMatches.filter((keywordDateMatch) => {
-                              return activityTypeMatches.indexOf(keywordDateMatch) !== -1;
-                            });
-                          }
-
-                          // Find all activities that match the provided inputs and displays them on-screen.
-                          // Called every time "get activities" is clicked.
-                          function searchActivities() {
-                            const filterMatches = getFilterMatches();
-
-                            const oldTableBody = document.getElementById("matchedActivities");
-                            const table = document.getElementById("activitiesTable");
-                            var selectedIDs = [];
-                            if (filterMatches.length > 0) {
-                              var newTableBody = document.createElement('tbody');
-                              newTableBody.id = "matchedActivities";
-                              // credit https://codedec.com/tutorials/how-to-add-new-row-in-table-using-javascript/
-                              for (var i = 0; i < filterMatches.length; ++i) {
-                                const activity = filterMatches[i][1];
-                                var row = newTableBody.insertRow(i);
-                                var nameCell = row.insertCell(0);
-                                var dateCell = row.insertCell(1);
-                                var typeCell = row.insertCell(2);
-                                var distanceCell = row.insertCell(3);
-
-                                nameCell.innerHTML = activity["name"];
-                                dateCell.innerHTML = activity["displayTime"];
-                                typeCell.innerHTML = activity["type"];
-                                typeCell.style = "text-align:right;"
-                                distanceCell.innerHTML = activity["distance"] + " mi";
-                                distanceCell.style = "text-align:right;"
-
-                                selectedIDs[i] = filterMatches[i][0];
-                              }
-
-                              oldTableBody.parentNode.replaceChild(newTableBody, oldTableBody);
-                              if (table.hidden) table.hidden = false;
-                              var generateButton = document.getElementById("generate-button");
-                              if (generateButton.disabled) { 
-                                generateButton.disabled = false;
-                                $("#generate-button").removeClass("disabled-button");
-                              }
-                            }
-                            else {
-                              table.hidden = true;
-                              var generateButton =  document.getElementById("generate-button");
-                              generateButton.disabled = true;
-                              $("#generate-button").addClass("disabled-button");
+                              selectedIDs[i] = filterMatches[i][0];
                             }
 
-                            const selectedActivitiesElement = document.getElementById("selectedActivities");
-                            console.log(selectedActivitiesElement);
-                            selectedActivitiesElement["value"] = selectedIDs;
-                            selectedActivitiesElement.setAttribute("value", selectedIDs);
-                            console.log(selectedActivitiesElement);
+                            oldTableBody.parentNode.replaceChild(newTableBody, oldTableBody);
+                            tableHeader.hidden = false;
+                            table.hidden = false;
+                            var generateButton = document.getElementById("generate-button");
+                            generateButton.disabled = false;
+                            $("#generate-button").removeClass("disabled-button");
                           }
-                          
-                          document.getElementById("getActivitiesButton").addEventListener ("click", searchActivities, false);
-                        </script>
-                         <table id = "activitiesTable" hidden>
-                          <colgroup>
-                              <col span="1" style="width: 40%;">
-                              <col span="1" style="width: 20%;">
-                              <col span="1" style="width: 20%;">
-                              <col span="1" style="width: 20%;">
-                            </colgroup>
-                          <thead>
-                            <trow>
-                              <th>Name</th>
-                              <th>Date</th>
-                              <th style="text-align:right;">Type</th>
-                              <th style="text-align:right;">Distance</th>
-                            </trow>
-                          </thead>
-                          <tbody id = "matchedActivities">
-                          </tbody>
-                        </table>
+                          else {
+                            tableHeader.hidden = true;
+                            table.hidden = true;
+                            var generateButton =  document.getElementById("generate-button");
+                            generateButton.disabled = true;
+                            $("#generate-button").addClass("disabled-button");
+                          }
+
+                          const selectedActivitiesElement = document.getElementById("selectedActivities");
+                          console.log(selectedActivitiesElement);
+                          selectedActivitiesElement["value"] = selectedIDs;
+                          selectedActivitiesElement.setAttribute("value", selectedIDs);
+                          console.log(selectedActivitiesElement);
+                        }
+                        
+                        document.getElementById("getActivitiesButton").addEventListener ("click", searchActivities, false);
+                      </script>
+                      <table class = "table table-striped table-bordered table-sm" id = "activitiesTable">
+                        <thead id = "activitiesTableHeader" style="width: 100%;display: block;" hidden>
+                          <tr style="width: 100%;display: flex;">
+                            <th class = "nameCell">Name</th>
+                            <th class = "dateCell">Date</th>
+                            <th class = "typeCell">Type</th>
+                            <th class = "distanceCell">Distance</th>
+                          </tr>
+                        </thead>
+                        <tbody id = "matchedActivities"></tbody>
+                      </table>
                     </div>
+                    <!--
                     <div
                       class="tab-pane fade"
                       id="v-pills-visualtype"
@@ -316,6 +323,7 @@
                     >
                       <h1>Select Visual Type</h1>
                     </div>
+                  -->
                     <div
                       class="tab-pane fade"
                       id="v-pills-background"
@@ -336,17 +344,40 @@
                       aria-labelledby="v-pills-drawstyle-tab"
                     >
                       <h1>Select Draw Style</h1>
-                      <div>
-                        <input type="color" id="gridlineColor" name="gridlineColor"
-                                value="#000000">
-                        <label for="gridlineColor">Grid Color</label>
+                      <!--
+                      <div class="slidecontainer">
+                        <input type="range" min="1" max="30" value="15" class="slider" id="blurIntensity">
                       </div>
-                      <div>
-                        <input type="color" id="pathColor" name="pathColor"
-                              value="#000000">
-                        <label for="pathColor">Line Color</label>
+                       -->
+                      <div id="gridlineSettings">
+                        <label for="displayGridLines">Display Grid
+                          <input type="checkbox" id = "displayGridLines" name="displayGridLines">
+                        </label>
+                        <br>
+                        <label for="gridlineThickness" hidden>Gridline Thickness
+                          <input type="range" min="1" max="30" value="5" class="slider" id="gridlineThickness" name="gridlineThickness">
+                        </label>
+                        <label for="gridlineColor" hidden>Grid Color
+                          <input type="color" id="gridlineColor" name="gridlineColor" value="#000000">
+                          <br>
+                        </label>
+                        <script type="text/javascript">
+                          var gridCheckBox = document.getElementById("displayGridLines");
+                          var gridlineColorSelector = document.getElementById("gridlineColor").parentNode;
+                          var gridlineThicknessSelector = document.getElementById("gridlineThickness").parentNode;
+                          function gridChecked() {
+                            console.log(gridCheckBox.checked);
+                            gridlineColorSelector.hidden = !gridCheckBox.checked;
+                            gridlineThicknessSelector.hidden = gridlineColorSelector.hidden;
+                          }
+                          gridCheckBox.addEventListener ("change", gridChecked, false);
+                        </script>
                       </div>
+                        <label for="pathColor">Path Color
+                          <input type="color" id="pathColor" name="pathColor" value="#000000">
+                        </label>
                     </div>
+                    <!--
                     <div
                       class="tab-pane fade"
                       id="v-pills-text"
@@ -355,6 +386,8 @@
                     >
                       <h1>Select Text Options</h1>
                     </div>
+                  -->
+                  <!--
                     <div
                       class="tab-pane fade"
                       id="v-pills-title"
@@ -363,13 +396,10 @@
                     >
                       title
                     </div>
-                  </div>
-              </div>
+                  -->
             </div>
           </div>
-          <input class = "nav-link button-custom parameter-button generate-button disabled-button" id="generate-button" type="submit" value="Generate" disabled> 
-        </form>
-      </div>
+      </form>
 
         </div>
     </div>

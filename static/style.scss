@@ -24,6 +24,11 @@ body {
   flex-flow: column nowrap;
 }
 
+.main-container form {
+  display: flex;
+  flex-flow: column wrap;
+}
+
 //// This section is used for code only for main page ////
 ////                                                  ////
 ////                                                  ////
@@ -153,9 +158,31 @@ body {
   background-color: lightgrey !important;
 }
 
+#v-pills-activities fieldset {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
 .parameter-button {
   color: #333333;
   box-shadow: none;
+}
+
+.nameCell {
+  width:50%;
+}
+
+.dateCell {
+  width:18%;
+}
+
+.typeCell {
+  width:15%;
+}
+
+.distanceCell {
+  width:17%;
+  text-align: right;
 }
 
 .generate-button {
@@ -171,6 +198,17 @@ body {
 .disabled-button {
   opacity:0.5;
   cursor: not-allowed;
+}
+
+#gridlineSettings {
+  display:flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+}
+
+#displayGridLines {
+  padding-left: 0;
+  margin-left: 0;
 }
 
 #Strava {
@@ -221,9 +259,17 @@ body {
 }
 
 #customize {
-  //max-width: 60;
-  padding-right: 0 !important;
   max-width: 100% !important;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  height: 35vh;
+}
+
+#categories {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
 }
 
 .sidebyside {
@@ -239,6 +285,18 @@ body {
   display: block !important;
 }
 
+#getActivitiesButton {
+  width:25%;
+}
+
+#activitiesTable {
+  width:100%;
+  overflow: auto;
+  display: block;
+  direction: ltr;
+  scroll-behavior: smooth;
+  margin-top: 20px;
+}
 
 /* these are experimental and may be deleted if still unused
 
