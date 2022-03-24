@@ -147,7 +147,7 @@ def render_generatePage():
                 selected = dict([(activityID, userActivities[uniqueId][activityID]) for activityID in userActivities[uniqueId] if str(activityID) in formArgs["selectedActivities"]])
                 if len(selected) > 0:
                     polylines = apis[session["networkName"]].getAllPolylines(selected)
-                    return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=formArgs["pathThickness"], gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"])))
+                    return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"])))
                 else:
                     return functions.throwError("No activities were selected.")
     else:
