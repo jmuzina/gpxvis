@@ -176,6 +176,24 @@ def render_generatePage():
 def returnActivityFiltering():
     return send_file("./static/activityFiltering.js")
 
+@flaskApp.route('/aboutPage')
+def render_aboutPage():
+    sessionDataValidationResult = functions.validUserData(session)
+
+    if sessionDataValidationResult == True:
+        return render_template('aboutPage.html', userData = session['userData'])
+    else:
+        return render_template('aboutPage.html')
+
+@flaskApp.route('/privacyPage')
+def render_privacyPage():
+    sessionDataValidationResult = functions.validUserData(session)
+
+    if sessionDataValidationResult == True:
+        return render_template('privacyPage.html', userData = session['userData'])
+    else:
+        return render_template('privacyPage.html')
+
 # Store any config items not related to API logins under app.config
 for key in config["DEFAULT"]:
     flaskApp.config[key] = config["DEFAULT"][key]
