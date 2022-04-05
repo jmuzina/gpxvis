@@ -91,7 +91,7 @@ function searchActivities(activities) {
     // credit https://codedec.com/tutorials/how-to-add-new-row-in-table-using-javascript/
     for (var i = 0; i < filterMatches.length; ++i) {
       const activity = filterMatches[i][1];
-      for (var j = 0; j < 10; ++j) {
+      for (var j = 0; j < 1; ++j) {
         var row = newTableBody.insertRow(i + j);
         var nameCell = row.insertCell(0);
         var dateCell = row.insertCell(1);

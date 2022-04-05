@@ -17,6 +17,7 @@
       href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap"
       rel="stylesheet"
     />
+    <script src="activityFiltering.js"></script>
   </head>
 
   <body>
@@ -90,11 +91,19 @@
           -->
 
           <!-- Generate Button -->
+          <script type = "text/javascript">
+            function doSelection() {
+              const selectedActivitiesElement = document.getElementById("selectedActivities");
+              selectedActivitiesElement["value"] = Object.keys(selectedIDs).reverse().toString();
+              selectedActivitiesElement.setAttribute("value", selectedActivitiesElement["value"]);
+            }
+          </script>
           <input
             class="nav-link button-custom parameter-button generate-button disabled-button"
             id="generate-button"
             type="submit"
             value="Generate"
+            onclick="doSelection()"
             disabled
           />
         </div>
@@ -160,15 +169,6 @@
                 <input type="text" id="keyword" name="keyword" value="" />
               </label>
               <br />
-              <!--
-              <button
-                id="getActivitiesButton"
-                type="button"
-                class="btn btn-warning"
-              >
-                Get Activities
-              </button>
-            -->
               <input
                 id="selectedActivities"
                 type="hidden"
@@ -177,7 +177,7 @@
                 hidden
               />
             </fieldset>
-            <script src="activityFiltering.js"></script>
+            
               <script type="text/javascript">
                 activities = pythonBridge({{activities|tojson}});
                 const activitiesAsArray = Object.entries(activities);
@@ -195,11 +195,9 @@
                   }
                   searchActivities(activitiesAsArray);
                 }, 200);
-
-                //searchActivities(activitiesAsArray);
             </script>
-            <table class = "table table-striped table-bordered table-sm table-responsive" id = "activitiesTable">
-              <thead id = "activitiesTableHeader" style="display: block;" hidden>
+            <table class = "table table-striped table-sm w-auto" id = "activitiesTable">
+              <thead id = "activitiesTableHeader" hidden>
                 <tr>
                   <th class = "nameCell">Name</th>
                   <th class = "dateCell">Date</th>
@@ -246,11 +244,6 @@
             aria-labelledby="v-pills-drawstyle-tab"
           >
             <h3>Select Draw Style</h3>
-            <!--
-                      <div class="slidecontainer">
-                        <input type="range" min="1" max="30" value="15" class="slider" id="blurIntensity">
-                      </div>
-                       -->
             <div id="gridlineSettings">
               <label for="displayGridLines"
                 >Display Grid

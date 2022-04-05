@@ -37,12 +37,12 @@ body {
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 5%;
+  padding: 4.1%;
 }
 
 .parameter-button-container {
   border-color: yellow;
-  width: 33%;
+  width: 25%;
   padding: 10px;
   justify-content: space-between;
 }
@@ -133,7 +133,7 @@ body {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  width: 220px;
+  width: 100%;
   word-break: break-word;
   border: 0;
   display: inline;
@@ -167,7 +167,7 @@ body {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  width: 220px;
+  width: 100%;
   word-break: break-word;
   border: 0;
   display: inline;
@@ -211,20 +211,24 @@ body {
   color: white !important;
 }
 
+.selectedCell {
+  width: 3%;
+}
+
 .nameCell {
-  width:24.7vw;
+  width:44%;
 }
 
 .dateCell {
-  width:5.7vw;
+  width:19%;
 }
 
 .typeCell {
-  width:3.1vw;
+  width:14%;
 }
 
 .distanceCell {
-  width:4.7vw;
+  width:20%;
   text-align: right;
 }
 
@@ -252,7 +256,6 @@ body {
   display: block;
   direction: ltr;
   scroll-behavior: smooth;
-  margin-top: 20px;
 }
 
 #gridlineSettings {
