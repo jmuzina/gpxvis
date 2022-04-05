@@ -110,10 +110,10 @@
             role="tabpanel"
             aria-labelledby="v-pills-activities-tab"
           >
-            <h1>Select your Activities</h1>
+            <h3>Select your Activities</h3>
             <fieldset>
               <div class="row" id="dateFilters">
-                <div class="col-md-5" style="padding-right: 0">
+                <div class="col-md-4" style="padding-right: 0">
                   <label for="start"
                     >Start date:
                     <input
@@ -126,7 +126,7 @@
                     />
                   </label>
                 </div>
-                <div class="col-md-5" style="padding-left: 0">
+                <div class="col-md-4" style="padding-left: 0">
                   <label for="end"
                     >End date: <span>&nbsp;</span>
                     <input
@@ -139,20 +139,20 @@
                     />
                   </label>
                 </div>
+                <div class="col-md-4">
+                  <label for="activity" >Activity Type:
+                    <select name="activity" id="activity-type">
+                      <option value="all">All</option>
+                      <option value="ride">Ride</option>
+                      <option value="run">Run</option>
+                      <option value="swim">Swim</option>
+                      <option value="walk">Walk</option>
+                      <option value="hike">Hike</option>
+                      <option value="ski">Ski</option>
+                    </select>
+                  </label>
+                </div>
               </div>
-
-              <label for="activity"
-                >Activity Type:
-                <select name="activity" id="activity-type">
-                  <option value="all">All</option>
-                  <option value="ride">Ride</option>
-                  <option value="run">Run</option>
-                  <option value="swim">Swim</option>
-                  <option value="walk">Walk</option>
-                  <option value="hike">Hike</option>
-                  <option value="ski">Ski</option>
-                </select>
-              </label>
               <br />
 
               <label for="fname"
@@ -160,6 +160,7 @@
                 <input type="text" id="keyword" name="keyword" value="" />
               </label>
               <br />
+              <!--
               <button
                 id="getActivitiesButton"
                 type="button"
@@ -167,6 +168,7 @@
               >
                 Get Activities
               </button>
+            -->
               <input
                 id="selectedActivities"
                 type="hidden"
@@ -180,13 +182,23 @@
                 activities = pythonBridge({{activities|tojson}});
                 const activitiesAsArray = Object.entries(activities);
 
-                configureDateFields(pythonBridge({{startDate|tojson}}), pythonBridge({{endDate|tojson}}));                                                
-                
-                document.getElementById("getActivitiesButton").addEventListener ("click", function() {
+                configureDateFields(pythonBridge({{startDate|tojson}}), pythonBridge({{endDate|tojson}}));  
+
+                // After 0.2  secs, register input event listeners with all filter fields to live update activities table
+                setTimeout(() => {
+                  for (var i = 0; i < filterFieldIDs.length; ++i) {
+                    waitForElement(filterFieldIDs[i], function()  {
+                      document.getElementById(filterFieldIDs[i]).addEventListener("input", function() {
+                        searchActivities(activitiesAsArray);
+                      }, false);
+                    })                  
+                  }
                   searchActivities(activitiesAsArray);
-                }, false);
+                }, 200);
+
+                //searchActivities(activitiesAsArray);
             </script>
-            <table class = "table table-striped table-bordered table-sm" id = "activitiesTable">
+            <table class = "table table-striped table-bordered table-sm table-responsive" id = "activitiesTable">
               <thead id = "activitiesTableHeader" style="display: block;" hidden>
                 <tr>
                   <th class = "nameCell">Name</th>
@@ -206,7 +218,7 @@
             role="tabpanel"
             aria-labelledby="v-pills-visualtype-tab"
           >
-            <h1>Select Visual Type</h1>
+            <h3>Select Visual Type</h3>
           </div>
           <!-- Background Tab Content -->
           <div
@@ -215,7 +227,7 @@
             role="tabpanel"
             aria-labelledby="v-pills-background-tab"
           >
-            <h1>Select Background</h1>
+            <h3>Select Background</h3>
             <div>
               <input
                 type="color"
@@ -233,7 +245,7 @@
             role="tabpanel"
             aria-labelledby="v-pills-drawstyle-tab"
           >
-            <h1>Select Draw Style</h1>
+            <h3>Select Draw Style</h3>
             <!--
                       <div class="slidecontainer">
                         <input type="range" min="1" max="30" value="15" class="slider" id="blurIntensity">
@@ -316,7 +328,7 @@
             role="tabpanel"
             aria-labelledby="v-pills-text-tab"
           >
-            <h1>Select Text Options</h1>
+            <h3>Select Text Options</h3>
           </div>
         </div>
       </form>

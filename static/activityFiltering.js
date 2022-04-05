@@ -26,9 +26,11 @@ function configureDateFields(startDate, endDate) {
 // credit https://stackoverflow.com/questions/2488313/javascripts-getdate-returns-wrong-date
 function getDateMatches(startDate, endDate) {
   const splitStartDate = startDate.match(/(\d+)/g);
+  if (splitStartDate == null) return [];
   const filterStartDate = new Date(splitStartDate[0], splitStartDate[1]-1, splitStartDate[2]);
 
   const splitEndDate = endDate.match(/(\d+)/g);
+  if (splitEndDate == null) return [];
   const filterEndDate = new Date(splitEndDate[0], splitEndDate[1]-1, splitEndDate[2]);
 
   return activitiesAsArray.filter(([key, value]) => {
@@ -89,20 +91,22 @@ function searchActivities(activities) {
     // credit https://codedec.com/tutorials/how-to-add-new-row-in-table-using-javascript/
     for (var i = 0; i < filterMatches.length; ++i) {
       const activity = filterMatches[i][1];
-      var row = newTableBody.insertRow(i);
-      var nameCell = row.insertCell(0);
-      var dateCell = row.insertCell(1);
-      var typeCell = row.insertCell(2);
-      var distanceCell = row.insertCell(3);
+      for (var j = 0; j < 10; ++j) {
+        var row = newTableBody.insertRow(i + j);
+        var nameCell = row.insertCell(0);
+        var dateCell = row.insertCell(1);
+        var typeCell = row.insertCell(2);
+        var distanceCell = row.insertCell(3);
 
-      nameCell.innerHTML = activity["name"];
-      nameCell.className = "nameCell";
-      dateCell.innerHTML = activity["displayTime"];
-      dateCell.className = "dateCell";
-      typeCell.innerHTML = activity["type"];
-      typeCell.className = "typeCell";
-      distanceCell.innerHTML = activity["distance"] + " mi";
-      distanceCell.className = "distanceCell";
+        nameCell.innerHTML = activity["name"];
+        nameCell.className = "nameCell";
+        dateCell.innerHTML = activity["displayTime"];
+        dateCell.className = "dateCell";
+        typeCell.innerHTML = activity["type"];
+        typeCell.className = "typeCell";
+        distanceCell.innerHTML = activity["distance"] + " mi";
+        distanceCell.className = "distanceCell";
+      }
 
       selectedIDs[i] = filterMatches[i][0];
     }
@@ -110,7 +114,7 @@ function searchActivities(activities) {
     oldTableBody.parentNode.replaceChild(newTableBody, oldTableBody);
     tableHeader.hidden = false;
     table.hidden = false;
-    table.style = "max-height:250px;";
+    table.style = "max-height:230px;";
     var generateButton = document.getElementById("generate-button");
     generateButton.disabled = false;
     $("#generate-button").removeClass("disabled-button");
@@ -125,8 +129,24 @@ function searchActivities(activities) {
   }
 
   const selectedActivitiesElement = document.getElementById("selectedActivities");
-  console.log(selectedActivitiesElement);
   selectedActivitiesElement["value"] = selectedIDs;
   selectedActivitiesElement.setAttribute("value", selectedIDs);
-  console.log(selectedActivitiesElement);
 }
+
+function waitForElement(elementID, callback) {
+  if (document.getElementById(elementID)) callback();
+  else {
+    setTimeout(function() {
+      waitForElement(elementID, callback);
+    }, 50);
+  }
+}
+
+// Element IDs of parameter input elements that should cause a live update of
+// the selected activities table on element change
+const filterFieldIDs = [
+  "start-date",
+  "end-date",
+  "activity-type",
+  "keyword"
+];
