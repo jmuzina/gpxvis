@@ -196,17 +196,19 @@
                   searchActivities(activitiesAsArray);
                 }, 200);
             </script>
-            <table class = "table table-striped table-sm w-auto" id = "activitiesTable">
-              <thead id = "activitiesTableHeader" hidden>
-                <tr>
-                  <th class = "nameCell">Name</th>
-                  <th class = "dateCell">Date</th>
-                  <th class = "typeCell">Type</th>
-                  <th class = "distanceCell">Distance</th>
-                </tr>
-              </thead>
-              <tbody id = "matchedActivities"></tbody>
-            </table>
+            <div class = "scrollable-table-container">
+              <table class = "table table-striped table-sm w-auto" id = "activitiesTable">
+                <thead id = "activitiesTableHeader" hidden>
+                  <tr>
+                    <th class = "nameCell">Name</th>
+                    <th class = "dateCell">Date</th>
+                    <th class = "typeCell">Type</th>
+                    <th class = "distanceCell">Distance</th>
+                  </tr>
+                </thead>
+                <tbody id = "matchedActivities"></tbody>
+              </table>
+            </div>
           </div>
 
           <!-- Visual Type Tab Content -->

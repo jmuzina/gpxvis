@@ -11,7 +11,7 @@ body {
 // this is used for the centered inner box in the main page, and parameters page
 .main-container {
   background-color: white;
-  height: 60%;
+  //height: 60%;
   min-height: 432px;
   width: 60%;
   min-width: 768px;
@@ -250,12 +250,15 @@ body {
   width:25%;
 }
 
-#activitiesTable {
-  //width:38vw;
-  overflow: auto;
-  display: block;
+.scrollable-table-container {
+  overflow: scroll;
   direction: ltr;
   scroll-behavior: smooth;
+  max-height: 300px;
+}
+
+#activitiesTable {
+  display:table;
 }
 
 #gridlineSettings {
