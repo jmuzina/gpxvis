@@ -176,6 +176,10 @@ def render_generatePage():
 def returnActivityFiltering():
     return send_file("./static/activityFiltering.js")
 
+@flaskApp.route("/fileVerification.js")
+def returnFileVerification():
+    return send_file("./static/fileVerification.js")
+
 # Store any config items not related to API logins under app.config
 for key in config["DEFAULT"]:
     flaskApp.config[key] = config["DEFAULT"][key]

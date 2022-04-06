@@ -1,3 +1,5 @@
+var selectedIDs = [];
+
 // Allows jinja2 template values from flask to be read into JavaScript
 // credit https://stackoverflow.com/questions/37259740/passing-variables-from-flask-to-javascript
 function pythonBridge(vars) {
@@ -84,7 +86,7 @@ function searchActivities(activities) {
   const oldTableBody = document.getElementById("matchedActivities");
   var table = document.getElementById("activitiesTable");
   const tableHeader = document.getElementById("activitiesTableHeader");
-  var selectedIDs = [];
+
   if (filterMatches.length > 0) {
     var newTableBody = document.createElement('tbody');
     newTableBody.id = "matchedActivities";

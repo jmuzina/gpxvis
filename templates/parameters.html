@@ -18,6 +18,7 @@
       rel="stylesheet"
     />
     <script src="activityFiltering.js"></script>
+    <script src="fileVerification.js"></script>
   </head>
 
   <body>
@@ -93,9 +94,11 @@
           <!-- Generate Button -->
           <script type = "text/javascript">
             function doSelection() {
-              const selectedActivitiesElement = document.getElementById("selectedActivities");
-              selectedActivitiesElement["value"] = Object.keys(selectedIDs).reverse().toString();
-              selectedActivitiesElement.setAttribute("value", selectedActivitiesElement["value"]);
+              // Reverse the selected IDs
+              //const selectedActivitiesElement = document.getElementById("selectedActivities");
+              //selectedActivitiesElement["value"] = Object.keys(selectedIDs).reverse().toString();
+              //console.log(selectedActivitiesElement["value"]);
+              //selectedActivitiesElement.setAttribute("value", selectedActivitiesElement["value"]);
             }
           </script>
           <input
@@ -236,6 +239,9 @@
                 value="#FFFFFF"
               />
               <label for="backgroundColor">Background Color</label>
+              <label for="backgroundImage">Background Image:
+                <input type="file" id="backgroundImage" name="backgroundImage" onchange="verifyBackgroundImage()">
+              </label>
             </div>
           </div>
           <!-- Draw Style Tab Content -->
