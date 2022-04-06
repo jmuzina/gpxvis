@@ -68,6 +68,7 @@ function fileUploadIsValid(fileType) {
     }
 }
 
+
 function verifyBackgroundImage(fileType = "") {
     const fileVerificationResult = fileUploadIsValid(fileType);
     const uploadBtn = document.getElementById(fileType);
@@ -95,4 +96,10 @@ function verifyBackgroundImage(fileType = "") {
             }
         }
     }
+}
+
+window.onload = function(){
+    // Set background blur slider visibility depending on whether image is  cached 
+    const backgroundImage =  document.getElementById("backgroundImage").value;
+    document.getElementById("blurIntensityLabel").hidden = backgroundImage.length == 0;
 }
