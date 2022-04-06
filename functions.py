@@ -11,6 +11,10 @@ from flask import (Flask, Response, redirect, render_template, request,
 
 # ---------------------------- #
 
+def allowed_file(filename, extensions):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in extensions
+
 def getImageBase64String(imageData):
     return "data:image/png;base64," + str(imageData)
 

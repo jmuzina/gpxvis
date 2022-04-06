@@ -8,6 +8,7 @@ import time
 from configparser import ConfigParser, RawConfigParser
 from datetime import datetime, timedelta
 from os.path import exists
+from werkzeug.utils import secure_filename
 
 from flask import (Flask, Response, redirect, render_template, request,
                    send_file, session, url_for)
@@ -17,11 +18,12 @@ import functions
 import generateVis
 
 # ---------------------------- #
-
+ALLOWED_EXTENSIONS = {'png', 'jpeg', 'jpg', 'gif', 'gpx'}
 IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
 
 flaskApp = Flask(__name__)
 flaskApp.config['TEMPLATES_AUTO_RELOAD'] = True
+flaskApp.config['UPLOAD_FOLDER'] = "uploads"
 # Hex-encoded random 24 character string for session encryption
 flaskApp.secret_key = os.urandom(32)
 
@@ -157,6 +159,7 @@ def render_generatePage():
     #print(request.form)
     #print("\n")
     #print(formArgs)
+        
     
     if "userData" in session:
         if "id" in session["userData"]:
@@ -165,7 +168,15 @@ def render_generatePage():
                 selected = dict([(activityID, userActivities[uniqueId][activityID]) for activityID in userActivities[uniqueId] if str(activityID) in formArgs["selectedActivities"]])
                 if len(selected) > 0:
                     polylines = apis[session["networkName"]].getAllPolylines(selected)
-                    return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"])))
+                    filename = ""
+                    if "backgroundImage" in request.files:
+                        file = request.files['backgroundImage']
+
+                        if file and functions.allowed_file(file.filename, ALLOWED_EXTENSIONS):
+                            filename = secure_filename(file.filename)
+                            file.save(os.path.join(flaskApp.config['UPLOAD_FOLDER'], filename))
+
+                    return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"])))
                 else:
                     return functions.throwError("No activities were selected.")
     else:

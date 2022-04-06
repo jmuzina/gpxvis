@@ -63,7 +63,7 @@ function fileUploadIsValid(fileType) {
     else {
         return {
             "success": false,
-            "message": "No matching file restriction configuration for type " + fileType + "."
+            "message": "No matching file restriction configuration for type " + fileType + ".\n\nAllowed types are " + Object.keys(fileRestrictions).toString() + "."
         };
     }
 }
@@ -71,11 +71,14 @@ function fileUploadIsValid(fileType) {
 function verifyBackgroundImage(fileType = "") {
     const fileVerificationResult = fileUploadIsValid(fileType);
     const uploadBtn = document.getElementById(fileType);
+
     if (fileVerificationResult["success"]) {
-        console.log("success");
+        //console.log("success");
+        
     }
     else {
         alert(fileVerificationResult["message"]);
+
         if (uploadBtn !== null) {
             uploadBtn.value = null;
         }

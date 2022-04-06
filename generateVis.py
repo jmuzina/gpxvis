@@ -97,7 +97,11 @@ class ImageCreator:
         ####background image####
 
        
-        if backgroundImage!=None:
+        if backgroundImage!="":
+            filePath = "uploads/" + backgroundImage
+            backgroundImage = pil_image.open(filePath)
+            os.remove(filePath) 
+
             ##resize and crop image to fit##
             if(backgroundImage.width < resolution or backgroundImage.height < resolution):
                 if(backgroundImage.width>backgroundImage.height):
@@ -316,7 +320,7 @@ def gpx_to_list(gpx):
             
 
 
-def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = None, backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (0,0,0), gridThickness = 1,  title = "", blackWhiteImage = None, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""): 
+def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (0,0,0), gridThickness = 1,  title = "", blackWhiteImage = None, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""): 
     """ Program entry point """
     
     
