@@ -71,9 +71,17 @@ function fileUploadIsValid(fileType) {
 function verifyBackgroundImage(fileType = "") {
     const fileVerificationResult = fileUploadIsValid(fileType);
     const uploadBtn = document.getElementById(fileType);
+    const blurIntensitySlider = document.getElementById("blurIntensityLabel");
 
     if (fileVerificationResult["success"]) {
         //console.log("success");
+        if (fileType  == "backgroundImage") {
+            console.log("isimage");
+            if (blurIntensitySlider !== null) {
+                console.log("showing BIS");
+                blurIntensitySlider.hidden = false;
+            }
+        }
         
     }
     else {
@@ -81,6 +89,10 @@ function verifyBackgroundImage(fileType = "") {
 
         if (uploadBtn !== null) {
             uploadBtn.value = null;
+            if (blurIntensitySlider !== null) {
+                blurIntensitySlider.hidden = true;
+                console.log("hiding BIS");
+            }
         }
     }
 }

@@ -242,6 +242,18 @@
               <label for="backgroundImage">Background Image:
                 <input type="file" id="backgroundImage" name="backgroundImage" onchange="verifyBackgroundImage('backgroundImage')">
               </label>
+              <label for="blurIntensity" id="blurIntensityLabel" hidden
+                >Blur Intensity
+                <input
+                  type="range"
+                  min="0"
+                  max="30"
+                  value="5"
+                  class="slider"
+                  id="blurIntensity"
+                  name="blurIntensity"
+                />
+              </label>
             </div>
           </div>
           <!-- Draw Style Tab Content -->
@@ -291,7 +303,6 @@
                 var gridlineThicknessSelector =
                   document.getElementById("gridlineThickness").parentNode;
                 function gridChecked() {
-                  console.log(gridCheckBox.checked);
                   gridlineColorSelector.hidden = !gridCheckBox.checked;
                   gridlineThicknessSelector.hidden =
                     gridlineColorSelector.hidden;

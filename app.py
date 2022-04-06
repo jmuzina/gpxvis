@@ -176,7 +176,7 @@ def render_generatePage():
                             filename = secure_filename(file.filename)
                             file.save(os.path.join(flaskApp.config['UPLOAD_FOLDER'], filename))
 
-                    return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"])))
+                    return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"])))
                 else:
                     return functions.throwError("No activities were selected.")
     else:

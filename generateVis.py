@@ -92,10 +92,7 @@ class ImageCreator:
         self.gridOn = gridOn
         self.gridThickness = gridThickness
 
-
-
         ####background image####
-
        
         if backgroundImage!="":
             filePath = "uploads/" + backgroundImage
@@ -109,7 +106,7 @@ class ImageCreator:
                 else:
                     backgroundImage = backgroundImage.resize((resolution,backgroundImage.height*(math.ceil(resolution/backgroundImage.width))))
             backgroundImage = backgroundImage.crop(((backgroundImage.width-resolution)/2,(backgroundImage.height-resolution)/2, (backgroundImage.width+resolution)/2,(backgroundImage.height+resolution)/2))
-            backgroundImage = backgroundImage.filter(pil_filter.GaussianBlur(20))
+            backgroundImage = backgroundImage.filter(pil_filter.GaussianBlur(int(backgroundBlur)))
             backgroundImage = backgroundImage.convert("RGBA")
             self.image = backgroundImage
         else:
