@@ -35,6 +35,12 @@ if not os.path.exists("logs/console"):
     os.makedirs("logs/console")
 if not os.path.exists("uploads"):
     os.makedirs("uploads")
+else:
+    # Clear all files in uploads directory on app launch
+    # https://www.tutorialspoint.com/How-to-delete-all-files-in-a-directory-with-Python
+    for root, dirs, files in os.walk("uploads"):
+        for file in files:
+            os.remove(os.path.join(root, file))
 
 logFileName = str(datetime.utcnow()).replace(" ", "").replace(":", "").replace(".", "") + ".log"
 

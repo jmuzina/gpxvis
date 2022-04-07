@@ -95,9 +95,8 @@ class ImageCreator:
         ####background image####
        
         if backgroundImage!="":
-            filePath = "uploads/" + backgroundImage
-            backgroundImage = pil_image.open(filePath)
-            os.remove(filePath) 
+            self.backgroundImageFilePath = "uploads/" + backgroundImage
+            backgroundImage = pil_image.open(self.backgroundImageFilePath)
 
             ##resize and crop image to fit##
             if(backgroundImage.width < resolution or backgroundImage.height < resolution):
@@ -376,4 +375,9 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
     else:
         image_creator.draw_facets()
 
-    return(image_creator.save_image())
+    drawnImage = image_creator.save_image()
+
+    image_creator.image.close()
+    os.remove(image_creator.backgroundImageFilePath) 
+
+    return drawnImage
