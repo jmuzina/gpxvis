@@ -126,8 +126,8 @@ class ImageCreator:
           
     def draw_text(self,label="",text=""):
         draw = pil_draw.Draw(self.image)
-        textFont = pil_font.truetype('arial.ttf', int(self.width/13)) #300
-        labelFont = pil_font.truetype('arial.ttf', int(self.width/30)) #130
+        textFont = pil_font.truetype('static/aileron/Aileron-Regular.otf', int(self.width/13)) #300
+        labelFont = pil_font.truetype('static/aileron/Aileron-Regular.otf', int(self.width/30)) #130
         
         # calculate the x,y coordinates of the text
         textwidth, textheight = draw.textsize(text, textFont)
@@ -314,8 +314,8 @@ def gpx_to_list(gpx):
 
 def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (0,0,0), gridThickness = 1,  title = "", blackWhiteImage = None, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""): 
     ### Un-comment these when Adam has fixed font/image dependencies
-    #infoText = (infoText == "on")
-    #textBackgroundFade = (textBackgroundFade == "on")
+    infoText = (infoText == "on")
+    textBackgroundFade = (textBackgroundFade == "on")
     ###
     tracks = []
     countLimit = 2000 #temporary
