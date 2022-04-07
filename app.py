@@ -33,6 +33,8 @@ if not os.path.exists("logs/flask"):
     os.makedirs("logs/flask")
 if not os.path.exists("logs/console"):
     os.makedirs("logs/console")
+if not os.path.exists("uploads"):
+    os.makedirs("uploads")
 
 logFileName = str(datetime.utcnow()).replace(" ", "").replace(":", "").replace(".", "") + ".log"
 
