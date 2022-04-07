@@ -113,12 +113,12 @@ def render_parameters():
 
     if sessionDataValidationResult == True:
         uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
-        if len(userActivities[uniqueId]) > 0:
+        if len(userActivities[uniqueId]["activities"]) > 0:
             currentDate = datetime.now()
             currentDateStr = datetime.strftime(currentDate, "%Y-%m-%d")
             yearAgoTime = currentDate- timedelta(days = 365)
             yearAgoStr = datetime.strftime(yearAgoTime, "%Y-%m-%d")
-            return render_template("parameters.html", userData = session['userData'], activities = userActivities[uniqueId], startDate = yearAgoStr, endDate = currentDateStr)
+            return render_template("parameters.html", userData = session['userData'], activities = userActivities[uniqueId]["activities"], startDate = yearAgoStr, endDate = currentDateStr)
         else:
             return functions.throwError("No activities found in your account.")
     elif sessionDataValidationResult == False: # No userdata, render guest homepage
@@ -148,7 +148,9 @@ def render_generatePage():
         "gridlineColor": (0,0,0),
         "beforeTime": str(math.floor(time.time())),
         "afterTime": str(0),
-        "selectedActivities": ""
+        "selectedActivities": "",
+        "infoText": False,
+        "textBackgroundFade": False
     }
 
     # Set form args to received form submission
@@ -160,12 +162,11 @@ def render_generatePage():
     #print("\n")
     #print(formArgs)
         
-    
     if "userData" in session:
         if "id" in session["userData"]:
             if "networkName" in session:
                 uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
-                selected = dict([(activityID, userActivities[uniqueId][activityID]) for activityID in userActivities[uniqueId] if str(activityID) in formArgs["selectedActivities"]])
+                selected = dict([(activityID, userActivities[uniqueId]["activities"][activityID]) for activityID in userActivities[uniqueId]["activities"] if str(activityID) in formArgs["selectedActivities"]])
                 if len(selected) > 0:
                     polylines = apis[session["networkName"]].getAllPolylines(selected)
                     filename = ""
@@ -176,7 +177,7 @@ def render_generatePage():
                             filename = secure_filename(file.filename)
                             file.save(os.path.join(flaskApp.config['UPLOAD_FOLDER'], filename))
 
-                    return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"])))
+                    return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], infoText=formArgs["infoText"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=userActivities[uniqueId]["timeElapsed"], totalDistance=userActivities[uniqueId]["distanceTravelled"])))
                 else:
                     return functions.throwError("No activities were selected.")
     else:

@@ -75,11 +75,8 @@ function verifyBackgroundImage(fileType = "") {
     const blurIntensitySlider = document.getElementById("blurIntensityLabel");
 
     if (fileVerificationResult["success"]) {
-        //console.log("success");
         if (fileType  == "backgroundImage") {
-            console.log("isimage");
             if (blurIntensitySlider !== null) {
-                console.log("showing BIS");
                 blurIntensitySlider.hidden = false;
             }
         }
@@ -92,7 +89,6 @@ function verifyBackgroundImage(fileType = "") {
             uploadBtn.value = null;
             if (blurIntensitySlider !== null) {
                 blurIntensitySlider.hidden = true;
-                console.log("hiding BIS");
             }
         }
     }

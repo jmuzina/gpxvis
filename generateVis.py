@@ -114,7 +114,7 @@ class ImageCreator:
 
         ###extra image additions####
         if(textBackgroundFade == True):
-            fade = pil_image.open("fade.png").resize((resolution,resolution))
+            fade = pil_image.open("static/fade.png").resize((resolution,resolution))
             self.image = pil_image.alpha_composite(self.image, fade)
 
         if (self.gridOn==True): 
@@ -225,9 +225,6 @@ class ImageCreator:
     def get_tracks_length(self):
         return(len(self.tracks))
         
-        
-            
-
     #activity. only stores GPX data at the moment. eventually should also have data such as activity name, time, distance, etc....          
 class Track:
     def __init__(self, activity, min_lat, max_lat, min_lon, max_lon, zoom):
@@ -243,10 +240,8 @@ class Track:
         self.height = (self.y2 - self.y1 + 1)
         self.zoom = zoom
 
-    
         self.x_offset = 0
         self.y_offset = 0
-
         
     def lat_lon_to_image_xy (self, lat_deg, lon_deg, tile_res):
         """ Internal. Converts lat, lon into dst_img coordinates in pixels """
@@ -318,9 +313,10 @@ def gpx_to_list(gpx):
 
 
 def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (0,0,0), gridThickness = 1,  title = "", blackWhiteImage = None, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""): 
-    """ Program entry point """
-    
-    
+    ### Un-comment these when Adam has fixed font/image dependencies
+    #infoText = (infoText == "on")
+    #textBackgroundFade = (textBackgroundFade == "on")
+    ###
     tracks = []
     countLimit = 2000 #temporary
     count = 0
@@ -381,5 +377,3 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
         image_creator.draw_facets()
 
     return(image_creator.save_image())
-
-

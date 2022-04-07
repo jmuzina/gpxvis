@@ -78,18 +78,17 @@
             aria-selected="false"
             >Draw Style</a
           >
-          <!-- Text tab
+          <!-- Overlay tab-->
           <a
             class="button-custom parameter-button nav-link"
-            id="v-pills-text-tab"
+            id="v-pills-overlay-tab"
             data-toggle="pill"
-            href="#v-pills-text"
+            href="#v-pills-overlay"
             role="tab"
-            aria-controls="v-pills-text"
+            aria-controls="v-pills-overlay"
             aria-selected="false"
-            >Text</a
+            >Overlay</a
           >
-          -->
 
           <!-- Generate Button -->
           <script type = "text/javascript">
@@ -264,7 +263,7 @@
             aria-labelledby="v-pills-drawstyle-tab"
           >
             <h3>Select Draw Style</h3>
-            <div id="gridlineSettings">
+            <div id="overlaySettings">
               <label for="displayGridLines"
                 >Display Grid
                 <input
@@ -333,15 +332,44 @@
               />
             </label>
           </div>
-          <!-- Text Tab Content -->
+         <!-- Overlay Tab Content -->
           <div
             class="tab-pane fade"
-            id="v-pills-text"
+            id="v-pills-overlay"
             role="tabpanel"
-            aria-labelledby="v-pills-text-tab"
+            aria-labelledby="v-pills-overlay-tab"
           >
-            <h3>Select Text Options</h3>
+            <h3>Configure Overlay</h3>
+              <label for="infoText"
+              >Show Statistics
+                <input
+                  type="checkbox"
+                  id="infoText"
+                  name="infoText"
+                />
+            </label>
+            <br />
+            <label for="textBackgroundFade"
+              >Overlay Background Fade
+                <input
+                  type="checkbox"
+                  id="textBackgroundFade"
+                  name="textBackgroundFade"
+                />
+            </label>
+            <br />
           </div>
+          <script type="text/javascript">
+            // Show/hide overlay options if the show overlay button is checked
+            var overlayCheckBox = document.getElementById("infoText");
+            var overlayBackground = document.getElementById("textBackgroundFade").parentNode;
+
+            function overlayChecked() {
+              overlayBackground.hidden = !overlayCheckBox.checked;
+            }
+            overlayCheckBox.addEventListener("change", overlayChecked, false);
+            overlayBackground.hidden = !overlayCheckBox.checked;
+          </script>
         </div>
       </form>
     </div>
