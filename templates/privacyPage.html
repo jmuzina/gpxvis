@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    {% assets "scss_all" %} <link rel=stylesheet type=text/css href="{{
+    ASSET_URL }}"> {% endassets %}
+    <meta charset="UTF-8" />
+    <title>My Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    {% block content -%}
+    {% include "navBar.html" %}
+    {%- endblock content %}
+  </body>
+
+  
+  <div class="about-section">
+    <h1 id="about-title">Privacy Policy</h1> <br>
+    <h3>Information Collection and Usage</h3>
+    <p>We do not sell your personal information. Information made available with connection to Strava is gathered to make available for the user to post publicly. </p><br>
+    <h3>How We Protect Information</h3>
+    <p>We have measures to safeguard the information we are using to create your visualizations. Allowing us the ability to quickly delete important user data.  </p><br>
+    <h3>Links to Other Sites</h3>
+    <p>Our site contains links to other sites which are not under operation by us. Clicking third party links will open a page to visit that site directly.</p>
+    <p>We advise to read through other third party sites privacy policies. We assume no responsibilit for the content or practices of any third party site.</p><br>
+    <h3>Service Providers</h3>
+    <p>We use third parties which give us access to your user data.</p><br>
+    <h3>Contact Us</h3>
+    <p>If you have any questions regarding this privacy policy, please reach out to us through the "About Us" page links.</p><br>
+  </div>

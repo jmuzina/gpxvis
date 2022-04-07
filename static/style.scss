@@ -3,21 +3,88 @@ body {
   font-family: "Open Sans", sans-serif;
   height: 100vh;
   background-color: #f2f2f2;
+}
+
+
+.main-body {
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100vh;
+}
+
+.navbar-container {
+  position: absolute;
+  width: 100vw;
+}
+
+.navbar {
+  display: flex;
+  top: 0;
+  height: 10vh;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 20px;
+  background: white;
+  box-shadow: 0px 4px 13px 0px rgba(0, 0, 0, 0.25);
+  height: fit-content;
+
+}
+
+.nav-sub {
+  display: flex;
+  justify-content: space-between;
+}
+
+ul {
+  margin-bottom: 0;
+}
+
+.list-item {
+  padding: 10px;
+  list-style: none;
+}
+
+.nav-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.gpx-title {
+  color: black;
+  text-decoration: none !important;
+}
+
+
+/*Properties for Hamburger*/
+.ham {
+  display: none;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.bar1,
+.bar2,
+.bar3 {
+  display: block;
+  width: 35px;
+  height: 3px;
+  margin: 5px auto;
+  background-color: #101010;
+  transition: 0.4s;
 }
 
 // this is used for the centered inner box in the main page, and parameters page
 .main-container {
   background-color: white;
-  //height: 60%;
+  //height: 65%;
   min-height: 432px;
   width: 60%;
   min-width: 768px;
   border-radius: 10px;
   box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.25);
-  margin: auto; /* this centers the main-container horizontally */
+  margin: auto;
+  /* this centers the main-container horizontally */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,7 +152,7 @@ body {
 }
 
 #login-buttons {
-  display:flex;
+  display: flex;
   justify-content: center;
 }
 
@@ -140,6 +207,7 @@ body {
   margin: 2.5px;
 }
 
+
 // this changes the color of these buttons when clicked
 .button-custom:active {
   background: grey !important;
@@ -175,7 +243,7 @@ body {
 }
 
 .disabled-button {
-  opacity:0.5;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -216,19 +284,19 @@ body {
 }
 
 .nameCell {
-  width:44%;
+  width: 44%;
 }
 
 .dateCell {
-  width:19%;
+  width: 19%;
 }
 
 .typeCell {
-  width:14%;
+  width: 14%;
 }
 
 .distanceCell {
-  width:20%;
+  width: 20%;
   text-align: right;
 }
 
@@ -247,7 +315,7 @@ body {
 }
 
 #getActivitiesButton {
-  width:25%;
+  width: 25%;
 }
 
 .scrollable-table-container {
@@ -262,7 +330,7 @@ body {
 }
 
 #gridlineSettings {
-  display:flex;
+  display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
 }
@@ -345,3 +413,152 @@ $app_themes: (
     
 );
 */
+//
+//
+//
+// Creating CSS FOR ABOUT PAGE HERE
+//
+//
+//
+//
+
+
+html {
+  box-sizing: border-box;
+}
+
+
+#about-title {
+  padding-bottom: 2%;
+}
+
+.our-team-title {
+  margin: 30px;
+  text-align: center;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.column {
+  float: left;
+  width: 33.3%;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+.card {
+  padding: 20px 20px;
+  background: white;
+  box-shadow: 0px 4px 13px 0px rgba(0, 0, 0, 0.25);
+  margin: 8px;
+}
+
+.about-container {
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.about-section {
+  padding: 10%;
+  padding-bottom: 5%;
+  text-align: center;
+  background-color: #474e5d;
+  color: white;
+  //margin-top: 100px;
+}
+
+// images on about page
+.crop {
+  overflow: hidden;
+  margin: auto;
+  padding-bottom: 20px;
+
+}
+
+.crop img {
+  width: 200px;
+  height: 200px;
+  background-position: center;
+  /* Make the background image cover the area of the <div>, and clip the excess */
+  background-size: cover;
+  border-radius: 100%;
+}
+
+.container {
+  padding: 0 px;
+}
+
+.container::after,
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.title {
+  color: grey;
+}
+
+.button {
+  margin-top: 10px;
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.button:hover {
+  background-color: #555;
+}
+
+@media screen and (max-width: 650px) {
+  .column {
+    width: 100%;
+    display: block;
+  }
+}
+
+
+@media only screen and (max-width:768px) {
+  * {
+    overflow: hidden;
+  }
+
+  .nav-sub {
+    position: absolute;
+    top: 10vh;
+    right: 0px;
+    flex-direction: column;
+    background-color: rgb(0, 0, 0, 0.75);
+    border-radius: 0px 0px 0px 20px;
+    transition: transform 0.3s ease-in;
+    transform: translate(100%);
+  }
+
+  .nav-change {
+    transform: translate(0%);
+  }
+
+  .ham {
+    display: block;
+  }
+
+  .change .bar1 {
+    transform: rotate(45deg) translate(8px, 3px);
+  }
+
+  .change .bar2 {
+    opacity: 0;
+  }
+
+  .change .bar3 {
+    transform: rotate(-45deg) translate(8px, -3px);
+  }
+}
