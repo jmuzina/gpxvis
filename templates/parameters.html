@@ -235,22 +235,22 @@
             aria-labelledby="v-pills-background-tab"
           >
             <h3>Select Background</h3>
-            <div>
-              <input
-                type="color"
-                id="backgroundColor"
-                name="backgroundColor"
-                value="#FFFFFF"
-              />
-              <label for="backgroundColor">Background Color</label>
-              <br>
+            <div id = "backgroundSettings">
+              <label for="backgroundColor">Flat Background Color:
+                <input
+                  type="color"
+                  id="backgroundColor"
+                  name="backgroundColor"
+                  value="#FFFFFF"
+                />
+              </label>
               <label for="backgroundImage">Background Image:
                 <input type="file" id="backgroundImage" name="backgroundImage" onchange="verifyBackgroundImage('backgroundImage')">
               </label>
-              <br>
-              <button id="clearBackgroundButton" type="button" class="btn btn-danger" hidden>Remove Background Image</button>
+              <button id="clearBackgroundButton" type="button" class="btn btn-danger" hidden>Clear</button>
               <label for="blurIntensity" id="blurIntensityLabel" hidden
-                >Blur Intensity
+                >
+                Blur Intensity
                 <input
                   type="range"
                   min="0"

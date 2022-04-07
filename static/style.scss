@@ -262,6 +262,64 @@ ul {
   background-color: lightgrey !important;
 }
 
+#customize {
+  max-width: 100% !important;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  height: 35vh;
+}
+
+#categories {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+}
+
+#Strava {
+  background: #fc5200 !important;
+  text-align: center;
+}
+
+#Underarmour {
+  background: #1d1d1d !important;
+}
+
+//// This section is for divs in the PARAMETERS page ////
+////                                                 ////
+////                                                 ////
+////                                                 ////
+
+//container ID
+//used in parameters page with container class
+//setting nowrap ensures that the right div isn't placed under the nav pills
+/*
+.sideBySide {
+  display: flex;
+  flex-wrap: nowrap;
+}
+*/
+
+//Setting flex to one makes the two boxes take up all of the space within the container.
+//Even though parameter-column inherits display: flex from the container it's in, we set
+// it again so that the content within parameter-column can use flexbox properties.
+
+/*
+.parameter-column {
+  //display: ;
+  flex: 1;
+  border: 2px solid yellow;
+  align-content: center;
+}
+
+//this sets the parameters buttons to only 1/3 of the space and places a slight gap between the div with buttons
+//and the div with options
+.parameter-column:first-child {
+  max-width: 36%;
+  margin-right: 20px;
+}
+*/
+
 #v-pills-activities fieldset {
   display: flex;
   flex-flow: column nowrap;
@@ -308,20 +366,6 @@ ul {
   text-align: right;
 }
 
-#customize {
-  max-width: 100% !important;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-start;
-  height: 35vh;
-}
-
-#categories {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-start;
-}
-
 #getActivitiesButton {
   width: 25%;
 }
@@ -337,7 +381,7 @@ ul {
   bottom:0;
 }
 
-#drawSettings {
+#drawSettings, #backgroundSettings {
   display: flex;
   flex-flow: column wrap;
 }
@@ -364,49 +408,10 @@ ul {
   margin-left: 0;
 }
 
-#Strava {
-  background: #fc5200 !important;
-  text-align: center;
+#clearBackgroundButton {
+  width: 50px;
+  font-size:11px;
 }
-
-#Underarmour {
-  background: #1d1d1d !important;
-}
-
-//// This section is for divs in the PARAMETERS page ////
-////                                                 ////
-////                                                 ////
-////                                                 ////
-
-//container ID
-//used in parameters page with container class
-//setting nowrap ensures that the right div isn't placed under the nav pills
-/*
-.sideBySide {
-  display: flex;
-  flex-wrap: nowrap;
-}
-*/
-
-//Setting flex to one makes the two boxes take up all of the space within the container.
-//Even though parameter-column inherits display: flex from the container it's in, we set
-// it again so that the content within parameter-column can use flexbox properties.
-
-/*
-.parameter-column {
-  //display: ;
-  flex: 1;
-  border: 2px solid yellow;
-  align-content: center;
-}
-
-//this sets the parameters buttons to only 1/3 of the space and places a slight gap between the div with buttons
-//and the div with options
-.parameter-column:first-child {
-  max-width: 36%;
-  margin-right: 20px;
-}
-*/
 
 .tab-pane.fade.show {
   display: block !important;

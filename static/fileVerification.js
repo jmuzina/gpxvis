@@ -96,6 +96,7 @@ function verifyBackgroundImage(fileType = "") {
         }
     }
     clearBackgroundButton.hidden = blurIntensitySlider.hidden;
+    document.getElementById("backgroundColor").parentNode.hidden = !clearBackgroundButton.hidden;
 }
 
 window.onload = function(){

@@ -12,6 +12,7 @@ window.onload = function() {
     var overlayCheckBox = document.getElementById("infoText");
     var overlayBackground = document.getElementById("textBackgroundFade").parentNode;
     const clearBackgroundButton = document.getElementById("clearBackgroundButton");
+    const backgroundColor = document.getElementById("backgroundColor").parentNode;
 
     function gridChecked() {
         gridlineColorSelector.hidden = !gridCheckBox.checked;
@@ -39,6 +40,7 @@ window.onload = function() {
         backgroundImage.value = null;
         clearBackgroundButton.hidden = true;
         blurIntensityLabel.hidden = true;
+        backgroundColor.hidden = false;
     }
 
     // Bootstrap
@@ -48,6 +50,7 @@ window.onload = function() {
     gridlineThicknessSelector.hidden = !gridCheckBox.checked;
     blurIntensityLabel.hidden = backgroundImage.value.length == 0;
     clearBackgroundButton.hidden = blurIntensityLabel.hidden;
+    backgroundColor.hidden = !clearBackgroundButton.hidden;
 
 
     // Listen for value changes and adjust accordingly
