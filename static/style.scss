@@ -381,6 +381,10 @@ ul {
   bottom:0;
 }
 
+#keyword {
+  width: 50%;
+}
+
 #drawSettings, #backgroundSettings {
   display: flex;
   flex-flow: column wrap;

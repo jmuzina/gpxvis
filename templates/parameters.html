@@ -131,7 +131,7 @@
             <h3>Filter your Activities</h3>
             <fieldset>
               <div class="row" id="dateFilters">
-                <div class="col-md-4" style="padding-right: 0">
+                <div class="col-md-6" style="padding-right: 0">
                   <label for="start"
                     >Start date:
                     <input
@@ -144,7 +144,7 @@
                     />
                   </label>
                 </div>
-                <div class="col-md-4" style="padding-left: 0">
+                <div class="col-md-6" style="padding-left: 0">
                   <label for="end"
                     >End date: <span>&nbsp;</span>
                     <input
@@ -157,32 +157,36 @@
                     />
                   </label>
                 </div>
-                <div class="col-md-4">
-                  <label for="activity" >Activity Type:
-                    <select name="activity" id="activity-type">
-                      <option value="all">All</option>
-                      <option value="ride">Ride</option>
-                      <option value="run">Run</option>
-                      <option value="swim">Swim</option>
-                      <option value="walk">Walk</option>
-                      <option value="hike">Hike</option>
-                      <option value="ski">Ski</option>
-                    </select>
-                  </label>
-                </div>
               </div>
-              <label for="fname"
-                >Keyword:
-                <input type="text" id="keyword" name="keyword" value="" />
-              </label>
-              <br />
-              <input
-                id="selectedActivities"
-                type="hidden"
-                name="selectedActivities"
-                value=""
-                hidden
-              />
+              <div class = "row">
+                <div class = "col-md-6">
+                  <label for="fname"
+                    >Keyword:
+                    <input type="text" id="keyword" name="keyword" value="" />
+                  </label>
+                  <br />
+                  <input
+                    id="selectedActivities"
+                    type="hidden"
+                    name="selectedActivities"
+                    value=""
+                    hidden
+                  />
+              </div>
+              <div class="col-md-6">
+                <label for="activity" >Activity Type:
+                  <select name="activity" id="activity-type">
+                    <option value="all">All</option>
+                    <option value="ride">Ride</option>
+                    <option value="run">Run</option>
+                    <option value="swim">Swim</option>
+                    <option value="walk">Walk</option>
+                    <option value="hike">Hike</option>
+                    <option value="ski">Ski</option>
+                  </select>
+                </label>
+              </div>
+            </div>
             </fieldset>
             
               <script type="text/javascript">
@@ -250,7 +254,7 @@
               <button id="clearBackgroundButton" type="button" class="btn btn-danger" hidden>Clear</button>
               <label for="blurIntensity" id="blurIntensityLabel" hidden
                 >
-                Blur Intensity
+                Background Blur Intensity
                 <input
                   type="range"
                   min="0"
@@ -348,7 +352,7 @@
             </label>
             <br />
             <label for="textBackgroundFade"
-              >Overlay Background Fade
+              >Statistics backdrop
                 <input
                   type="checkbox"
                   id="textBackgroundFade"
