@@ -378,6 +378,7 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
     drawnImage = image_creator.save_image()
 
     image_creator.image.close()
-    os.remove(image_creator.backgroundImageFilePath) 
+    if hasattr(image_creator, "backgroundImageFilePath"):
+        os.remove(image_creator.backgroundImageFilePath) 
 
     return drawnImage
