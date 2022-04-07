@@ -337,6 +337,11 @@ ul {
   bottom:0;
 }
 
+#drawSettings {
+  display: flex;
+  flex-flow: column wrap;
+}
+
 #activitiesTable {
   display:table;
   table-layout: fixed;

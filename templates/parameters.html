@@ -19,6 +19,7 @@
     />
     <script src="activityFiltering.js"></script>
     <script src="fileVerification.js"></script>
+    <script src="dynamicParameters.js"></script>
   </head>
 
   <body>
@@ -247,6 +248,7 @@
                 <input type="file" id="backgroundImage" name="backgroundImage" onchange="verifyBackgroundImage('backgroundImage')">
               </label>
               <br>
+              <button id="clearBackgroundButton" type="button" class="btn btn-danger" hidden>Remove Background Image</button>
               <label for="blurIntensity" id="blurIntensityLabel" hidden
                 >Blur Intensity
                 <input
@@ -258,6 +260,7 @@
                   id="blurIntensity"
                   name="blurIntensity"
                 />
+                <span id="blurIntensityPreview">5</span>
               </label>
             </div>
           </div>
@@ -269,7 +272,7 @@
             aria-labelledby="v-pills-drawstyle-tab"
           >
             <h3>Select Draw Style</h3>
-            <div id="overlaySettings">
+            <div id="drawSettings">
               <label for="displayGridLines"
                 >Display Grid
                 <input
@@ -278,9 +281,9 @@
                   name="displayGridLines"
                 />
               </label>
-              <br />
               <label for="gridThickness" hidden
-                >Gridline Thickness
+                >
+                Gridline Thickness
                 <input
                   type="range"
                   min="1"
@@ -290,30 +293,18 @@
                   id="gridThickness"
                   name="gridThickness"
                 />
+                <span id="gridThicknessPreview">5</span>
               </label>
               <label for="gridlineColor" hidden
-                >Grid Color
+                >
+                Grid Color
                 <input
                   type="color"
                   id="gridlineColor"
                   name="gridlineColor"
                   value="#000000"
                 />
-                <br />
               </label>
-              <script type="text/javascript">
-                var gridCheckBox = document.getElementById("displayGridLines");
-                var gridlineColorSelector =
-                  document.getElementById("gridlineColor").parentNode;
-                var gridlineThicknessSelector =
-                  document.getElementById("gridThickness").parentNode;
-                function gridChecked() {
-                  gridlineColorSelector.hidden = !gridCheckBox.checked;
-                  gridlineThicknessSelector.hidden =
-                    gridlineColorSelector.hidden;
-                }
-                gridCheckBox.addEventListener("change", gridChecked, false);
-              </script>
             </div>
             <label for="pathColor"
               >Path Color
@@ -336,6 +327,7 @@
                 id="pathThickness"
                 name="pathThickness"
               />
+              <span id="pathThicknessPreview">5</span>
             </label>
           </div>
          <!-- Overlay Tab Content -->
@@ -365,17 +357,6 @@
             </label>
             <br />
           </div>
-          <script type="text/javascript">
-            // Show/hide overlay options if the show overlay button is checked
-            var overlayCheckBox = document.getElementById("infoText");
-            var overlayBackground = document.getElementById("textBackgroundFade").parentNode;
-
-            function overlayChecked() {
-              overlayBackground.hidden = !overlayCheckBox.checked;
-            }
-            overlayCheckBox.addEventListener("change", overlayChecked, false);
-            overlayBackground.hidden = !overlayCheckBox.checked;
-          </script>
         </div>
       </form>
     </div>

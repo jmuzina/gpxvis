@@ -23,6 +23,8 @@ const fileRestrictions = {
     }
 }
 
+const clearBackgroundButton = document.getElementById("clearBackgroundButton");
+
 function fileUploadIsValid(fileType) {
     if (fileRestrictions[fileType] && fileRestrictions[fileType]["extensions"] && fileRestrictions[fileType]["maxSize"]) {
         const uploadBtn = document.getElementById(fileType);
@@ -73,6 +75,7 @@ function verifyBackgroundImage(fileType = "") {
     const fileVerificationResult = fileUploadIsValid(fileType);
     const uploadBtn = document.getElementById(fileType);
     const blurIntensitySlider = document.getElementById("blurIntensityLabel");
+    const clearBackgroundButton =  document.getElementById("clearBackgroundButton");
 
     if (fileVerificationResult["success"]) {
         if (fileType  == "backgroundImage") {
@@ -92,10 +95,12 @@ function verifyBackgroundImage(fileType = "") {
             }
         }
     }
+    clearBackgroundButton.hidden = blurIntensitySlider.hidden;
 }
 
 window.onload = function(){
     // Set background blur slider visibility depending on whether image is  cached 
     const backgroundImage =  document.getElementById("backgroundImage").value;
     document.getElementById("blurIntensityLabel").hidden = backgroundImage.length == 0;
+    document.getElementById("clearBackgroundButton").hidden = backgroundImage.length == 0;
 }

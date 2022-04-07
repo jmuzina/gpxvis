@@ -199,6 +199,11 @@ def returnActivityFiltering():
 @flaskApp.route("/fileVerification.js")
 def returnFileVerification():
     return send_file("./static/fileVerification.js")
+
+@flaskApp.route("/dynamicParameters.js")
+def returnDynamicParameters():
+    return send_file("./static/dynamicParameters.js")
+
 @flaskApp.route('/aboutPage')
 def render_aboutPage():
     sessionDataValidationResult = functions.validUserData(session)
