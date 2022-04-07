@@ -1,9 +1,19 @@
+html {
+  font-size: 100%;
+}
+
 // Make body take full vertical space and hide overflow
 body {
+  font-size: 1rem;
+  line-height: 1.5;
   font-family: "Open Sans", sans-serif;
   height: 100vh;
   background-color: #f2f2f2;
   overflow-x: hidden;
+}
+
+h3 {
+  font-size: 2.25rem;
 }
 
 
@@ -93,7 +103,7 @@ ul {
 
 .parameter-button-container {
   border-color: yellow;
-  width: 25%;
+  width: 27.5%;
   height: 100%;
   padding: 10px;
   justify-content: space-between;
@@ -178,8 +188,7 @@ ul {
   box-sizing: border-box;
   color: #ffffff;
   cursor: pointer;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 1.1rem; // previously 16px
   opacity: 1;
   outline: 0 solid transparent;
   padding: 8px 18px !important;
@@ -212,9 +221,8 @@ ul {
   border-radius: 999px;
   box-sizing: border-box;
   color: #ffffff;
-  font-size: 16px;
+  font-size: 1.1rem;
   font-weight: 700;
-  line-height: 24px;
   opacity: 1;
   outline: 0 solid transparent;
   padding: 8px 18px !important;
@@ -231,6 +239,11 @@ ul {
 .disabled-button {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.material-icons {
+  padding-right: 5px;
+  font-size: 22px !important;
 }
 
 // this is used in parameters page to change appearance of display with user's name
@@ -584,17 +597,16 @@ html {
 
   .button-custom,
   .fake-button {
-    font-size: 34px;
-    line-height: 50px;
+    font-size: 2.2rem; // previously 34px
     padding: 8px 30px !important;
   }
 
   h1 {
-    font-size: 90px;
+    font-size: 6rem;
   }
 
   h3 {
-    font-size: 60px;
+    font-size: 4rem;
   }
 
 
