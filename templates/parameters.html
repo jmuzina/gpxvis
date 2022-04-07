@@ -279,7 +279,7 @@
                 />
               </label>
               <br />
-              <label for="gridlineThickness" hidden
+              <label for="gridThickness" hidden
                 >Gridline Thickness
                 <input
                   type="range"
@@ -287,8 +287,8 @@
                   max="30"
                   value="5"
                   class="slider"
-                  id="gridlineThickness"
-                  name="gridlineThickness"
+                  id="gridThickness"
+                  name="gridThickness"
                 />
               </label>
               <label for="gridlineColor" hidden
@@ -306,7 +306,7 @@
                 var gridlineColorSelector =
                   document.getElementById("gridlineColor").parentNode;
                 var gridlineThicknessSelector =
-                  document.getElementById("gridlineThickness").parentNode;
+                  document.getElementById("gridThickness").parentNode;
                 function gridChecked() {
                   gridlineColorSelector.hidden = !gridCheckBox.checked;
                   gridlineThicknessSelector.hidden =

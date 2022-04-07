@@ -152,7 +152,7 @@ def render_generatePage():
         "pathThickness": 5,
         "pathColor": (0,0,0),
         "displayGridLines": False,
-        "gridlineThickness": 5,
+        "gridThickness": 5,
         "gridlineColor": (0,0,0),
         "beforeTime": str(math.floor(time.time())),
         "afterTime": str(0),
@@ -185,7 +185,7 @@ def render_generatePage():
                             filename = secure_filename(file.filename)
                             file.save(os.path.join(flaskApp.config['UPLOAD_FOLDER'], filename))
 
-                    return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], infoText=formArgs["infoText"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=userActivities[uniqueId]["timeElapsed"], totalDistance=userActivities[uniqueId]["distanceTravelled"])))
+                    return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=userActivities[uniqueId]["timeElapsed"], totalDistance=userActivities[uniqueId]["distanceTravelled"])))
                 else:
                     return functions.throwError("No activities were selected.")
     else:
