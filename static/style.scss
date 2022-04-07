@@ -3,6 +3,7 @@ body {
   font-family: "Open Sans", sans-serif;
   height: 100vh;
   background-color: #f2f2f2;
+  overflow-x: hidden;
 }
 
 
@@ -110,12 +111,14 @@ ul {
 .parameter-button-container {
   border-color: yellow;
   width: 25%;
+  height:100%;
   padding: 10px;
   justify-content: space-between;
 }
 
 .parameter-content-container {
   width: 66%;
+  height:100%;
   border-color: yellow;
   flex-grow: 1;
   padding: 10px;
@@ -264,6 +267,11 @@ ul {
   flex-flow: column nowrap;
 }
 
+#v-pills-activities {
+  height: 100%;
+  position:relative;
+}
+
 .parameter-button {
   color: #333333;
   box-shadow: none;
@@ -319,14 +327,25 @@ ul {
 }
 
 .scrollable-table-container {
-  overflow: scroll;
+  position: absolute;
+  overflow: auto;
   direction: ltr;
   scroll-behavior: smooth;
-  max-height: 300px;
+  height:auto;
+  width:100%;
+  top:9rem;
+  bottom:0;
 }
 
 #activitiesTable {
   display:table;
+  table-layout: fixed;
+  width:100%;
+  //height:90%;
+}
+
+#activitiesTable th,td {
+  word-wrap: break-word;
 }
 
 #gridlineSettings {

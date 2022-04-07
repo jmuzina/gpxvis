@@ -116,7 +116,6 @@ function searchActivities(activities) {
     oldTableBody.parentNode.replaceChild(newTableBody, oldTableBody);
     tableHeader.hidden = false;
     table.hidden = false;
-    table.style = "max-height:230px;";
     var generateButton = document.getElementById("generate-button");
     generateButton.disabled = false;
     $("#generate-button").removeClass("disabled-button");
