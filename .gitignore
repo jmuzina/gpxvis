@@ -1,3 +1,5 @@
+# User uploaded files directory
+uploads/
 # sensitive auth data
 *.cfg
 # Byte-compiled / optimized / DLL files
