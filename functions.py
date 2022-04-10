@@ -6,7 +6,7 @@ import urllib.request
 from socket import timeout
 import time
 import random
-
+import app as main
 import requests
 from flask import (Flask, Response, redirect, render_template, request,
                    session, url_for)
@@ -86,6 +86,13 @@ def validUserData(session):
     return False
 
 def wipeSession(session):
+    sessionDataValidationResult = validUserData(session)
+
+    if sessionDataValidationResult == True:
+        uniqueId = uniqueUserId(session["networkName"], session["userData"]["id"])
+        if "sessionTimer" in main.userCachedData[uniqueId]:
+            main.userCachedData[uniqueId]["sessionTimer"] = None
+
     for key in sessionVars:
         if key in session:
             session.pop(key)

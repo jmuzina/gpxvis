@@ -16,6 +16,7 @@ from flask_assets import Bundle, Environment
 
 import functions
 import generateVis
+import SessionTimer
 
 # ---------------------------- #
 ALLOWED_EXTENSIONS = {'png', 'jpeg', 'jpg', 'gif', 'gpx'}
@@ -126,6 +127,7 @@ def logout():
 
 @flaskApp.route('/parameters')
 def render_parameters():
+    refreshSessionTimer()
     sessionDataValidationResult = functions.validUserData(session)
 
     if sessionDataValidationResult == True:
@@ -145,6 +147,8 @@ def render_parameters():
 
 @flaskApp.route('/errorPage')
 def render_errorPage():
+    refreshSessionTimer()
+    
     errorMessage = request.args.get("errorMsg")
     if errorMessage == None:
         errorMessage = "Unknown Error"
@@ -156,6 +160,7 @@ def render_errorPage():
 
 @flaskApp.route('/generatePage', methods = ["POST", "GET"])
 def render_generatePage():
+    refreshSessionTimer()
     twitterUsername = request.args.get("twitterUsername")
     tweetID = request.args.get("tweetID")
 
@@ -190,11 +195,12 @@ def render_generatePage():
         for key in formArgs:
             if key in request.form:
                 formArgs[key] = request.form[key]
-
+        
         selected = dict([(activityID, userCachedData[uniqueId]["activities"][activityID]) for activityID in userCachedData[uniqueId]["activities"] if str(activityID) in formArgs["selectedActivities"]])
         if len(selected) > 0:
             polylines = apis[session["networkName"]].getAllPolylines(selected)
             filename = ""
+            # Pass a background image into the visualizer if one was given
             if "backgroundImage" in request.files:
                 file = request.files['backgroundImage']
 
@@ -215,6 +221,22 @@ def render_generatePage():
     else:
         return functions.throwError("Social media share results were given but no visualization was found.")
 
+# Update user activity tracker
+def refreshSessionTimer():
+    sessionDataValidationResult = functions.validUserData(session)
+    if sessionDataValidationResult == True:
+        uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
+        # Valid activity tracker exists: Check whether it is expired
+        if "sessionTimer" in userCachedData[uniqueId]:
+            # User's session has not expired: restart the timer
+            if not userCachedData[uniqueId]["sessionTimer"].expired():
+                userCachedData[uniqueId]["sessionTimer"].start()
+            # User has been inactive too long: wipe their session data
+            else:
+                functions.wipeSession(session)
+        # User has no session timer: start one
+        else:
+            userCachedData[uniqueId]["sessionTimer"] = SessionTimer.SessionTimer()
 
 @flaskApp.route("/activityFiltering.js")
 def returnActivityFiltering():
