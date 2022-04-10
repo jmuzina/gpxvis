@@ -31,11 +31,6 @@ class twitterApi:
         self.CONSUMER_SECRET = self.configDetails['CONSUMER_SECRET'].strip('\'')
         self.ACCESS_TOKEN_PUBLIC = self.configDetails['ACCESS_TOKEN_PUBLIC'].strip('\'')
         self.ACCESS_TOKEN_SECRET = self.configDetails['ACCESS_TOKEN_SECRET'].strip('\'')
-        self.KEY_SECRET = '{}:{}'.format(self.CONSUMER_KEY, self.CONSUMER_SECRET).encode('ascii')
-        self.B64_ENCODED_KEY = base64.b64encode(self.KEY_SECRET).decode('ascii')
-        #self.BEARER_TOKEN = self.configDetails['BEARER_TOKEN']#.strip('\'')
-        #self.verifyToken = str(binascii.hexlify(os.urandom(24)))[2:-1]
-        self.OAUTH_SIGNATURE_METHOD = self.configDetails["OAUTH_SIGNATURE_METHOD"].strip('\'')
         self.loginWith = False
 
         # Handle twitter authentication. When users successfully log in to twitter, they are sent to {site-url}/twitter-login
