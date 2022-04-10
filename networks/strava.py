@@ -34,7 +34,6 @@ class StravaApi:
             # Store user data as session for future use
             main.session["userData"] = authResponse["athlete"]
             main.session["accessKey"] = authResponse["access_token"]
-            #main.session["activities"] = self.getAllActivities() # Must be called after session is set
             main.session["networkName"] = self.configCode
 
             uniqueId = functions.uniqueUserId(self.configCode, authResponse["athlete"]["id"])

@@ -13,6 +13,8 @@ from flask import (Flask, Response, redirect, render_template, request,
 
 # ---------------------------- #
 
+sessionVars = ["accessKey", "networkName", "userData"]
+
 def allowed_file(filename, extensions):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in extensions
@@ -76,13 +78,14 @@ def throwError(msg):
 
 def validUserData(session):
     if 'userData' in session:
-        if 'accessKey' in session:
+        if 'accessKey' in session and "networkName" in session:
                 return True
         else:
-            return throwError(msg = "Access key was not found in session data.")
+            return throwError(msg = "Incomplete session data")
 
     return False
 
 def wipeSession(session):
-    for k, v in session:
-        session.pop(k)
+    for key in sessionVars:
+        if key in session:
+            session.pop(key)

@@ -116,7 +116,7 @@ def logout():
     # Clear user session data
     functions.wipeSession(session)
 
-    # Wipe user image
+    # Wipe user cached data
     if "userData" in session and "id" in session["userData"] and "networkName" in session:
         uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
         #userImages[uniqueId] = None
@@ -149,7 +149,10 @@ def render_errorPage():
     if errorMessage == None:
         errorMessage = "Unknown Error"
 
-    return render_template("errorPage.html", errorMessage = errorMessage)
+    if "userData" in session:
+        return render_template("errorPage.html", userData = session['userData'], errorMessage = errorMessage)
+    else:
+        return render_template("errorPage.html", errorMessage = errorMessage)
 
 @flaskApp.route('/generatePage', methods = ["POST", "GET"])
 def render_generatePage():
@@ -164,7 +167,7 @@ def render_generatePage():
                 uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
 
     if uniqueId == None:
-        return functions.throwError("No user data found")
+        return redirect(url_for("render_index"))
     elif not (twitterUsername and tweetID): # process generate form inputs
         # default values of form arguments
         formArgs = {
@@ -201,14 +204,14 @@ def render_generatePage():
 
             userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=userCachedData[uniqueId]["timeElapsed"], totalDistance=userCachedData[uniqueId]["distanceTravelled"]))
 
-            return render_template("generatePage.html", shareAuthURLs = shareAuthURLs, visualization =  userCachedData[uniqueId]["visualizationResult"])
+            return render_template("generatePage.html", userData = session['userData'], shareAuthURLs = shareAuthURLs, visualization =  userCachedData[uniqueId]["visualizationResult"])
         else:
             return functions.throwError("No activities were selected.")
 
         return functions.throwError("Could not display visualized image.")
 
     elif uniqueId in userCachedData and "visualizationResult" in userCachedData[uniqueId]: # User has just shared the post to social media
-        return render_template("generatePage.html", shareAuthURLs = shareAuthURLs, visualization =  userCachedData[uniqueId]["visualizationResult"], tweetLink = "https://twitter.com/" + twitterUsername + "/status/" + tweetID)
+        return render_template("generatePage.html", userData = session['userData'], shareAuthURLs = shareAuthURLs, visualization =  userCachedData[uniqueId]["visualizationResult"], tweetLink = "https://twitter.com/" + twitterUsername + "/status/" + tweetID)
     else:
         return functions.throwError("Social media share results were given but no visualization was found.")
 

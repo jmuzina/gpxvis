@@ -7,9 +7,13 @@
       <span class="bar3"></span>  
       </div>  
       <ul class="nav-sub">  
-       <li class="list-item "><a href="/aboutPage" class="nav-link">About</a></li>  
-       <li class="list-item "><a href="/privacyPage" class="nav-link">Privacy Policy</a></li>  
+        <li class="list-item"><a href="/aboutPage" class="nav-link">About</a></li>  
+        <li class="list-item"><a href="/privacyPage" class="nav-link">Privacy Policy</a></li>  
+        {% if userData %}
+          <li class="list-item"><a href="/logout" class="nav-link">Log Out</a></li>  
+        {% endif %}
       </ul>  
+      
      </nav>  
   
   </div>
