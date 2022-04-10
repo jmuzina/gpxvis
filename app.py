@@ -225,10 +225,6 @@ def returnFileVerification():
 def returnDynamicParameters():
     return send_file("./static/dynamicParameters.js")
 
-@flaskApp.route("/twitter-access-key")
-def receiveTwitterAccessKey():
-    print("RECEIVED RESPONSE FROM TWITTER")
-
 @flaskApp.route('/aboutPage')
 def render_aboutPage():
     sessionDataValidationResult = functions.validUserData(session)
