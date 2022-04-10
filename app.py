@@ -148,7 +148,7 @@ def render_parameters():
 @flaskApp.route('/errorPage')
 def render_errorPage():
     refreshSessionTimer()
-    
+
     errorMessage = request.args.get("errorMsg")
     if errorMessage == None:
         errorMessage = "Unknown Error"
@@ -252,6 +252,7 @@ def returnDynamicParameters():
 
 @flaskApp.route('/aboutPage')
 def render_aboutPage():
+    refreshSessionTimer()
     sessionDataValidationResult = functions.validUserData(session)
 
     if sessionDataValidationResult == True:
@@ -261,6 +262,7 @@ def render_aboutPage():
 
 @flaskApp.route('/privacyPage')
 def render_privacyPage():
+    refreshSessionTimer()
     sessionDataValidationResult = functions.validUserData(session)
 
     if sessionDataValidationResult == True:
