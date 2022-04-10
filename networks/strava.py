@@ -20,16 +20,17 @@ class StravaApi:
         self.clientSecret = self.configDetails['CLIENT_SECRET'].strip('\'')
         self.authUrl = self.configDetails['AUTH_URL'].strip('\'')
         self.verifyToken = str(binascii.hexlify(os.urandom(24)))[2:-1]
+        self.loginWith = True
 
         # Handle Strava authentication. When users successfully log in to Strava, they are sent to {site-url}/strava-login
         @app.route('/' + self.configCode + '-login')
-        def auth():
+        def stravaAuth():
             # Get user data and access token
-            authResponse = functions.getAPI(url = self.tokenUrl, params = {
+            authResponse = functions.callAPI(url = self.tokenUrl, method="POST", params = {
                 "client_id": self.clientId, 
                 "client_secret": self.clientSecret, 
                 "code": request.args.get('code')
-            })
+            }).json()
             # Store user data as session for future use
             main.session["userData"] = authResponse["athlete"]
             main.session["accessKey"] = authResponse["access_token"]
@@ -39,13 +40,13 @@ class StravaApi:
             uniqueId = functions.uniqueUserId(self.configCode, authResponse["athlete"]["id"])
 
             # Store user activities
-            main.userActivities[uniqueId] = self.getActivitiesInRange()
+            main.userCachedData[uniqueId] = self.getActivitiesInRange()
 
-            if len(main.userActivities[uniqueId]) > 0:            
+            if len(main.userCachedData[uniqueId]) > 0:            
                 # Render parameters page
                 return redirect(url_for('render_parameters'))
             else:
-                main.userActivities[uniqueId] = None
+                main.userCachedData[uniqueId] = None
                 return functions.throwError("There are no activities recorded on your Strava account.")
     
     def getAllPolylines(self, activities):
@@ -71,7 +72,7 @@ class StravaApi:
         
         # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
         # Get activities in batches of 100 until all have been found
-        activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&after=" + endTime + "&per_page=200&page=" + str(pageNum), authCode = main.session['accessKey']).json()
+        activitiesResponse = functions.callAPI(method="GET", url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&after=" + endTime + "&per_page=200&page=" + str(pageNum), header = {"Authorization": "Bearer " + main.session['accessKey']}).json()
         while activitiesResponse != None:
             # Process batch if it is not empty
             if len(activitiesResponse) != 0:
@@ -97,7 +98,7 @@ class StravaApi:
 
                 # Advance to next page
                 pageNum += 1
-                activitiesResponse = functions.getAPI(url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&after=" + endTime + "&per_page=100&page=" + str(pageNum), authCode = main.session['accessKey']).json()
+                activitiesResponse = functions.callAPI(method="GET", url = "https://www.strava.com/api/v3/athlete/activities?before=" + beforeTime + "&after=" + endTime + "&per_page=100&page=" + str(pageNum), header = {"Authorization": "Bearer " + main.session['accessKey']}).json()
 
             # No activities in the batch; exit the loop and return result
             else:
@@ -116,4 +117,4 @@ class StravaApi:
         }
 
     def isAvailable(self):
-        return (functions.getAPI(url = self.tokenUrl) != False)
+        return (functions.checkTimeout(url = self.tokenUrl) != False)
