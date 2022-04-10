@@ -17,12 +17,14 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
   - `pip3 install requests`
   - `pip3 install gpxpy`
   - `pip3 install pandas`
+  - `pip3 install tweepy`
 - Complete app.cfg
   - Log in to the shared Strava account. The app API tokens/etc. are in the [API dashboard](https://www.strava.com/settings/api).
   - In `AUTH_URL`: replace `{ID}` with the Client ID from the dashboard
   - Replace `CLIENT_ID` with the Client ID from the dashboard
   - Replace `CLIENT_SECRET` with the Client Secret from the dashboard
   - Replace `SECRET_KEY` with a random string, whatever you like. 
+  - Fill in Twitter credentials using information securely sent via Bitwarden.
 - Open Capstone project folder: `cd Capstone`
 - Run web server using the flask executable. In my case the command is `python -m flask run` < should start the webserver.
  
@@ -43,12 +45,14 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
   - `pip3 install requests`
   - `pip3 install gpxpy`
   - `pip3 install pandas`
+  - `pip3 install tweepy`
 - Complete app.cfg
   - Log in to the shared Strava account. The app API tokens/etc. are in the [API dashboard](https://www.strava.com/settings/api).
   - In `AUTH_URL`: replace `{ID}` with the Client ID from the dashboard
   - Replace `CLIENT_ID` with the Client ID from the dashboard
   - Replace `CLIENT_SECRET` with the Client Secret from the dashboard
   - Replace `SECRET_KEY` with a random string, whatever you like. 
+  - Fill in Twitter credentials using information securely sent via Bitwarden.
 - Run web server: `flask run`
 
 # KSU VM Production Server Running
