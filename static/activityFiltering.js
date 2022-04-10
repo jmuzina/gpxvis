@@ -29,11 +29,11 @@ function configureDateFields(startDate, endDate) {
 function getDateMatches(startDate, endDate) {
   const splitStartDate = startDate.match(/(\d+)/g);
   if (splitStartDate == null) return [];
-  const filterStartDate = new Date(splitStartDate[0], splitStartDate[1]-1, splitStartDate[2]);
+  const filterStartDate = new Date(splitStartDate[0], splitStartDate[1] - 1, splitStartDate[2]);
 
   const splitEndDate = endDate.match(/(\d+)/g);
   if (splitEndDate == null) return [];
-  const filterEndDate = new Date(splitEndDate[0], splitEndDate[1]-1, splitEndDate[2]);
+  const filterEndDate = new Date(splitEndDate[0], splitEndDate[1] - 1, splitEndDate[2]);
 
   return activitiesAsArray.filter(([key, value]) => {
     const splitActivityDate = value["displayTime"].match(/(\d+)/g);
@@ -82,7 +82,7 @@ function getFilterMatches(arr) {
 // Called every time "get activities" is clicked.
 function searchActivities(activities) {
   const filterMatches = getFilterMatches(activities);
-  
+
   const oldTableBody = document.getElementById("matchedActivities");
   var table = document.getElementById("activitiesTable");
   const tableHeader = document.getElementById("activitiesTableHeader");
@@ -124,7 +124,7 @@ function searchActivities(activities) {
     tableHeader.hidden = true;
     table.hidden = true;
     table.style = "";
-    var generateButton =  document.getElementById("generate-button");
+    var generateButton = document.getElementById("generate-button");
     generateButton.disabled = true;
     $("#generate-button").addClass("disabled-button");
   }
@@ -137,7 +137,7 @@ function searchActivities(activities) {
 function waitForElement(elementID, callback) {
   if (document.getElementById(elementID)) callback();
   else {
-    setTimeout(function() {
+    setTimeout(function () {
       waitForElement(elementID, callback);
     }, 50);
   }
