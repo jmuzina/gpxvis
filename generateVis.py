@@ -82,8 +82,8 @@ class ImageCreator:
         self.tile_res = self.maxTileWidth/self.maxRows
         #(resolution/2)*(self.maxTileWidth) #resolution of drawn tracks #6*(self.width/1000)
         self.gridElementSize = self.width / self.maxRows
-        print("Max track width: " + str(self.get_max_track_width()))
-        print("Max tile width: " + str(self.maxTileWidth))
+        #print("Max track width: " + str(self.get_max_track_width()))
+        #print("Max tile width: " + str(self.maxTileWidth))
         
         ##user parameters##
         self.lineThickness = lineThickness 

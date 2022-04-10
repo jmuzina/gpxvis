@@ -94,30 +94,45 @@ class twitterApi:
                 return redirect(url_for("render_index"))
 
     # Upload visualization to Twitter server and return media ID
-    def uploadImage(self):
-        sessionDataValidationResult = functions.validUserData(main.session)
-        if sessionDataValidationResult == True:
-            uniqueId = functions.uniqueUserId(main.session["networkName"], main.session["userData"]["id"])
-            if "twitterUserID" in main.session:
-                # Start an authenticated API session between our application and Twitter
-                twitterAPI = OAuth1Session(client_key=self.CONSUMER_KEY, client_secret=self.CONSUMER_SECRET, resource_owner_key=self.ACCESS_TOKEN_PUBLIC, resource_owner_secret=self.ACCESS_TOKEN_SECRET)
-                # Upload the visualization to Twitter's servers and store its ID
-                postResult = twitterAPI.post(url="https://upload.twitter.com/1.1/media/upload.json", 
-                    data={
-                        "media_data": main.userCachedData[uniqueId]["visualizationResult"][22:],
-                        "media_category": "tweet_image",
-                        "additional_owners":  main.session["twitterUserID"]
-                    }
-                ).json()
-                if "media_id_string" in postResult:
-                    main.session["twitterUserID"] = None
-                    return True, postResult["media_id_string"]
+    def uploadImage(self, attemptNumber=1):
+        # Try a maximum of 3 times to upload the image
+        if attemptNumber <= 3:
+            sessionDataValidationResult = functions.validUserData(main.session)
+            if sessionDataValidationResult == True:
+                uniqueId = functions.uniqueUserId(main.session["networkName"], main.session["userData"]["id"])
+                if "twitterUserID" in main.session:
+                    # Start an authenticated API session between our application and Twitter
+                    twitterAPI = OAuth1Session(client_key=self.CONSUMER_KEY, client_secret=self.CONSUMER_SECRET, resource_owner_key=self.ACCESS_TOKEN_PUBLIC, resource_owner_secret=self.ACCESS_TOKEN_SECRET)
+                    uploadResult = twitterAPI.post(url="https://upload.twitter.com/1.1/media/upload.json", 
+                        data={
+                            "media_data": main.userCachedData[uniqueId]["visualizationResult"][22:],
+                            "media_category": "tweet_image",
+                            "additional_owners":  main.session["twitterUserID"]
+                        }
+                    )
+                    try:
+                        uploadResultJSON = uploadResult.json()
+                        # Upload the visualization to Twitter's servers and store its ID
+                        if "media_id_string" in uploadResultJSON:
+                            main.session["twitterUserID"] = None
+                            return True, uploadResultJSON["media_id_string"]
+                        else:
+                            # Twitter servers are under high stress: attempt the upload again.
+                            if uploadResult.status_code == 503:
+                                return self.uploadImage(attemptNumber + 1)
+                            else:
+                                return False, functions.throwError("Failed to upload image to Twitter.")
+                    except Exception as e:
+                        if hasattr(e, "message"):
+                            return False, functions.throwError(e.message)
+                        else:
+                            return False, functions.throwError("Failed to upload image to Twitter.")
                 else:
-                    return False, functions.throwError("Failed to upload image to Twitter.")
+                    return False, functions.throwError("No Twitter User ID found")
             else:
-                return False, functions.throwError("No Twitter User ID found")
+                return False, functions.throwError("Invalid session data")
         else:
-            return False, functions.throwError("Invalid session data")
+            return False, functions.throwError("Twitter's media upload servers are currently under heavy stress. Please try again later or, save the image and upload it directly.")
 
     def getClient(self):
         return tweepy.Client(
