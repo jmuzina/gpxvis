@@ -150,6 +150,33 @@ ul {
 #login-buttons {
   display: flex;
   justify-content: center;
+  flex-flow: column wrap;
+}
+
+#login-buttons div, form{
+  align-self: center;
+}
+
+#gpxUpload {
+  display: flex;
+  flex-flow: column wrap;
+  margin-top: 20px;
+}
+
+#gpxUpload h6, h5 {
+  text-align: center;
+}
+
+#gpxFile {
+  text-align: center;
+}
+
+#GPXSubmit {
+  background: #000000 !important;
+  text-align: center;
+  margin-top: 20px;
+  width:70%;
+  align-self:center
 }
 
 ////        This is the section for buttons          ////

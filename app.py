@@ -125,8 +125,10 @@ def logout():
 
     return redirect(url_for('render_index'))
 
-@flaskApp.route('/parameters')
+@flaskApp.route('/parameters', methods = ["POST", "GET"])
 def render_parameters():
+    print("PARAMETERS")
+    print(request.method)
     refreshSessionTimer()
     sessionDataValidationResult = functions.validUserData(session)
 
