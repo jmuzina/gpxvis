@@ -139,10 +139,17 @@ def render_parameters():
 
     if request.method == "POST" and "gpxFile" in request.files:
         if not "userData" in session:
+            id = None
+            session["networkName"] = "gpxFile"
+
+            # Get random ID for gpx file uploader and ensure nobody else has the same ID
+            while ((id == None) or (functions.uniqueUserId(session["networkName"], id) in userCachedData)):
+                id = functions.randomAlphanumericString(16)
+
             session["userData"] = {
-                "id": functions.randomAlphanumericString(16)
+                "id": id
             }
-        session["networkName"] = "gpxFile"
+
         uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
 
         if not os.path.exists("uploads/" + uniqueId):

@@ -389,7 +389,9 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
     if hasattr(image_creator, "backgroundImageFilePath"):
         os.remove(image_creator.backgroundImageFilePath) 
 
+    # Delete GPX files
     if type(data) is str:
-        shutil.rmtree("uploads/" + data)
+        if os.path.exists("uploads/" + data):
+            shutil.rmtree("uploads/" + data)
 
     return drawnImage

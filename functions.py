@@ -1,16 +1,18 @@
 # ---- Dependency imports ---- #
 import json
-import math
+import os
+import random
+import shutil
+import time
 import urllib.parse
 import urllib.request
 from socket import timeout
-import time
-import random
-import app as main
+
 import requests
-import shutil
 from flask import (Flask, Response, redirect, render_template, request,
                    session, url_for)
+
+import app as main
 
 # ---------------------------- #
 
@@ -94,7 +96,9 @@ def wipeSession(session):
         if "sessionTimer" in main.userCachedData[uniqueId]:
             main.userCachedData[uniqueId]["sessionTimer"] = None
 
-        shutil.rmtree("uploads/" + uniqueId)
+        # Delete GPX files
+        if os.path.exists("uploads/" + uniqueId):
+            shutil.rmtree("uploads/" + uniqueId)
 
     for key in sessionVars:
         if key in session:
