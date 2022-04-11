@@ -16,7 +16,7 @@ import app as main
 
 # ---------------------------- #
 
-sessionVars = ["accessKey", "networkName", "userData"]
+sessionVars = ["accessKey", "networkName", "userData", "twitterAccessToken", "twitterUserID", "visualizationID"]
 
 def allowed_file(filename, extensions):
     return '.' in filename and \
