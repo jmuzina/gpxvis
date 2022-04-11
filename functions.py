@@ -1,15 +1,18 @@
 # ---- Dependency imports ---- #
 import json
-import math
+import os
+import random
+import shutil
+import time
 import urllib.parse
 import urllib.request
 from socket import timeout
-import time
-import random
-import app as main
+
 import requests
 from flask import (Flask, Response, redirect, render_template, request,
                    session, url_for)
+
+import app as main
 
 # ---------------------------- #
 
@@ -88,10 +91,14 @@ def validUserData(session):
 def wipeSession(session):
     sessionDataValidationResult = validUserData(session)
 
-    if sessionDataValidationResult == True:
+    if sessionDataValidationResult == True or ("networkName" in session and session["networkName"] == "gpxFile"):
         uniqueId = uniqueUserId(session["networkName"], session["userData"]["id"])
         if "sessionTimer" in main.userCachedData[uniqueId]:
             main.userCachedData[uniqueId]["sessionTimer"] = None
+
+        # Delete GPX files
+        if os.path.exists("uploads/" + uniqueId):
+            shutil.rmtree("uploads/" + uniqueId)
 
     for key in sessionVars:
         if key in session:

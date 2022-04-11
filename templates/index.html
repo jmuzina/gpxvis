@@ -13,15 +13,13 @@
         href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap"
         rel="stylesheet"
         />
-        
+        <script src="fileVerification.js"></script>
     </head>
     <body>
-
         {% block content -%}
         {% include "navBar.html" %}
         {%- endblock content %}
 
-        {% if not userData %}
         <div class="main-body">
         <div class="main-container">
             <div class="main-content-container">
@@ -36,21 +34,19 @@
                         {% endif %}
                     </div>
                     {% endfor %}
+                    <form id = "gpxUpload" action="/parameters" method="POST" enctype="multipart/form-data">
+                        <h6>OR</h6>
+                        <h5>Upload GPX Files</h5>
+                        <input type="file" id="gpxFile" name="gpxFile" onchange="verifyGPXFile()" multiple>
+                        <input type="submit" class="button-custom disabled-button" id="GPXSubmit" value="Submit GPX" disabled/>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-        {% endif %}
-        {% if userData %}
-            {% if userData['imageBytes'] %}
-                <div class = "visualizedContainer container">
-                    <img class = "visualizedResult" src = "{{userData['imageBytes']}}" alt = "visualized image"> 
-                </div>
-            {% endif %}
-        {% endif %}
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </body>
 
 </html>

@@ -151,3 +151,17 @@ const filterFieldIDs = [
   "activity-type",
   "keyword"
 ];
+
+setTimeout(function() {
+	// GPX Upload, not API pull: enable generate button and change active tab to background tab (activities tab is hidden)
+	if (document.getElementById("v-pills-activities-tab") == null) {
+  		waitForElement("generate-button", function() {
+    		const generateButton = document.getElementById("generate-button");
+    		generateButton.disabled = false;
+    		$(generateButton).removeClass("disabled-button");
+    		$("#v-pills-background-tab").addClass("active");
+    		$("#v-pills-background").addClass("show");
+    		$("#v-pills-background").addClass("active");
+  		});
+	}
+}, 500);
