@@ -1,6 +1,7 @@
 # App launch-point
 
 # ---- Dependency imports ---- #
+from enum import unique
 import logging
 import math
 import os
@@ -17,6 +18,8 @@ from flask_assets import Bundle, Environment
 import functions
 import generateVis
 import SessionTimer
+import glob
+import shutil
 
 # ---------------------------- #
 ALLOWED_EXTENSIONS = {'png', 'jpeg', 'jpg', 'gif', 'gpx'}
@@ -34,14 +37,18 @@ if not os.path.exists("logs/flask"):
     os.makedirs("logs/flask")
 if not os.path.exists("logs/console"):
     os.makedirs("logs/console")
+
+# Clear all files in uploads directory on app launch
+# https://www.tutorialspoint.com/How-to-delete-all-files-in-a-directory-with-Python
+for root, dirs, files in os.walk("uploads"):
+    for file in files:
+        os.remove(os.path.join(root, file))
+
+for sub_folder in glob.glob("uploads"):
+    shutil.rmtree(sub_folder)
+
 if not os.path.exists("uploads"):
     os.makedirs("uploads")
-else:
-    # Clear all files in uploads directory on app launch
-    # https://www.tutorialspoint.com/How-to-delete-all-files-in-a-directory-with-Python
-    for root, dirs, files in os.walk("uploads"):
-        for file in files:
-            os.remove(os.path.join(root, file))
 
 logFileName = str(datetime.utcnow()).replace(" ", "").replace(":", "").replace(".", "") + ".log"
 
@@ -98,7 +105,7 @@ def render_index():
 
     if sessionDataValidationResult == True: # User already logged in, redirect to parameters page
 	    return redirect(url_for("render_parameters"))
-    elif sessionDataValidationResult == False: # No user ID, not logged in.
+    elif sessionDataValidationResult == False or ("networkName" in session and session["networkName"] == "gpxFile"): # No user ID, not logged in.
         networks = {}
         for networkName in apis:
             if apis[networkName].loginWith:
@@ -125,14 +132,34 @@ def logout():
 
     return redirect(url_for('render_index'))
 
-@flaskApp.route('/parameters', methods = ["POST", "GET"])
+@flaskApp.route('/parameters', methods=["POST", "GET"])
 def render_parameters():
-    print("PARAMETERS")
-    print(request.method)
     refreshSessionTimer()
     sessionDataValidationResult = functions.validUserData(session)
 
-    if sessionDataValidationResult == True:
+    if request.method == "POST" and "gpxFile" in request.files:
+        if not "userData" in session:
+            session["userData"] = {
+                "id": functions.randomAlphanumericString(16)
+            }
+        session["networkName"] = "gpxFile"
+        uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
+
+        if not os.path.exists("uploads/" + uniqueId):
+            os.makedirs("uploads/" + uniqueId)
+
+        for file in request.files.getlist('gpxFile'):
+            if file and functions.allowed_file(file.filename, ALLOWED_EXTENSIONS):
+                filename = secure_filename(functions.randomAlphanumericString(16) + "_" + file.filename)
+                #print(file)
+                file.save(os.path.join(flaskApp.config['UPLOAD_FOLDER'] + "/" + uniqueId, filename))     
+
+        if not uniqueId in userCachedData:
+            userCachedData[uniqueId] = {}
+
+        return render_template("parameters.html", isGuest = True)
+
+    elif sessionDataValidationResult == True:
         uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
         if len(userCachedData[uniqueId]["activities"]) > 0:
             currentDate = datetime.now()
@@ -163,6 +190,7 @@ def render_errorPage():
 @flaskApp.route('/generatePage', methods = ["POST", "GET"])
 def render_generatePage():
     refreshSessionTimer()
+
     twitterUsername = request.args.get("twitterUsername")
     tweetID = request.args.get("tweetID")
 
@@ -198,9 +226,17 @@ def render_generatePage():
             if key in request.form:
                 formArgs[key] = request.form[key]
         
-        selected = dict([(activityID, userCachedData[uniqueId]["activities"][activityID]) for activityID in userCachedData[uniqueId]["activities"] if str(activityID) in formArgs["selectedActivities"]])
-        if len(selected) > 0:
-            polylines = apis[session["networkName"]].getAllPolylines(selected)
+        selected = None
+        if (session["networkName"] != "gpxFile"):
+            selected = dict([(activityID, userCachedData[uniqueId]["activities"][activityID]) for activityID in userCachedData[uniqueId]["activities"] if str(activityID) in formArgs["selectedActivities"]])
+        
+        if session["networkName"] == "gpxFile" or len(selected) > 0:
+            data = None
+            if session["networkName"] != "gpxFile":
+                data = apis[session["networkName"]].getAllPolylines(selected)
+            else:
+                data = uniqueId
+            
             filename = ""
             # Pass a background image into the visualizer if one was given
             if "backgroundImage" in request.files:
@@ -210,13 +246,14 @@ def render_generatePage():
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(flaskApp.config['UPLOAD_FOLDER'], filename))
 
-            userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=userCachedData[uniqueId]["timeElapsed"], totalDistance=userCachedData[uniqueId]["distanceTravelled"]))
+            if session["networkName"] != "gpxFile":
+                userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=data, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=userCachedData[uniqueId]["timeElapsed"], totalDistance=userCachedData[uniqueId]["distanceTravelled"]))
+            else:
+                userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=data, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"], textBackgroundFade=formArgs["textBackgroundFade"]))
 
             return render_template("generatePage.html", userData = session['userData'], shareAuthURLs = shareAuthURLs, visualization =  userCachedData[uniqueId]["visualizationResult"])
         else:
             return functions.throwError("No activities were selected.")
-
-        return functions.throwError("Could not display visualized image.")
 
     elif uniqueId in userCachedData and "visualizationResult" in userCachedData[uniqueId]: # User has just shared the post to social media
         return render_template("generatePage.html", userData = session['userData'], shareAuthURLs = shareAuthURLs, visualization =  userCachedData[uniqueId]["visualizationResult"], tweetLink = "https://twitter.com/" + twitterUsername + "/status/" + tweetID)

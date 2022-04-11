@@ -25,8 +25,6 @@ const fileRestrictions = {
     }
 }
 
-const clearBackgroundButton = document.getElementById("clearBackgroundButton");
-
 function fileUploadIsValid(fileType) {
     if (fileRestrictions[fileType] && fileRestrictions[fileType]["extensions"] && fileRestrictions[fileType]["maxSize"]) {
         const uploadBtn = document.getElementById(fileType);
@@ -86,15 +84,12 @@ function verifyBackgroundImage() {
     const fileVerificationResult = fileUploadIsValid("backgroundImage");
     const uploadBtn = document.getElementById("backgroundImage");
     const blurIntensitySlider = document.getElementById("blurIntensityLabel");
-    const clearBackgroundButton =  document.getElementById("clearBackgroundButton");
+    //const clearBackgroundButton =  document.getElementById("clearBackgroundButton");
 
     if (fileVerificationResult["success"]) {
-        if (fileType  == "backgroundImage") {
-            if (blurIntensitySlider !== null) {
-                blurIntensitySlider.hidden = false;
-            }
+        if (blurIntensitySlider !== null) {
+            blurIntensitySlider.hidden = false;
         }
-        
     }
     else {
         alert(fileVerificationResult["message"]);
@@ -106,8 +101,8 @@ function verifyBackgroundImage() {
             }
         }
     }
-    clearBackgroundButton.hidden = blurIntensitySlider.hidden;
-    document.getElementById("backgroundColor").parentNode.hidden = !clearBackgroundButton.hidden;
+    document.getElementById("clearBackgroundButton").hidden = blurIntensitySlider.hidden;
+    document.getElementById("backgroundColor").parentNode.hidden = !document.getElementById("clearBackgroundButton").hidden;
 }
 
 function verifyGPXFile() {

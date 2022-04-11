@@ -30,6 +30,9 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
  
 # Linux Environment Setup
 - Clone repo: `git clone https://github.com/joemuzina/capstone`
+- Install Nginx: `sudo apt-get install nginx`
+- Set up Nginx to proxy the Flask server: [instructions](https://stackoverflow.com/questions/11443917/why-does-gunicorn-use-port-8000-8001-instead-of-80)
+- Set Nginx upload limit to 50m: [instructions](https://learn.coderslang.com/0018-how-to-fix-error-413-request-entity-too-large-in-nginx/)
 - Install Python dependencies
   - Python3 venv: `apt install python3.8-venv`
   - VirtualEnv: `sudo apt-get install python3-virtualenv`
@@ -46,6 +49,7 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
   - `pip3 install gpxpy`
   - `pip3 install pandas`
   - `pip3 install tweepy`
+  - `pip3 install gunicorn`
 - Complete app.cfg
   - Log in to the shared Strava account. The app API tokens/etc. are in the [API dashboard](https://www.strava.com/settings/api).
   - In `AUTH_URL`: replace `{ID}` with the Client ID from the dashboard
@@ -53,9 +57,4 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
   - Replace `CLIENT_SECRET` with the Client Secret from the dashboard
   - Replace `SECRET_KEY` with a random string, whatever you like. 
   - Fill in Twitter credentials using information securely sent via Bitwarden.
-- Run web server: `flask run`
-
-# KSU VM Production Server Running
-- Attach to the TMUX session : `tmux a`
-- Launch webserver: `sudo python3 app.py`
-- Detach from TMUX session: Press CTRL+B, then press D.
+- Run web server: `gunicorn wsgi:flaskApp`

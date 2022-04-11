@@ -35,7 +35,7 @@ class twitterApi:
         @app.route('/' + self.configCode + '-login')
         def twitterAuth():
             sessionDataValidationResult = functions.validUserData(main.session)
-            if sessionDataValidationResult == True:
+            if sessionDataValidationResult == True or ("networkName" in main.session and main.session["networkName"] == "gpxFile"):
                 uniqueId = functions.uniqueUserId(main.session["networkName"], main.session["userData"]["id"])
 
                 # Authenticate our app with Twitter
@@ -54,7 +54,7 @@ class twitterApi:
         @app.route("/twitter-login-callback")
         def twitterLoginCallback():
             sessionDataValidationResult = functions.validUserData(main.session)
-            if sessionDataValidationResult == True:
+            if sessionDataValidationResult == True or ("networkName" in main.session and main.session["networkName"] == "gpxFile"):
                 uniqueId = functions.uniqueUserId(main.session["networkName"], main.session["userData"]["id"])
                 if "twitterOAuth" in main.userCachedData[uniqueId]:
                     if uniqueId in main.userCachedData and "visualizationResult" in main.userCachedData[uniqueId]:
@@ -98,7 +98,7 @@ class twitterApi:
         # Try a maximum of 3 times to upload the image
         if attemptNumber <= 3:
             sessionDataValidationResult = functions.validUserData(main.session)
-            if sessionDataValidationResult == True:
+            if sessionDataValidationResult == True or ("networkName" in main.session and main.session["networkName"] == "gpxFile"):
                 uniqueId = functions.uniqueUserId(main.session["networkName"], main.session["userData"]["id"])
                 if "twitterUserID" in main.session:
                     # Start an authenticated API session between our application and Twitter

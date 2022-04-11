@@ -2,23 +2,26 @@
 ####generateVis
 ####code sources: https://github.com/pavel-perina/gpx_to_png
 
-import sys  
-import math 
-import logging 
-import urllib
-import os
-import io
 import base64
+import glob
+import io
+import logging
+import math
+import os
+import shutil
+import sys
+import urllib
+from ast import Str
+
 import gpxpy
 from PIL import Image as pil_image
-from PIL import ImageFilter as pil_filter
 from PIL import ImageDraw as pil_draw
+from PIL import ImageFilter as pil_filter
 from PIL import ImageFont as pil_font
-print(os.getcwd())
-from PIL.ImageFilter import (
-   BLUR, CONTOUR, DETAIL, EDGE_ENHANCE, EDGE_ENHANCE_MORE,
-   EMBOSS, FIND_EDGES, SMOOTH, SMOOTH_MORE, SHARPEN
-)
+from PIL.ImageFilter import (BLUR, CONTOUR, DETAIL, EDGE_ENHANCE,
+                             EDGE_ENHANCE_MORE, EMBOSS, FIND_EDGES, SHARPEN,
+                             SMOOTH, SMOOTH_MORE)
+
 
 def get_black_pixels(im):
     width, height = im.size
@@ -334,10 +337,14 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
                 print("Error processing polyline")
                 sys.exit(1)
     #####GPX FILE#####
-    ##convert GPX file to list
+    #convert GPX file to list
     else:
-        print("GPX File")
-        gpx_files = glob.glob (r"*.gpx") #get all GPX files in same directory
+        gpx_files = None
+        if type(data) is not str:
+            gpx_files = glob.glob (r"*.gpx") #get all GPX files in same directory
+        else:
+            dir = "uploads/" + data + "/*.gpx"
+            gpx_files = glob.glob("uploads/" + data + "/*.gpx") #get all GPX files in user upload directory
         
         for gpx_file in gpx_files:
             if count != countLimit:
@@ -358,7 +365,8 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
 
                     logging.exception(e)
                     print('Error processing: %s' % gpx_file)
-                    sys.exit(1)
+                    #sys.exit(1)
+                    continue
             else:
                 break
 
@@ -380,5 +388,8 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
     image_creator.image.close()
     if hasattr(image_creator, "backgroundImageFilePath"):
         os.remove(image_creator.backgroundImageFilePath) 
+
+    if type(data) is str:
+        shutil.rmtree("uploads/" + data)
 
     return drawnImage

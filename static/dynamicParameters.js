@@ -1,48 +1,62 @@
-window.onload = function() {
-    var gridCheckBox = document.getElementById("displayGridLines");
-    var gridlineColorSelector = document.getElementById("gridlineColor").parentNode;
-    var gridThickness = document.getElementById("gridThickness");
-    var gridlineThicknessSelector = gridThickness.parentNode;
-    var gridThicknessPreview = document.getElementById("gridThicknessPreview");
-    var pathThicknessPreview = document.getElementById("pathThicknessPreview");
-    const blurIntensityLabel = document.getElementById("blurIntensityLabel");
-    const blurIntensityPreview = document.getElementById("blurIntensityPreview");
-    const blurIntensity = document.getElementById("blurIntensity");
-    const backgroundImage =  document.getElementById("backgroundImage");
-    var overlayCheckBox = document.getElementById("infoText");
-    var overlayBackground = document.getElementById("textBackgroundFade").parentNode;
-    const clearBackgroundButton = document.getElementById("clearBackgroundButton");
-    const backgroundColor = document.getElementById("backgroundColor").parentNode;
+var gridCheckBox;
+var gridlineColorSelector;
+var gridThickness;
+var gridlineThicknessSelector;
+var gridThicknessPreview;
+var pathThicknessPreview;
+var blurIntensityLabel;
+var blurIntensityPreview;
+var blurIntensity;
+var backgroundImage;
+var overlayCheckBox;
+var overlayBackground;
+var clearBackgroundButton;
+var backgroundColor;
 
-    function gridChecked() {
-        gridlineColorSelector.hidden = !gridCheckBox.checked;
-        gridlineThicknessSelector.hidden =
-        gridlineColorSelector.hidden;
-    }
+waitForElement("displayGridLines", function() { gridCheckBox = document.getElementById("displayGridLines"); });
+waitForElement("gridlineColor", function() { gridlineColorSelector = document.getElementById("gridlineColor").parentNode; });
+waitForElement("gridThickness", function() { gridThickness = document.getElementById("gridThickness"); gridlineThicknessSelector = gridThickness.parentNode; });
+waitForElement("gridThicknessPreview", function() {gridThicknessPreview = document.getElementById("gridThicknessPreview"); });
+waitForElement("pathThicknessPreview", function() { pathThicknessPreview = document.getElementById("pathThicknessPreview"); });
+waitForElement("blurIntensityLabel", function() { blurIntensityLabel = document.getElementById("blurIntensityLabel"); });
+waitForElement("blurIntensityPreview", function() { blurIntensityPreview = document.getElementById("blurIntensityPreview"); });
+waitForElement("blurIntensity", function() { blurIntensity = document.getElementById("blurIntensity"); });
+waitForElement("backgroundImage", function() { backgroundImage = document.getElementById("backgroundImage"); });
+waitForElement("infoText", function() { overlayCheckBox = document.getElementById("infoText"); });
+waitForElement("textBackgroundFade", function() { overlayBackground = document.getElementById("textBackgroundFade").parentNode; });
+waitForElement("clearBackgroundButton", function() { clearBackgroundButton = document.getElementById("clearBackgroundButton"); });
+waitForElement("backgroundColor", function() { backgroundColor = document.getElementById("backgroundColor").parentNode; });
 
-    function overlayChecked() {
-        overlayBackground.hidden = !overlayCheckBox.checked;
-    }
+function gridChecked() {
+    gridlineColorSelector.hidden = !gridCheckBox.checked;
+    gridlineThicknessSelector.hidden =
+    gridlineColorSelector.hidden;
+}
 
-    function gridThicknessChanged() {
-        gridThicknessPreview.innerHTML = gridThickness.value;
-    }
+function overlayChecked() {
+    overlayBackground.hidden = !overlayCheckBox.checked;
+}
 
-    function pathThicknessChanged() {
-        pathThicknessPreview.innerHTML = pathThickness.value;
-    }
+function gridThicknessChanged() {
+    gridThicknessPreview.innerHTML = gridThickness.value;
+}
 
-    function blurIntensityChanged() {
-        blurIntensityPreview.innerHTML = blurIntensity.value;
-    }
+function pathThicknessChanged() {
+    pathThicknessPreview.innerHTML = pathThickness.value;
+}
 
-    function clearBackground() {
-        backgroundImage.value = null;
-        clearBackgroundButton.hidden = true;
-        blurIntensityLabel.hidden = true;
-        backgroundColor.hidden = false;
-    }
+function blurIntensityChanged() {
+    blurIntensityPreview.innerHTML = blurIntensity.value;
+}
 
+function clearBackground() {
+    backgroundImage.value = null;
+    clearBackgroundButton.hidden = true;
+    blurIntensityLabel.hidden = true;
+    backgroundColor.hidden = false;
+}
+
+setTimeout(function () {
     // Bootstrap
     overlayChecked();
     gridThicknessChanged();
@@ -60,4 +74,4 @@ window.onload = function() {
     gridCheckBox.addEventListener("change", gridChecked, false);
     blurIntensity.addEventListener("change", blurIntensityChanged, false);
     clearBackgroundButton.addEventListener("click", clearBackground, false);
-}
+}, 500);
