@@ -209,7 +209,7 @@
               <script type="text/javascript">
                 activities = pythonBridge({{activities|tojson}});
                 const activitiesAsArray = Object.entries(activities);
-                console.log("hello we are  here");
+
                 if (document.getElementById("v-pills-activities-tab") !== null) {
                   configureDateFields(pythonBridge({{startDate|tojson}}), pythonBridge({{endDate|tojson}}));  
 

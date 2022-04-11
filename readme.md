@@ -57,4 +57,4 @@ Terminal commands in this section can be executed in Windows Powershell or Micro
   - Replace `CLIENT_SECRET` with the Client Secret from the dashboard
   - Replace `SECRET_KEY` with a random string, whatever you like. 
   - Fill in Twitter credentials using information securely sent via Bitwarden.
-- Run web server: `gunicorn wsgi:flaskApp`
+- Run web server: `bash start.sh`
