@@ -16,6 +16,7 @@ from flask_assets import Bundle, Environment
 
 import functions
 import generateVis
+import SessionTimer
 
 # ---------------------------- #
 ALLOWED_EXTENSIONS = {'png', 'jpeg', 'jpg', 'gif', 'gpx'}
@@ -74,12 +75,20 @@ config.read_file(open(r'./app.cfg'))
 # -------------------------------------------- #
 
 import networks.strava  # Must be imported after config has been read
+import networks.twitter
 
-userActivities = {}
+userCachedData = {}
 
 apis = {
-    'strava': networks.strava.StravaApi(config, flaskApp)
+    'strava': networks.strava.StravaApi(config, flaskApp),
+    'twitter': networks.twitter.twitterApi(config, flaskApp)
 }
+
+shareAuthURLs = {}
+
+for networkName in apis:
+    if not apis[networkName].loginWith:
+        shareAuthURLs[networkName] = apis[networkName].authUrl
 
 # Index page
 @flaskApp.route('/')
@@ -92,11 +101,12 @@ def render_index():
     elif sessionDataValidationResult == False: # No user ID, not logged in.
         networks = {}
         for networkName in apis:
-            networkDetails = False
-            if apis[networkName].isAvailable():
-                networkDetails = apis[networkName].authUrl
-            
-            networks[networkName] = networkDetails
+            if apis[networkName].loginWith:
+                networkDetails = False
+                if apis[networkName].isAvailable():
+                    networkDetails = apis[networkName].authUrl
+                
+                networks[networkName] = networkDetails
 
         return render_template("index.html", networks = networks)
     else:
@@ -107,26 +117,27 @@ def logout():
     # Clear user session data
     functions.wipeSession(session)
 
-    # Wipe user image
+    # Wipe user cached data
     if "userData" in session and "id" in session["userData"] and "networkName" in session:
         uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
         #userImages[uniqueId] = None
-        userActivities[uniqueId] = None
+        userCachedData[uniqueId] = None
 
     return redirect(url_for('render_index'))
 
 @flaskApp.route('/parameters')
 def render_parameters():
+    refreshSessionTimer()
     sessionDataValidationResult = functions.validUserData(session)
 
     if sessionDataValidationResult == True:
         uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
-        if len(userActivities[uniqueId]["activities"]) > 0:
+        if len(userCachedData[uniqueId]["activities"]) > 0:
             currentDate = datetime.now()
             currentDateStr = datetime.strftime(currentDate, "%Y-%m-%d")
             yearAgoTime = currentDate- timedelta(days = 365)
             yearAgoStr = datetime.strftime(yearAgoTime, "%Y-%m-%d")
-            return render_template("parameters.html", userData = session['userData'], activities = userActivities[uniqueId]["activities"], startDate = yearAgoStr, endDate = currentDateStr)
+            return render_template("parameters.html", userData = session['userData'], activities = userCachedData[uniqueId]["activities"], startDate = yearAgoStr, endDate = currentDateStr)
         else:
             return functions.throwError("No activities found in your account.")
     elif sessionDataValidationResult == False: # No userdata, render guest homepage
@@ -136,61 +147,96 @@ def render_parameters():
 
 @flaskApp.route('/errorPage')
 def render_errorPage():
+    refreshSessionTimer()
+
     errorMessage = request.args.get("errorMsg")
     if errorMessage == None:
         errorMessage = "Unknown Error"
 
-    return render_template("errorPage.html", errorMessage = errorMessage)
+    if "userData" in session:
+        return render_template("errorPage.html", userData = session['userData'], errorMessage = errorMessage)
+    else:
+        return render_template("errorPage.html", errorMessage = errorMessage)
 
-@flaskApp.route('/generatePage', methods = ["POST"])
+@flaskApp.route('/generatePage', methods = ["POST", "GET"])
 def render_generatePage():
-    # default values of form arguments
-    formArgs = {
-        "backgroundColor": (255,255,255),
-        "backgroundImage": "",
-        "blurIntensity": 5,
-        "pathThickness": 5,
-        "pathColor": (0,0,0),
-        "displayGridLines": False,
-        "gridThickness": 5,
-        "gridlineColor": (0,0,0),
-        "beforeTime": str(math.floor(time.time())),
-        "afterTime": str(0),
-        "selectedActivities": "",
-        "infoText": False,
-        "textBackgroundFade": False
-    }
+    refreshSessionTimer()
+    twitterUsername = request.args.get("twitterUsername")
+    tweetID = request.args.get("tweetID")
 
-    # Set form args to received form submission
-    for key in formArgs:
-        if key in request.form:
-            formArgs[key] = request.form[key]
+    uniqueId = None
 
-    #print(request.form)
-    #print("\n")
-    #print(formArgs)
-        
     if "userData" in session:
         if "id" in session["userData"]:
             if "networkName" in session:
                 uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
-                selected = dict([(activityID, userActivities[uniqueId]["activities"][activityID]) for activityID in userActivities[uniqueId]["activities"] if str(activityID) in formArgs["selectedActivities"]])
-                if len(selected) > 0:
-                    polylines = apis[session["networkName"]].getAllPolylines(selected)
-                    filename = ""
-                    if "backgroundImage" in request.files:
-                        file = request.files['backgroundImage']
 
-                        if file and functions.allowed_file(file.filename, ALLOWED_EXTENSIONS):
-                            filename = secure_filename(file.filename)
-                            file.save(os.path.join(flaskApp.config['UPLOAD_FOLDER'], filename))
+    if uniqueId == None:
+        return redirect(url_for("render_index"))
+    elif not (twitterUsername and tweetID): # process generate form inputs
+        # default values of form arguments
+        formArgs = {
+            "backgroundColor": (255,255,255),
+            "backgroundImage": "",
+            "blurIntensity": 5,
+            "pathThickness": 5,
+            "pathColor": (0,0,0),
+            "displayGridLines": False,
+            "gridThickness": 5,
+            "gridlineColor": (0,0,0),
+            "beforeTime": str(math.floor(time.time())),
+            "afterTime": str(0),
+            "selectedActivities": "",
+            "infoText": False,
+            "textBackgroundFade": False
+        }
 
-                    return render_template("generatePage.html", visualization = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=userActivities[uniqueId]["timeElapsed"], totalDistance=userActivities[uniqueId]["distanceTravelled"])))
-                else:
-                    return functions.throwError("No activities were selected.")
+        # Set form args to received form submission
+        for key in formArgs:
+            if key in request.form:
+                formArgs[key] = request.form[key]
+        
+        selected = dict([(activityID, userCachedData[uniqueId]["activities"][activityID]) for activityID in userCachedData[uniqueId]["activities"] if str(activityID) in formArgs["selectedActivities"]])
+        if len(selected) > 0:
+            polylines = apis[session["networkName"]].getAllPolylines(selected)
+            filename = ""
+            # Pass a background image into the visualizer if one was given
+            if "backgroundImage" in request.files:
+                file = request.files['backgroundImage']
+
+                if file and functions.allowed_file(file.filename, ALLOWED_EXTENSIONS):
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(flaskApp.config['UPLOAD_FOLDER'], filename))
+
+            userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=polylines, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=userCachedData[uniqueId]["timeElapsed"], totalDistance=userCachedData[uniqueId]["distanceTravelled"]))
+
+            return render_template("generatePage.html", userData = session['userData'], shareAuthURLs = shareAuthURLs, visualization =  userCachedData[uniqueId]["visualizationResult"])
+        else:
+            return functions.throwError("No activities were selected.")
+
+        return functions.throwError("Could not display visualized image.")
+
+    elif uniqueId in userCachedData and "visualizationResult" in userCachedData[uniqueId]: # User has just shared the post to social media
+        return render_template("generatePage.html", userData = session['userData'], shareAuthURLs = shareAuthURLs, visualization =  userCachedData[uniqueId]["visualizationResult"], tweetLink = "https://twitter.com/" + twitterUsername + "/status/" + tweetID)
     else:
-        print("FAILED")
-    return functions.throwError("Could not display visualized image.")
+        return functions.throwError("Social media share results were given but no visualization was found.")
+
+# Update user activity tracker
+def refreshSessionTimer():
+    sessionDataValidationResult = functions.validUserData(session)
+    if sessionDataValidationResult == True:
+        uniqueId = functions.uniqueUserId(session["networkName"], session["userData"]["id"])
+        # Valid activity tracker exists: Check whether it is expired
+        if "sessionTimer" in userCachedData[uniqueId]:
+            # User's session has not expired: restart the timer
+            if not userCachedData[uniqueId]["sessionTimer"].expired():
+                userCachedData[uniqueId]["sessionTimer"].start()
+            # User has been inactive too long: wipe their session data
+            else:
+                functions.wipeSession(session)
+        # User has no session timer: start one
+        else:
+            userCachedData[uniqueId]["sessionTimer"] = SessionTimer.SessionTimer()
 
 @flaskApp.route("/activityFiltering.js")
 def returnActivityFiltering():
@@ -199,8 +245,14 @@ def returnActivityFiltering():
 @flaskApp.route("/fileVerification.js")
 def returnFileVerification():
     return send_file("./static/fileVerification.js")
+
+@flaskApp.route("/dynamicParameters.js")
+def returnDynamicParameters():
+    return send_file("./static/dynamicParameters.js")
+
 @flaskApp.route('/aboutPage')
 def render_aboutPage():
+    refreshSessionTimer()
     sessionDataValidationResult = functions.validUserData(session)
 
     if sessionDataValidationResult == True:
@@ -210,6 +262,7 @@ def render_aboutPage():
 
 @flaskApp.route('/privacyPage')
 def render_privacyPage():
+    refreshSessionTimer()
     sessionDataValidationResult = functions.validUserData(session)
 
     if sessionDataValidationResult == True:
@@ -220,3 +273,5 @@ def render_privacyPage():
 # Store any config items not related to API logins under app.config
 for key in config["DEFAULT"]:
     flaskApp.config[key] = config["DEFAULT"][key]
+
+#print(networks.twitter.twitterApi(config, flaskApp).getAccessKey())

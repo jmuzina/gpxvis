@@ -17,8 +17,11 @@
       href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap"
       rel="stylesheet"
     />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
     <script src="activityFiltering.js"></script>
     <script src="fileVerification.js"></script>
+    <script src="dynamicParameters.js"></script>
   </head>
 
   <body>
@@ -48,7 +51,9 @@
             role="tab"
             aria-controls="v-pills-activities"
             aria-selected="false"
-            >Activities</a
+            ><span class="material-icons-outlined material-icons">
+              stadium
+              </span>Activities</a
           >
           <!-- Visual Type tab
           <a
@@ -71,7 +76,9 @@
             role="tab"
             aria-controls="v-pills-background"
             aria-selected="false"
-            >Background</a
+            ><span class="material-icons-outlined material-icons">
+              wallpaper
+              </span>Background</a
           >
           <!-- Draw Style tab-->
           <a
@@ -82,7 +89,9 @@
             role="tab"
             aria-controls="v-pills-drawstyle"
             aria-selected="false"
-            >Draw Style</a
+            ><span class="material-icons-outlined material-icons">
+              draw
+              </span>Draw Style</a
           >
           <!-- Overlay tab-->
           <a
@@ -93,7 +102,9 @@
             role="tab"
             aria-controls="v-pills-overlay"
             aria-selected="false"
-            >Overlay</a
+            ><span class="material-icons-outlined material-icons">
+              layers
+              </span>Overlay</a
           >
 
           <!-- Generate Button -->
@@ -130,7 +141,7 @@
             <h3>Filter your Activities</h3>
             <fieldset>
               <div class="row" id="dateFilters">
-                <div class="col-md-4" style="padding-right: 0">
+                <div class="col-md-4" >
                   <label for="start"
                     >Start date:
                     <input
@@ -143,7 +154,7 @@
                     />
                   </label>
                 </div>
-                <div class="col-md-4" style="padding-left: 0">
+                <div class="col-md-4">
                   <label for="end"
                     >End date: <span>&nbsp;</span>
                     <input
@@ -156,32 +167,36 @@
                     />
                   </label>
                 </div>
-                <div class="col-md-4">
-                  <label for="activity" >Activity Type:
-                    <select name="activity" id="activity-type">
-                      <option value="all">All</option>
-                      <option value="ride">Ride</option>
-                      <option value="run">Run</option>
-                      <option value="swim">Swim</option>
-                      <option value="walk">Walk</option>
-                      <option value="hike">Hike</option>
-                      <option value="ski">Ski</option>
-                    </select>
-                  </label>
-                </div>
               </div>
-              <label for="fname"
-                >Keyword:
-                <input type="text" id="keyword" name="keyword" value="" />
-              </label>
-              <br />
-              <input
-                id="selectedActivities"
-                type="hidden"
-                name="selectedActivities"
-                value=""
-                hidden
-              />
+              <div class = "row">
+                <div class = "col-md-6">
+                  <label for="fname"
+                    >Keyword:
+                    <input type="text" id="keyword" name="keyword" value="" />
+                  </label>
+                  <br />
+                  <input
+                    id="selectedActivities"
+                    type="hidden"
+                    name="selectedActivities"
+                    value=""
+                    hidden
+                  />
+              </div>
+              <div class="col-md-6">
+                <label for="activity" >Activity Type:
+                  <select name="activity" id="activity-type">
+                    <option value="all">All</option>
+                    <option value="ride">Ride</option>
+                    <option value="run">Run</option>
+                    <option value="swim">Swim</option>
+                    <option value="walk">Walk</option>
+                    <option value="hike">Hike</option>
+                    <option value="ski">Ski</option>
+                  </select>
+                </label>
+              </div>
+            </div>
             </fieldset>
             
               <script type="text/javascript">
@@ -234,21 +249,22 @@
             aria-labelledby="v-pills-background-tab"
           >
             <h3>Select Background</h3>
-            <div>
-              <input
-                type="color"
-                id="backgroundColor"
-                name="backgroundColor"
-                value="#FFFFFF"
-              />
-              <label for="backgroundColor">Background Color</label>
-              <br>
+            <div id = "backgroundSettings">
+              <label for="backgroundColor">Flat Background Color:
+                <input
+                  type="color"
+                  id="backgroundColor"
+                  name="backgroundColor"
+                  value="#FFFFFF"
+                />
+              </label>
               <label for="backgroundImage">Background Image:
                 <input type="file" id="backgroundImage" name="backgroundImage" onchange="verifyBackgroundImage('backgroundImage')">
               </label>
-              <br>
+              <button id="clearBackgroundButton" type="button" class="btn btn-danger" hidden>Clear</button>
               <label for="blurIntensity" id="blurIntensityLabel" hidden
-                >Blur Intensity
+                >
+                Background Blur Intensity
                 <input
                   type="range"
                   min="0"
@@ -258,6 +274,7 @@
                   id="blurIntensity"
                   name="blurIntensity"
                 />
+                <span id="blurIntensityPreview">5</span>
               </label>
             </div>
           </div>
@@ -269,7 +286,7 @@
             aria-labelledby="v-pills-drawstyle-tab"
           >
             <h3>Select Draw Style</h3>
-            <div id="overlaySettings">
+            <div id="drawSettings">
               <label for="displayGridLines"
                 >Display Grid
                 <input
@@ -278,9 +295,9 @@
                   name="displayGridLines"
                 />
               </label>
-              <br />
               <label for="gridThickness" hidden
-                >Gridline Thickness
+                >
+                Gridline Thickness
                 <input
                   type="range"
                   min="1"
@@ -290,30 +307,18 @@
                   id="gridThickness"
                   name="gridThickness"
                 />
+                <span id="gridThicknessPreview">5</span>
               </label>
               <label for="gridlineColor" hidden
-                >Grid Color
+                >
+                Grid Color
                 <input
                   type="color"
                   id="gridlineColor"
                   name="gridlineColor"
                   value="#000000"
                 />
-                <br />
               </label>
-              <script type="text/javascript">
-                var gridCheckBox = document.getElementById("displayGridLines");
-                var gridlineColorSelector =
-                  document.getElementById("gridlineColor").parentNode;
-                var gridlineThicknessSelector =
-                  document.getElementById("gridThickness").parentNode;
-                function gridChecked() {
-                  gridlineColorSelector.hidden = !gridCheckBox.checked;
-                  gridlineThicknessSelector.hidden =
-                    gridlineColorSelector.hidden;
-                }
-                gridCheckBox.addEventListener("change", gridChecked, false);
-              </script>
             </div>
             <label for="pathColor"
               >Path Color
@@ -336,6 +341,7 @@
                 id="pathThickness"
                 name="pathThickness"
               />
+              <span id="pathThicknessPreview">5</span>
             </label>
           </div>
          <!-- Overlay Tab Content -->
@@ -356,7 +362,7 @@
             </label>
             <br />
             <label for="textBackgroundFade"
-              >Overlay Background Fade
+              >Statistics backdrop
                 <input
                   type="checkbox"
                   id="textBackgroundFade"
@@ -365,22 +371,10 @@
             </label>
             <br />
           </div>
-          <script type="text/javascript">
-            // Show/hide overlay options if the show overlay button is checked
-            var overlayCheckBox = document.getElementById("infoText");
-            var overlayBackground = document.getElementById("textBackgroundFade").parentNode;
-
-            function overlayChecked() {
-              overlayBackground.hidden = !overlayCheckBox.checked;
-            }
-            overlayCheckBox.addEventListener("change", overlayChecked, false);
-            overlayBackground.hidden = !overlayCheckBox.checked;
-          </script>
         </div>
       </form>
     </div>
 </div>
-
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -396,15 +390,5 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
-    <script>
-      const hamburger = document.querySelector(".ham");  
-      const navsub = document.querySelector(".nav-sub");  
-      hamburger.addEventListener('click', () => {  
-      hamburger.classList.toggle("change")  
-      navsub.classList.toggle("nav-change")  
-      });  
-  </script>
-
   </body>
 </html>
-
