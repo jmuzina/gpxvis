@@ -107,6 +107,8 @@ class StravaApi:
         #averageDistance = totalDistance / activitiesFound
         #averageTime = totalTime / activitiesFound
         totalTimeStr = str(datetime.timedelta(seconds = totalTime))
+        #numHours = math.floor(((totalTime / 60) / 60))
+        #numMinutes = math.floor(totalTime / 60)
         totalDistanceStr = str(round(functions.metersToMiles(totalDistance), 2)) + " mi."
 
         return {
