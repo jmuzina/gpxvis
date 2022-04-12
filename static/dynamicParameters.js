@@ -33,20 +33,25 @@ function gridChecked() {
     gridlineColorSelector.hidden;
 }
 
+function getSliderPercent(rangeElement) {
+    return Math.ceil(((rangeElement.value / rangeElement.max) * 100)) + " %"
+}
+
 function overlayChecked() {
     overlayBackground.hidden = !overlayCheckBox.checked;
 }
 
 function gridThicknessChanged() {
-    gridThicknessPreview.innerHTML = gridThickness.value;
+    gridThicknessPreview.innerHTML = getSliderPercent(gridThickness);
+    
 }
 
 function pathThicknessChanged() {
-    pathThicknessPreview.innerHTML = pathThickness.value;
+    pathThicknessPreview.innerHTML = getSliderPercent(pathThickness);
 }
 
 function blurIntensityChanged() {
-    blurIntensityPreview.innerHTML = blurIntensity.value;
+    blurIntensityPreview.innerHTML = getSliderPercent(blurIntensity);
 }
 
 function clearBackground() {
@@ -69,9 +74,9 @@ setTimeout(function () {
 
     // Listen for value changes and adjust accordingly
     overlayCheckBox.addEventListener("change", overlayChecked, false);
-    pathThickness.addEventListener("change", pathThicknessChanged, false);
-    gridThickness.addEventListener("change", gridThicknessChanged, false);
+    pathThickness.addEventListener("input", pathThicknessChanged, false);
+    gridThickness.addEventListener("input", gridThicknessChanged, false);
     gridCheckBox.addEventListener("change", gridChecked, false);
-    blurIntensity.addEventListener("change", blurIntensityChanged, false);
+    blurIntensity.addEventListener("input", blurIntensityChanged, false);
     clearBackgroundButton.addEventListener("click", clearBackground, false);
 }, 500);

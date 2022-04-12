@@ -296,6 +296,10 @@ def returnFileVerification():
 def returnDynamicParameters():
     return send_file("./static/dynamicParameters.js")
 
+@flaskApp.route("/resize.js")
+def returnResize():
+    return send_file("./static/resize.js")
+
 @flaskApp.route('/aboutPage')
 def render_aboutPage():
     refreshSessionTimer()

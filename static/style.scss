@@ -21,7 +21,7 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 90vh;
 }
 
 .navbar-container {
@@ -45,6 +45,14 @@ h3 {
 .nav-sub {
   display: flex;
   justify-content: space-between;
+}
+
+.custom-toggler .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 123, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+
+.custom-toggler.navbar-toggler {
+  border-color: white;
 }
 
 ul {
@@ -599,6 +607,14 @@ html {
     font-size: 44px;
   }
 
+  .main-container {
+    height: 95vh !important;
+    width: 95vw !important;
+    min-height: 0px  !important;
+    min-width: 0px !important;
+    margin-top: 2px;
+  }
+
 
   // main container for mobile phones
   // making increases height and width
@@ -664,5 +680,9 @@ html {
   .column {
     width: 75%;
     margin: auto;
+  }
+
+  #v-pills-tab *{
+    text-align:center;
   }
 }
