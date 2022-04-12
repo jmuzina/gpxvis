@@ -14,6 +14,7 @@ import urllib
 from ast import Str
 
 import gpxpy
+from PIL import GifImagePlugin as pil_gif
 from PIL import Image as pil_image
 from PIL import ImageDraw as pil_draw
 from PIL import ImageFilter as pil_filter
@@ -23,18 +24,28 @@ from PIL.ImageFilter import (BLUR, CONTOUR, DETAIL, EDGE_ENHANCE,
                              SMOOTH, SMOOTH_MORE)
 
 
-def get_black_pixels(im):
+def get_black_pixels(im, isGifFrame = False):
+    """ get list of every black pixel in an image and their coordinate """
     width, height = im.size
     blackPixels = []
-    for x in range(width):
-        for y in range(height):
-            color = im.getpixel((x,y))
-            if color < 200: #check for pixels that are not white
-                blackPixels.append({"x":x,"y":y})
+
+    #gifs store color slightly differently.
+    if isGifFrame:
+        for x in range(width):
+            for y in range(height):
+                color = im.getpixel((x,y))
+                if color < 140: #check for pixels that are not white. 175 is rough estimate and can be changed in future to something more elaborate
+                    blackPixels.append({"x":x,"y":y})
+    else:
+        for x in range(width):
+            for y in range(height):
+                color = im.getpixel((x,y))            
+                if color > 0: #check for pixels that are not white, formerly < 200 for gif
+                    blackPixels.append({"x":x,"y":y})
     return blackPixels
  
 
-##osm functions taken from https://github.com/pavel-perina/gpx_to_png
+## osm functions taken from https://github.com/pavel-perina/gpx_to_png
 def osm_lat_lon_to_x_y_tile (lat_deg, lon_deg, zoom):
     """ Gets tile containing given coordinate at given zoom level """
     ## taken from http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames, works for OSM maps and mapy.cz
@@ -66,24 +77,35 @@ def get_dimensions(n):
     print("failed to get dimensions")
     return(0)
 
-
+def save_image(image, filename = ""):
+    if filename != "":
+            image.save (filename)
+            #image.show()
+        # no file name provided, return image as base64-encoded string for displaying without saving on server
+    else:
+        imgArray = io.BytesIO()
+        image.save(imgArray, format="PNG")
+        return str(base64.b64encode(imgArray.getvalue()), 'utf-8')
+    #print("Saving " + filename) 
+    image.save(filename)
+    #image.show()
+            
 ##this class is the canvas that the activities(tracks) will be drawn on.
 class ImageCreator:
-    def __init__(self, tracks, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = None, backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (255,255,255), gridThickness = 1,  title = "", blackWhiteImage = None, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""):
+    def __init__(self, tracks, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (255,255,255), gridThickness = 1,  title = "", silhouetteImage = None, duplicateActivities = False, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""):
         
         self.tracks = tracks
         
         ##sizing##
-        resolution = 4000
-        self.maxTileWidth = resolution/(self.get_max_track_width())
-        if blackWhiteImage==None: 
+        self.resolution = 2000
+        self.maxTileWidth = self.resolution/(self.get_max_track_width())
+        if silhouetteImage==None: 
             self.maxRows = get_dimensions(len(tracks))
         else:
-            self.maxRows = blackWhiteImage.height
-        self.width = resolution #500 * self.maxRows
+            self.maxRows = silhouetteImage.height
+        self.width = self.resolution #500 * self.maxRows
         self.height = self.width
         self.tile_res = self.maxTileWidth/self.maxRows
-        #(resolution/2)*(self.maxTileWidth) #resolution of drawn tracks #6*(self.width/1000)
         self.gridElementSize = self.width / self.maxRows
         #print("Max track width: " + str(self.get_max_track_width()))
         #print("Max tile width: " + str(self.maxTileWidth))
@@ -94,39 +116,51 @@ class ImageCreator:
         self.foregroundColor = foregroundColor
         self.gridOn = gridOn
         self.gridThickness = gridThickness
+        self.textBackgroundFade = textBackgroundFade
+        self.infoText = infoText
+        self.duplicateActivities = duplicateActivities
 
+        ##statistics##
+        self.totalTime = totalTime
+        self.totalDistance = totalDistance
+        
         ####background image####
-       
+        
         if backgroundImage!="":
             self.backgroundImageFilePath = "uploads/" + backgroundImage
             backgroundImage = pil_image.open(self.backgroundImageFilePath)
 
             ##resize and crop image to fit##
-            if(backgroundImage.width < resolution or backgroundImage.height < resolution):
+            if(backgroundImage.width < self.resolution or backgroundImage.height < self.resolution):
                 if(backgroundImage.width>backgroundImage.height):
-                    backgroundImage = backgroundImage.resize((backgroundImage.width*(math.ceil(resolution/backgroundImage.height)),resolution))
+                    backgroundImage = backgroundImage.resize((backgroundImage.width*(math.ceil(self.resolution/backgroundImage.height)),self.resolution))
                 else:
-                    backgroundImage = backgroundImage.resize((resolution,backgroundImage.height*(math.ceil(resolution/backgroundImage.width))))
-            backgroundImage = backgroundImage.crop(((backgroundImage.width-resolution)/2,(backgroundImage.height-resolution)/2, (backgroundImage.width+resolution)/2,(backgroundImage.height+resolution)/2))
-            backgroundImage = backgroundImage.filter(pil_filter.GaussianBlur(int(backgroundBlur)))
+                    backgroundImage = backgroundImage.resize((self.resolution,backgroundImage.height*(math.ceil(self.resolution/backgroundImage.width))))
+            backgroundImage = backgroundImage.crop(((backgroundImage.width-self.resolution)/2,(backgroundImage.height-self.resolution)/2, (backgroundImage.width+self.resolution)/2,(backgroundImage.height+self.resolution)/2))
+            backgroundImage = backgroundImage.filter(pil_filter.GaussianBlur(20))
             backgroundImage = backgroundImage.convert("RGBA")
             self.image = backgroundImage
         else:
             self.image = pil_image.new ("RGBA", (self.width, self.height), backgroundColor)
 
-        ###extra image additions####
-        if(textBackgroundFade == True):
-            fade = pil_image.open("static/fade.png").resize((resolution,resolution))
+           
+    def draw_overlay(self):
+        ## draw things that overlay image, such as text, text backgroudn fade, and grid
+
+        if(self.textBackgroundFade == True):
+            fade = pil_image.open("static/fade.png").resize((self.resolution,self.resolution))
             self.image = pil_image.alpha_composite(self.image, fade)
 
         if (self.gridOn==True): 
             self.draw_grid()
 
-        if (infoText==True):
-           self.draw_text("activities",str(self.get_tracks_length())) #str(image_creator.get_tracks_length())
-        
-          
-    def draw_text(self,label="",text=""):
+        if (self.infoText==True):
+           self.draw_statistic("distance",self.totalDistance, "left")
+           self.draw_statistic("time", self.totalTime,"center")
+           self.draw_statistic("activities",str(self.get_tracks_length()),"right") #str(self.get_tracks_length())
+     
+    def draw_statistic(self,label="",text="", position="center"):
+        ## draw statistic in either left, right, or middle of image ##
         draw = pil_draw.Draw(self.image)
         textFont = pil_font.truetype('static/aileron/Aileron-Regular.otf', int(self.width/13)) #300
         labelFont = pil_font.truetype('static/aileron/Aileron-Regular.otf', int(self.width/30)) #130
@@ -135,21 +169,31 @@ class ImageCreator:
         textwidth, textheight = draw.textsize(text, textFont)
         labelwidth, labelheight = draw.textsize(label, labelFont)
         margin = self.width/40 #self.width is resolution
-        
-        textx = self.image.width - textwidth - margin
-        texty = self.image.height - textheight - margin
+        textx = 0
+        texty = 0
+    
+        if position=="right":
+            textx = self.image.width - labelwidth - margin
+            texty = self.image.height - textheight - margin
+        elif position=="left":
+            textx = 0
+            texty = self.image.height - textheight - margin
+        elif position=="center":
+            textx = self.image.width/2 - (textwidth/2)
+            texty = self.image.height - textheight - margin
+                    
 
         labelx = (textx + textwidth/2)-(labelwidth/2) #+ math.ceil(textwidth*.05)
         labely = texty-(textheight/2)
-        
         
         draw.text((textx, texty), text, font=textFont, align='center') #align='center'
         draw.text((labelx, labely), label, font=labelFont)
         
         del draw
     def draw_grid(self):
+        ## draw grid lines ##
         step_count = self.maxRows
-        # Draw some lines
+        
         draw = pil_draw.Draw (self.image)
         y_start = 0
         y_end = self.image.height
@@ -201,20 +245,15 @@ class ImageCreator:
                 break
             j+=1
             if j >= len(self.tracks):
-                j = 0
-            
+                if self.duplicateActivities == True:
+                    j = 0
+                else:
+                    break
+        
+        
+    def get_image(self):
+        return(self.image)
     
-    def save_image(self, filename = ""):
-        if filename != "":
-            self.image.save (filename)
-            self.image.show()
-        # no file name provided, return image as base64-encoded string for displaying without saving on server
-        else:
-            imgArray = io.BytesIO()
-            self.image.save(imgArray, format="PNG")
-            return str(base64.b64encode(imgArray.getvalue()), 'utf-8')
-        
-        
     def get_max_track_width(self):
         maxWidth = 0
         for track in self.tracks:
@@ -227,6 +266,9 @@ class ImageCreator:
     def get_tracks_length(self):
         return(len(self.tracks))
         
+        
+            
+
     #activity. only stores GPX data at the moment. eventually should also have data such as activity name, time, distance, etc....          
 class Track:
     def __init__(self, activity, min_lat, max_lat, min_lon, max_lon, zoom):
@@ -242,8 +284,10 @@ class Track:
         self.height = (self.y2 - self.y1 + 1)
         self.zoom = zoom
 
+    
         self.x_offset = 0
         self.y_offset = 0
+
         
     def lat_lon_to_image_xy (self, lat_deg, lon_deg, tile_res):
         """ Internal. Converts lat, lon into dst_img coordinates in pixels """
@@ -314,15 +358,12 @@ def gpx_to_list(gpx):
             
 
 
-def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (0,0,0), gridThickness = 1,  title = "", blackWhiteImage = None, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""): 
+def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (0,0,0), gridThickness = 1,  title = "", silhouetteImage = None, duplicateActivities = False, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""): 
     ### Un-comment these when Adam has fixed font/image dependencies
     infoText = (infoText == "on")
     textBackgroundFade = (textBackgroundFade == "on")
     ###
-    tracks = []
-    countLimit = 2000 #temporary
-    count = 0
-    
+    tracks = [] #list to store activities
     #####POLYLINE LIST####
     if (type(data[0][0]) is tuple): #very rough way to check if it is a polyline list or a GPX file
         for activity in data:
@@ -336,54 +377,68 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
                 logging.exception(e)
                 print("Error processing polyline")
                 sys.exit(1)
+                
     #####GPX FILE#####
-    #convert GPX file to list
+    ##convert GPX file to list
     else:
-        gpx_files = None
-        if type(data) is not str:
-            gpx_files = glob.glob (r"*.gpx") #get all GPX files in same directory
-        else:
-            dir = "uploads/" + data + "/*.gpx"
-            gpx_files = glob.glob("uploads/" + data + "/*.gpx") #get all GPX files in user upload directory
+        print("GPX File")
+        gpx_files = glob.glob (r"*.gpx") #get all GPX files in same directory
         
         for gpx_file in gpx_files:
-            if count != countLimit:
+
+            try:
+                gpx = gpxpy.parse(open(gpx_file))
+                
+                #start_time, end_time = gpx.get_time_bounds()
+                #min_lat, max_lat, min_lon, max_lon = gpx.get_bounds()
+                
+                activity = gpx_to_list(gpx)
+                min_lat, max_lat, min_lon, max_lon = get_latlon_bounds(activity)
+                zoom = osm_get_auto_zoom_level (min_lat, max_lat, min_lon, max_lon, 1)
+                track = Track(activity, min_lat, max_lat, min_lon, max_lon, zoom)
+                tracks.append(track)
+
+            except Exception as e:
+
+                logging.exception(e)
+                print('Error processing: %s' % gpx_file)
+                continue
+
+    ##if a silhouetteImage is provided, then the activities should be drawn in the shape of said silhouetteImage. else it should be drawn in a grid. somewhat messy and could be cleaned up
+    if silhouetteImage != None:
+        if silhouetteImage.is_animated:
+            images = []
+            count = 1
+            for frameNum in range(0,silhouetteImage.n_frames):
+                silhouetteImage.seek(frameNum)
+                print("frame " + str(count) + "/" + str(silhouetteImage.n_frames))
                 count+=1
-                try:
-                    gpx = gpxpy.parse(open(gpx_file))
-                    
-                    #start_time, end_time = gpx.get_time_bounds()
-                    #min_lat, max_lat, min_lon, max_lon = gpx.get_bounds()
-                    
-                    activity = gpx_to_list(gpx)
-                    min_lat, max_lat, min_lon, max_lon = get_latlon_bounds(activity)
-                    zoom = osm_get_auto_zoom_level (min_lat, max_lat, min_lon, max_lon, 1)
-                    track = Track(activity, min_lat, max_lat, min_lon, max_lon, zoom)
-                    tracks.append(track)
+                image_creator = ImageCreator(tracks, lineThickness, backgroundColor, backgroundImage, backgroundBlur, foregroundColor, gridOn, gridColor, gridThickness,  title, silhouetteImage, duplicateActivities, textBackgroundFade, infoText, totalTime, totalDistance)
+                blackPixels = get_black_pixels(silhouetteImage, True)
+                #print("number of black pixels: " + str(len(blackPixels)))
+                image_creator.draw_shape(blackPixels)
+                image_creator.draw_overlay()
+                #image_creator.get_image().show()
+                images.append(image_creator.get_image())
+                del image_creator
+                #if(count>10): break
+            drawnImage = images[0].save('testGif3.gif',save_all=True, append_images=images[1:])
+            return
 
-                except Exception as e:
-
-                    logging.exception(e)
-                    print('Error processing: %s' % gpx_file)
-                    #sys.exit(1)
-                    continue
-            else:
-                break
-
-    blackPixels = []
-    maxRows = 0 #set to 0 for imagecreator to automatically set height
-    if blackWhiteImage!=None:
-         blackPixels = get_black_pixels(blackWhiteImage)
-         print("black pixels: " + str(len(blackPixels)))
-         
-    image_creator = ImageCreator(tracks, lineThickness, backgroundColor, backgroundImage, backgroundBlur, foregroundColor, gridOn, gridColor, gridThickness,  title, blackWhiteImage, textBackgroundFade, infoText, totalTime, totalDistance)
-    
-    if blackWhiteImage != None:
-        image_creator.draw_shape(blackPixels)
+        else:
+            image_creator = ImageCreator(tracks, lineThickness, backgroundColor, backgroundImage, backgroundBlur, foregroundColor, gridOn, gridColor, gridThickness,  title, silhouetteImage, duplicateActivities, textBackgroundFade, infoText, totalTime, totalDistance)
+            blackPixels = get_black_pixels(silhouetteImage, False)
+            image_creator.draw_shape(blackPixels)
+            image_creator.draw_overlay()
+            drawnImage = save_image(image_creator.get_image())
+            
+            
+    ##draw activities as facets (grid formation)
     else:
+        image_creator = ImageCreator(tracks, lineThickness, backgroundColor, backgroundImage, backgroundBlur, foregroundColor, gridOn, gridColor, gridThickness,  title, silhouetteImage,duplicateActivities, textBackgroundFade, infoText, totalTime, totalDistance)
         image_creator.draw_facets()
-
-    drawnImage = image_creator.save_image()
+        image_creator.draw_overlay()
+        drawnImage = save_image(image_creator.get_image())
 
     image_creator.image.close()
     if hasattr(image_creator, "backgroundImageFilePath"):
