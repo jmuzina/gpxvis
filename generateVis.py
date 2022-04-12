@@ -155,9 +155,12 @@ class ImageCreator:
             self.draw_grid()
 
         if (self.infoText==True):
-           self.draw_statistic("distance",self.totalDistance, "left")
-           self.draw_statistic("time", self.totalTime,"center")
-           self.draw_statistic("activities",str(self.get_tracks_length()),"right") #str(self.get_tracks_length())
+            if self.totalDistance != "":
+                self.draw_statistic("distance",self.totalDistance, "left")
+            if self.totalTime != "":
+                self.draw_statistic("time", self.totalTime,"center")
+                
+            self.draw_statistic("activities",str(self.get_tracks_length()),"right") #str(self.get_tracks_length())
      
     def draw_statistic(self,label="",text="", position="center"):
         ## draw statistic in either left, right, or middle of image ##
@@ -359,6 +362,7 @@ def gpx_to_list(gpx):
 
 
 def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (0,0,0), gridThickness = 1,  title = "", silhouetteImage = None, duplicateActivities = False, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""): 
+    print(data)
     ### Un-comment these when Adam has fixed font/image dependencies
     infoText = (infoText == "on")
     textBackgroundFade = (textBackgroundFade == "on")
@@ -382,7 +386,8 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
     ##convert GPX file to list
     else:
         print("GPX File")
-        gpx_files = glob.glob (r"*.gpx") #get all GPX files in same directory
+        dir = "uploads/" + data + "/*.gpx"
+        gpx_files = glob.glob("uploads/" + data + "/*.gpx") #get all GPX files in user upload directory
         
         for gpx_file in gpx_files:
 
