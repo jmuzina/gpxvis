@@ -300,6 +300,10 @@ def returnDynamicParameters():
 def returnResize():
     return send_file("./static/resize.js")
 
+@flaskApp.route("/wait.js")
+def returnWait():
+    return send_file("./static/wait.js")
+
 @flaskApp.route('/aboutPage')
 def render_aboutPage():
     refreshSessionTimer()

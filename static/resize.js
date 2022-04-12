@@ -1,9 +1,8 @@
 var prevWidth = 0;
 var portrait;
+var gpxUploadSection;
 
 function refreshSize() {
-    const gpxUploadSection = document.getElementById("gpxUpload");
-
     if (window.innerWidth < window.innerHeight && !portrait) {
         portrait = true;
 
@@ -21,13 +20,10 @@ function refreshSize() {
 }
 
 window.addEventListener("resize", refreshSize);
-window.onload = function() {
-    console.log('loaded');
-    const gpxUploadSection = document.getElementById("gpxUpload");
-    console.log(window.innerWidth);
+waitForElement("gpxUpload", function() {
+    gpxUploadSection = document.getElementById("gpxUpload");
     if (gpxUploadSection != null) {
-        console.log("setting hidden state");
         portrait = (window.innerWidth < window.innerHeight);
         gpxUploadSection.hidden = portrait;
     }
-}
+});

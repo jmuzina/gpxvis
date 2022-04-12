@@ -134,15 +134,6 @@ function searchActivities(activities) {
   selectedActivitiesElement.setAttribute("value", selectedIDs);
 }
 
-function waitForElement(elementID, callback) {
-  if (document.getElementById(elementID)) callback();
-  else {
-    setTimeout(function () {
-      waitForElement(elementID, callback);
-    }, 50);
-  }
-}
-
 // Element IDs of parameter input elements that should cause a live update of
 // the selected activities table on element change
 const filterFieldIDs = [
