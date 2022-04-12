@@ -26,4 +26,6 @@ waitForElement("gpxUpload", function() {
         portrait = (window.innerWidth < window.innerHeight);
         gpxUploadSection.hidden = portrait;
     }
+	//gpxUploadSection.hidden = true;
+	//alert("how are you doingz");
 });
