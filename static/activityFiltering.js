@@ -142,8 +142,8 @@ function searchActivities(activities) {
   const selectedDistanceElement = document.getElementById("selectedActivityDistance");
   selectedLengthElement["value"] = selectedActivitiesLength;
   selectedLengthElement.setAttribute("value", selectedActivitiesLength);
-  selectedDistanceElement["value"] = selectedActivitiesDistance;
-  selectedDistanceElement.setAttribute("value", selectedActivitiesDistance);
+  selectedDistanceElement["value"] = Math.round(selectedActivitiesDistance);
+  selectedDistanceElement.setAttribute("value", Math.round(selectedActivitiesDistance));
 }
 
 // Element IDs of parameter input elements that should cause a live update of
