@@ -9,6 +9,8 @@ var blurIntensityPreview;
 var blurIntensity;
 var backgroundImage;
 var overlayCheckBox;
+var silhouetteImage;
+var duplicateActivities;
 var overlayBackground;
 var clearBackgroundButton;
 var backgroundColor;
@@ -22,15 +24,17 @@ waitForElement("blurIntensityLabel", function() { blurIntensityLabel = document.
 waitForElement("blurIntensityPreview", function() { blurIntensityPreview = document.getElementById("blurIntensityPreview"); });
 waitForElement("blurIntensity", function() { blurIntensity = document.getElementById("blurIntensity"); });
 waitForElement("backgroundImage", function() { backgroundImage = document.getElementById("backgroundImage"); });
+waitForElement("silhouetteImage", function() { silhouetteImage = document.getElementById("silhouetteImage").parentNode; });
+waitForElement("duplicateActivities", function() { duplicateActivities = document.getElementById("duplicateActivities").parentNode; });
 waitForElement("infoText", function() { overlayCheckBox = document.getElementById("infoText"); });
 waitForElement("textBackgroundFade", function() { overlayBackground = document.getElementById("textBackgroundFade").parentNode; });
 waitForElement("clearBackgroundButton", function() { clearBackgroundButton = document.getElementById("clearBackgroundButton"); });
 waitForElement("backgroundColor", function() { backgroundColor = document.getElementById("backgroundColor").parentNode; });
 
 function gridChecked() {
-    gridlineColorSelector.hidden = !gridCheckBox.checked;
-    gridlineThicknessSelector.hidden =
-    gridlineColorSelector.hidden;
+    gridlineColorSelector.parentNode.hidden = !gridCheckBox.checked;
+    gridlineThicknessSelector.parentNode.hidden = 
+    gridlineColorSelector.parentNode.hidden;
 }
 
 function getSliderPercent(rangeElement) {
@@ -38,7 +42,7 @@ function getSliderPercent(rangeElement) {
 }
 
 function overlayChecked() {
-    overlayBackground.hidden = !overlayCheckBox.checked;
+    overlayBackground.parentNode.hidden = !overlayCheckBox.checked;
 }
 
 function gridThicknessChanged() {
@@ -53,11 +57,21 @@ function pathThicknessChanged() {
 function blurIntensityChanged() {
     blurIntensityPreview.innerHTML = getSliderPercent(blurIntensity);
 }
+function silhouetteImageSelected() {
+    silhouetteImage = document.getElementById("silhouetteImage")
+    if (silhouetteImage.value!=""){
+        duplicateActivities.parentNode.hidden = false;
+    }
+    else{
+        duplicateActivities.parentNode.hidden = true;
+    }
+
+}
 
 function clearBackground() {
     backgroundImage.value = null;
     clearBackgroundButton.hidden = true;
-    blurIntensityLabel.hidden = true;
+    blurIntensityLabel.parentNode.hidden = true;
     backgroundColor.hidden = false;
 }
 
@@ -66,11 +80,12 @@ setTimeout(function () {
     overlayChecked();
     gridThicknessChanged();
     blurIntensityChanged();
-    gridlineThicknessSelector.hidden = !gridCheckBox.checked;
-    blurIntensityLabel.hidden = backgroundImage.value.length == 0;
-    clearBackgroundButton.hidden = blurIntensityLabel.hidden;
+    silhouetteImageSelected();
+    gridlineThicknessSelector.parentNode.hidden = !gridCheckBox.checked;
+    blurIntensityLabel.parentNode.hidden = backgroundImage.value.length == 0;
+    clearBackgroundButton.hidden = blurIntensityLabel.parentNode.hidden;
     backgroundColor.hidden = !clearBackgroundButton.hidden;
-
+    
 
     // Listen for value changes and adjust accordingly
     overlayCheckBox.addEventListener("change", overlayChecked, false);
@@ -78,6 +93,7 @@ setTimeout(function () {
     gridThickness.addEventListener("input", gridThicknessChanged, false);
     gridCheckBox.addEventListener("change", gridChecked, false);
     blurIntensity.addEventListener("input", blurIntensityChanged, false);
+    silhouetteImage.addEventListener("change", silhouetteImageSelected, false);
     clearBackgroundButton.addEventListener("click", clearBackground, false);
 
     gridThicknessChanged();

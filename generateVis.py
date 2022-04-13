@@ -97,11 +97,12 @@ class ImageCreator:
         self.tracks = tracks
         
         ##sizing##
-        self.resolution = 2000
+        self.resolution = 4000
         self.maxTileWidth = self.resolution/(self.get_max_track_width())
         if silhouetteImage==None: 
             self.maxRows = get_dimensions(len(tracks))
         else:
+            print(silhouetteImage)
             self.maxRows = silhouetteImage.height
         self.width = self.resolution #500 * self.maxRows
         self.height = self.width
@@ -137,7 +138,7 @@ class ImageCreator:
                 else:
                     backgroundImage = backgroundImage.resize((self.resolution,backgroundImage.height*(math.ceil(self.resolution/backgroundImage.width))))
             backgroundImage = backgroundImage.crop(((backgroundImage.width-self.resolution)/2,(backgroundImage.height-self.resolution)/2, (backgroundImage.width+self.resolution)/2,(backgroundImage.height+self.resolution)/2))
-            backgroundImage = backgroundImage.filter(pil_filter.GaussianBlur(20))
+            backgroundImage = backgroundImage.filter(pil_filter.GaussianBlur(int(backgroundBlur)))
             backgroundImage = backgroundImage.convert("RGBA")
             self.image = backgroundImage
         else:
@@ -225,7 +226,7 @@ class ImageCreator:
 
             track.draw_track((self.gridElementSize*column)+centerxOffset,(self.gridElementSize*row) + centeryOffset,self.image, self.tile_res, self.lineThickness, self.foregroundColor)
             column+=1
-        self.image = self.image.filter(SMOOTH_MORE)
+        #self.image = self.image.filter(SMOOTH_MORE)
 
     def draw_shape(self, blackPxSequence):
 
@@ -361,11 +362,12 @@ def gpx_to_list(gpx):
             
 
 
-def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (0,0,0), gridThickness = 1,  title = "", silhouetteImage = None, duplicateActivities = False, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""): 
-    print(data)
+def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (0,0,0), gridThickness = 1,  title = "", silhouetteImage = "", duplicateActivities = False, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""): 
+    print("sil image: " + silhouetteImage)
     ### Un-comment these when Adam has fixed font/image dependencies
     infoText = (infoText == "on")
     textBackgroundFade = (textBackgroundFade == "on")
+    duplicateActivities = (duplicateActivities == "on")
     ###
     tracks = [] #list to store activities
     #####POLYLINE LIST####
@@ -410,7 +412,8 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
                 continue
 
     ##if a silhouetteImage is provided, then the activities should be drawn in the shape of said silhouetteImage. else it should be drawn in a grid. somewhat messy and could be cleaned up
-    if silhouetteImage != None:
+    if silhouetteImage != "":
+        silhouetteImage = pil_image.open("static/silhouette-images/"+silhouetteImage)
         if silhouetteImage.is_animated:
             images = []
             count = 1
@@ -431,6 +434,7 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
             return
 
         else:
+
             image_creator = ImageCreator(tracks, lineThickness, backgroundColor, backgroundImage, backgroundBlur, foregroundColor, gridOn, gridColor, gridThickness,  title, silhouetteImage, duplicateActivities, textBackgroundFade, infoText, totalTime, totalDistance)
             blackPixels = get_black_pixels(silhouetteImage, False)
             image_creator.draw_shape(blackPixels)
@@ -440,7 +444,7 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
             
     ##draw activities as facets (grid formation)
     else:
-        image_creator = ImageCreator(tracks, lineThickness, backgroundColor, backgroundImage, backgroundBlur, foregroundColor, gridOn, gridColor, gridThickness,  title, silhouetteImage,duplicateActivities, textBackgroundFade, infoText, totalTime, totalDistance)
+        image_creator = ImageCreator(tracks, lineThickness, backgroundColor, backgroundImage, backgroundBlur, foregroundColor, gridOn, gridColor, gridThickness,  title, None,duplicateActivities, textBackgroundFade, infoText, totalTime, totalDistance)
         image_creator.draw_facets()
         image_creator.draw_overlay()
         drawnImage = save_image(image_creator.get_image())
