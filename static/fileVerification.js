@@ -88,7 +88,7 @@ function verifyBackgroundImage() {
 
     if (fileVerificationResult["success"]) {
         if (blurIntensitySlider !== null) {
-            blurIntensitySlider.hidden = false;
+            blurIntensitySlider.parentNode.hidden = false;
         }
     }
     else {
@@ -97,7 +97,7 @@ function verifyBackgroundImage() {
         if (uploadBtn !== null) {
             uploadBtn.value = null;
             if (blurIntensitySlider !== null) {
-                blurIntensitySlider.hidden = true;
+                blurIntensitySlider.parentNode.hidden = true;
             }
         }
     }
@@ -142,7 +142,7 @@ window.onload = function(){
     const backgroundImage =  document.getElementById("backgroundImage");
     const gpxFiles = document.getElementById("gpxFile");
     if (backgroundImage !== null) {
-        document.getElementById("blurIntensityLabel").hidden = backgroundImage.value.length == 0;
+        document.getElementById("blurIntensityLabel").parentNode.hidden = backgroundImage.value.length == 0;
         document.getElementById("clearBackgroundButton").hidden = backgroundImage.value.length == 0;
     }
     if (gpxFiles !== null) {

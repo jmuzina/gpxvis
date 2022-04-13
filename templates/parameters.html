@@ -271,21 +271,25 @@
               <label for="backgroundImage">Background Image:
                 <input type="file" id="backgroundImage" name="backgroundImage" onchange="verifyBackgroundImage()">
               </label>
-              <button id="clearBackgroundButton" type="button" class="btn btn-danger" hidden>Clear</button>
-              <label for="blurIntensity" id="blurIntensityLabel" hidden
-                >
-                Background Blur Intensity
-                <input
-                  type="range"
-                  min="0"
-                  max="30"
-                  value="5"
-                  class="slider"
-                  id="blurIntensity"
-                  name="blurIntensity"
-                />
-                <span id="blurIntensityPreview">5</span>
-              </label>
+              <button id="clearBackgroundButton" type="button" class="btn btn-danger" hidden > Clear</button>
+              <ul>
+                <li hidden>
+                  <label for="blurIntensity" id="blurIntensityLabel" 
+                    >
+                    Background Blur Intensity
+                    <input
+                      type="range"
+                      min="0"
+                      max="30"
+                      value="5"
+                      class="slider"
+                      id="blurIntensity"
+                      name="blurIntensity"
+                    />
+                    <span id="blurIntensityPreview">5</span>
+                  </label>
+                </li>
+              </ul>
             </div>
           </div>
           <!-- Draw Style Tab Content -->
@@ -305,15 +309,19 @@
                     <option value="silBicycle.png">Bicycle</option>
                   </select>
                 </label>
-
-              <label for="duplicateActivities" hidden
-              >Duplicate Activities to fill shapes
-              <input
-                type="checkbox"
-                id="duplicateActivities"
-                name="duplicateActivities"
-              />
-              </label>
+              <ul>
+                <li>
+                  <label for="duplicateActivities"
+                  >Duplicate Activities to fill shape
+                  <input
+                    type="checkbox"
+                    id="duplicateActivities"
+                    name="duplicateActivities"
+                  />
+                  </label>
+                </li>
+              </ul>
+        
               <label for="displayGridLines"
                 >Display Grid
                 <input
@@ -322,30 +330,37 @@
                   name="displayGridLines"
                 />
               </label>
-              <label for="gridThickness" hidden
-                >
-                Gridline Thickness
-                <input
-                  type="range"
-                  min="1"
-                  max="30"
-                  value="5"
-                  class="slider"
-                  id="gridThickness"
-                  name="gridThickness"
-                />
-                <span id="gridThicknessPreview">5</span>
-              </label>
-              <label for="gridlineColor" hidden
-                >
-                Grid Color
-                <input
-                  type="color"
-                  id="gridlineColor"
-                  name="gridlineColor"
-                  value="#000000"
-                />
-              </label>
+              <ul>
+                <li hidden> 
+                <label for="gridThickness" 
+                  \>
+                  Gridline Thickness
+                  <input
+                    type="range"
+                    min="1"
+                    max="30"
+                    value="5"
+                    class="slider"
+                    id="gridThickness"
+                    name="gridThickness"
+                  />
+                  <span id="gridThicknessPreview">5</span>
+                </label>
+                </li>
+                
+                <li hidden>
+                <label for="gridlineColor"
+                  >
+                  Grid Color
+                  <input
+                    type="color"
+                    id="gridlineColor"
+                    name="gridlineColor"
+                    value="#000000"
+                  />
+                </label>
+                </li>
+              </ul>
             </div>
             <label for="pathColor"
               >Path Color
@@ -388,14 +403,18 @@
                 />
             </label>
             <br />
-            <label for="textBackgroundFade"
-              >Statistics backdrop
-                <input
-                  type="checkbox"
-                  id="textBackgroundFade"
-                  name="textBackgroundFade"
-                />
-            </label>
+            <ul>
+              <li>
+                <label for="textBackgroundFade"
+                  >Statistics backdrop
+                    <input
+                      type="checkbox"
+                      id="textBackgroundFade"
+                      name="textBackgroundFade"
+                    />
+                </label>
+              </li>
+            </ul>
             <br />
           </div>
         </div>

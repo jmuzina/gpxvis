@@ -32,9 +32,9 @@ waitForElement("clearBackgroundButton", function() { clearBackgroundButton = doc
 waitForElement("backgroundColor", function() { backgroundColor = document.getElementById("backgroundColor").parentNode; });
 
 function gridChecked() {
-    gridlineColorSelector.hidden = !gridCheckBox.checked;
-    gridlineThicknessSelector.hidden =
-    gridlineColorSelector.hidden;
+    gridlineColorSelector.parentNode.hidden = !gridCheckBox.checked;
+    gridlineThicknessSelector.parentNode.hidden = 
+    gridlineColorSelector.parentNode.hidden;
 }
 
 function getSliderPercent(rangeElement) {
@@ -42,7 +42,7 @@ function getSliderPercent(rangeElement) {
 }
 
 function overlayChecked() {
-    overlayBackground.hidden = !overlayCheckBox.checked;
+    overlayBackground.parentNode.hidden = !overlayCheckBox.checked;
 }
 
 function gridThicknessChanged() {
@@ -60,10 +60,10 @@ function blurIntensityChanged() {
 function silhouetteImageSelected() {
     silhouetteImage = document.getElementById("silhouetteImage")
     if (silhouetteImage.value!=""){
-        duplicateActivities.hidden = false;
+        duplicateActivities.parentNode.hidden = false;
     }
     else{
-        duplicateActivities.hidden = true;
+        duplicateActivities.parentNode.hidden = true;
     }
 
 }
@@ -71,7 +71,7 @@ function silhouetteImageSelected() {
 function clearBackground() {
     backgroundImage.value = null;
     clearBackgroundButton.hidden = true;
-    blurIntensityLabel.hidden = true;
+    blurIntensityLabel.parentNode.hidden = true;
     backgroundColor.hidden = false;
 }
 
@@ -81,9 +81,9 @@ setTimeout(function () {
     gridThicknessChanged();
     blurIntensityChanged();
     silhouetteImageSelected();
-    gridlineThicknessSelector.hidden = !gridCheckBox.checked;
-    blurIntensityLabel.hidden = backgroundImage.value.length == 0;
-    clearBackgroundButton.hidden = blurIntensityLabel.hidden;
+    gridlineThicknessSelector.parentNode.hidden = !gridCheckBox.checked;
+    blurIntensityLabel.parentNode.hidden = backgroundImage.value.length == 0;
+    clearBackgroundButton.hidden = blurIntensityLabel.parentNode.hidden;
     backgroundColor.hidden = !clearBackgroundButton.hidden;
     
 
