@@ -363,7 +363,7 @@ def gpx_to_list(gpx):
 
 
 def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (0,0,0), gridThickness = 1,  title = "", silhouetteImage = "", duplicateActivities = False, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""): 
-    print("sil image: " + silhouetteImage)
+    #print("sil image: " + silhouetteImage)
     ### Un-comment these when Adam has fixed font/image dependencies
     infoText = (infoText == "on")
     textBackgroundFade = (textBackgroundFade == "on")
