@@ -166,8 +166,8 @@ class ImageCreator:
     def draw_statistic(self,label="",text="", position="center"):
         ## draw statistic in either left, right, or middle of image ##
         draw = pil_draw.Draw(self.image)
-        textFont = pil_font.truetype('static/aileron/Aileron-Regular.otf', int(self.width/13)) #300
-        labelFont = pil_font.truetype('static/aileron/Aileron-Regular.otf', int(self.width/30)) #130
+        textFont = pil_font.truetype('static/aileron/Aileron-Regular.otf', int(self.width/17)) #300
+        labelFont = pil_font.truetype('static/aileron/Aileron-Regular.otf', int(self.width/35)) #130
         
         # calculate the x,y coordinates of the text
         textwidth, textheight = draw.textsize(text, textFont)
