@@ -106,7 +106,8 @@ class StravaApi:
         #print("Activity API calls needed:\t" + str(pageNum - 1) + "\nActivities found:\t" + str(activitiesFound))
         #averageDistance = totalDistance / activitiesFound
         #averageTime = totalTime / activitiesFound
-        totalTimeStr = str(datetime.timedelta(seconds = totalTime))
+        #totalTimeStr = str(datetime.timedelta(seconds = totalTime))
+        totalTimeStr = functions.getTimeStr(seconds = totalTime)
         #numHours = math.floor(((totalTime / 60) / 60))
         #numMinutes = math.floor(totalTime / 60)
         totalDistanceStr = str(round(functions.metersToMiles(totalDistance), 2)) + " mi."

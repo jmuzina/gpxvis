@@ -6,6 +6,7 @@ import shutil
 import time
 import urllib.parse
 import urllib.request
+import math
 from socket import timeout
 
 import requests
@@ -21,6 +22,13 @@ sessionVars = ["accessKey", "networkName", "userData", "twitterAccessToken", "tw
 def allowed_file(filename, extensions):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in extensions
+
+def getTimeStr(seconds):
+    hours = int(math.floor(seconds / 60 / 60))
+    mins = int(math.floor((seconds / 60) % 60))
+    secs = int(math.floor(seconds % 60))
+
+    return (str(hours) + ":" + str(mins) + ":" + str(secs))
 
 def getImageBase64String(imageData):
     return "data:image/png;base64," + str(imageData)
