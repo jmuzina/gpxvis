@@ -219,6 +219,8 @@ def render_generatePage():
             "pathThickness": 5,
             "pathColor": (0,0,0),
             "displayGridLines": False,
+            "silhouetteImage": "",
+            "duplicateActivities": False,
             "gridThickness": 5,
             "gridlineColor": (0,0,0),
             "beforeTime": str(math.floor(time.time())),
@@ -229,9 +231,12 @@ def render_generatePage():
         }
 
         # Set form args to received form submission
+        print(request.form)
         for key in formArgs:
             if key in request.form:
                 formArgs[key] = request.form[key]
+            else:
+                formArgs[key]
         
         selected = None
         if (session["networkName"] != "gpxFile"):
@@ -254,9 +259,9 @@ def render_generatePage():
                     file.save(os.path.join(flaskApp.config['UPLOAD_FOLDER'], filename))
 
             if session["networkName"] != "gpxFile":
-                userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=data, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=userCachedData[uniqueId]["timeElapsed"], totalDistance=userCachedData[uniqueId]["distanceTravelled"]))
+                userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=data, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"],silhouetteImage=formArgs["silhouetteImage"], duplicateActivities=formArgs["duplicateActivities"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=userCachedData[uniqueId]["timeElapsed"], totalDistance=userCachedData[uniqueId]["distanceTravelled"]))
             else:
-                userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=data, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"], textBackgroundFade=formArgs["textBackgroundFade"]))
+                userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=data, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"], silhouetteImage=formArgs["silhouetteImage"], duplicateActivities=formArgs["duplicateActivities"], textBackgroundFade=formArgs["textBackgroundFade"]))
 
             return render_template("generatePage.html", userData = session['userData'], shareAuthURLs = shareAuthURLs, visualization =  userCachedData[uniqueId]["visualizationResult"])
         else:

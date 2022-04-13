@@ -9,6 +9,8 @@ var blurIntensityPreview;
 var blurIntensity;
 var backgroundImage;
 var overlayCheckBox;
+var silhouetteImage;
+var duplicateActivities;
 var overlayBackground;
 var clearBackgroundButton;
 var backgroundColor;
@@ -22,6 +24,8 @@ waitForElement("blurIntensityLabel", function() { blurIntensityLabel = document.
 waitForElement("blurIntensityPreview", function() { blurIntensityPreview = document.getElementById("blurIntensityPreview"); });
 waitForElement("blurIntensity", function() { blurIntensity = document.getElementById("blurIntensity"); });
 waitForElement("backgroundImage", function() { backgroundImage = document.getElementById("backgroundImage"); });
+waitForElement("silhouetteImage", function() { silhouetteImage = document.getElementById("silhouetteImage").parentNode; });
+waitForElement("duplicateActivities", function() { duplicateActivities = document.getElementById("duplicateActivities").parentNode; });
 waitForElement("infoText", function() { overlayCheckBox = document.getElementById("infoText"); });
 waitForElement("textBackgroundFade", function() { overlayBackground = document.getElementById("textBackgroundFade").parentNode; });
 waitForElement("clearBackgroundButton", function() { clearBackgroundButton = document.getElementById("clearBackgroundButton"); });
@@ -53,6 +57,16 @@ function pathThicknessChanged() {
 function blurIntensityChanged() {
     blurIntensityPreview.innerHTML = getSliderPercent(blurIntensity);
 }
+function silhouetteImageSelected() {
+    silhouetteImage = document.getElementById("silhouetteImage")
+    if (silhouetteImage.value!=""){
+        duplicateActivities.hidden = false;
+    }
+    else{
+        duplicateActivities.hidden = true;
+    }
+
+}
 
 function clearBackground() {
     backgroundImage.value = null;
@@ -66,11 +80,12 @@ setTimeout(function () {
     overlayChecked();
     gridThicknessChanged();
     blurIntensityChanged();
+    silhouetteImageSelected();
     gridlineThicknessSelector.hidden = !gridCheckBox.checked;
     blurIntensityLabel.hidden = backgroundImage.value.length == 0;
     clearBackgroundButton.hidden = blurIntensityLabel.hidden;
     backgroundColor.hidden = !clearBackgroundButton.hidden;
-
+    
 
     // Listen for value changes and adjust accordingly
     overlayCheckBox.addEventListener("change", overlayChecked, false);
@@ -78,5 +93,6 @@ setTimeout(function () {
     gridThickness.addEventListener("input", gridThicknessChanged, false);
     gridCheckBox.addEventListener("change", gridChecked, false);
     blurIntensity.addEventListener("input", blurIntensityChanged, false);
+    silhouetteImage.addEventListener("change", silhouetteImageSelected, false);
     clearBackgroundButton.addEventListener("click", clearBackground, false);
 }, 500);

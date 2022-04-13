@@ -297,6 +297,23 @@
           >
             <h3>Select Draw Style</h3>
             <div id="drawSettings">
+
+                <label for="silhouetteImage" >Draw Shape:
+                  <select name="silhouetteImage" id="silhouetteImage">
+                    <option value="">Grid</option>
+                    <option value="silRunner.png">Runner</option>
+                    <option value="silBicycle.png">Bicycle</option>
+                  </select>
+                </label>
+
+              <label for="duplicateActivities" hidden
+              >Duplicate Activities to fill shapes
+              <input
+                type="checkbox"
+                id="duplicateActivities"
+                name="duplicateActivities"
+              />
+              </label>
               <label for="displayGridLines"
                 >Display Grid
                 <input
