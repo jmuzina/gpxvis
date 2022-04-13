@@ -24,11 +24,24 @@ def allowed_file(filename, extensions):
            filename.rsplit('.', 1)[1].lower() in extensions
 
 def getTimeStr(seconds):
+    seconds = int(seconds)
     hours = int(math.floor(seconds / 60 / 60))
     mins = int(math.floor((seconds / 60) % 60))
     secs = int(math.floor(seconds % 60))
 
-    return (str(hours) + ":" + str(mins) + ":" + str(secs))
+    hoursStr = str(hours)
+    if hours < 10:
+        hoursStr = "0" + hoursStr
+    
+    minsStr = str(mins)
+    if mins < 10:
+        minsStr = "0" + minsStr
+
+    secsStr = str(secs)
+    if secs < 10:
+        secsStr = "0" + secsStr
+
+    return hoursStr + ":" + minsStr + ":" + secsStr
 
 def getImageBase64String(imageData):
     return "data:image/png;base64," + str(imageData)

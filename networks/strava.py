@@ -66,8 +66,8 @@ class StravaApi:
 
         pageNum = 1 # Current "page" of results
         #activitiesFound = 0 # Used to print number of activities found, could have more uses later?
-        totalDistance = 0
-        totalTime = 0
+        #totalDistance = 0
+        #totalTime = 0
         
         # Array of user SummaryActivities: https://developers.strava.com/docs/reference/#api-models-SummaryActivity
         # Get activities in batches of 100 until all have been found
@@ -86,12 +86,13 @@ class StravaApi:
                             "name":  activitiesResponse[activityIndex]["name"],
                             "polyline": activitiesResponse[activityIndex]["map"]["summary_polyline"],
                             "displayTime": dto.strftime('%m/%d/%Y'),
+                            "duration": activitiesResponse[activityIndex]["elapsed_time"],
                             "type": activitiesResponse[activityIndex]["type"],
                             "distance": round(functions.metersToMiles(activitiesResponse[activityIndex]["distance"]), 2)
                         }
 
-                        totalDistance += activitiesResponse[activityIndex]["distance"]
-                        totalTime += activitiesResponse[activityIndex]["elapsed_time"]
+                        #totalDistance += activitiesResponse[activityIndex]["distance"]
+                        #totalTime += activitiesResponse[activityIndex]["elapsed_time"]
 
                         #print("\t" + str(activitiesResponse[activityIndex]["id"]) + "\t", result[activitiesResponse[activityIndex]["id"]])
 
@@ -107,17 +108,17 @@ class StravaApi:
         #averageDistance = totalDistance / activitiesFound
         #averageTime = totalTime / activitiesFound
         #totalTimeStr = str(datetime.timedelta(seconds = totalTime))
-        totalTimeStr = functions.getTimeStr(seconds = totalTime)
+        #totalTimeStr = functions.getTimeStr(seconds = totalTime)
         #numHours = math.floor(((totalTime / 60) / 60))
         #numMinutes = math.floor(totalTime / 60)
-        totalDistanceStr = str(round(functions.metersToMiles(totalDistance), 2)) + " mi."
+        #totalDistanceStr = str(round(functions.metersToMiles(totalDistance), 2)) + " mi."
 
         #print("TIMESTR", totalTime, totalTimeStr, functions.getTimeStr(259200))
 
         return {
             "activities": activities, 
-            "timeElapsed": totalTimeStr, 
-            "distanceTravelled": totalDistanceStr
+            #"timeElapsed": totalTimeStr, 
+            #"distanceTravelled": totalDistanceStr
         }
 
     def isAvailable(self):

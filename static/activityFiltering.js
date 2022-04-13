@@ -87,6 +87,10 @@ function searchActivities(activities) {
   var table = document.getElementById("activitiesTable");
   const tableHeader = document.getElementById("activitiesTableHeader");
 
+  selectedIDs = [];
+  selectedActivitiesDistance = 0
+  selectedActivitiesLength = 0
+
   if (filterMatches.length > 0) {
     var newTableBody = document.createElement('tbody');
     newTableBody.id = "matchedActivities";
@@ -108,10 +112,12 @@ function searchActivities(activities) {
         typeCell.className = "typeCell";
         distanceCell.innerHTML = activity["distance"] + " mi";
         distanceCell.className = "distanceCell";
+        selectedActivitiesDistance += activity["distance"];
+        selectedActivitiesLength += activity["duration"];
       }
-
       selectedIDs[i] = filterMatches[i][0];
     }
+    console.log(selectedIDs);
 
     oldTableBody.parentNode.replaceChild(newTableBody, oldTableBody);
     tableHeader.hidden = false;
@@ -132,6 +138,12 @@ function searchActivities(activities) {
   const selectedActivitiesElement = document.getElementById("selectedActivities");
   selectedActivitiesElement["value"] = selectedIDs;
   selectedActivitiesElement.setAttribute("value", selectedIDs);
+  const selectedLengthElement = document.getElementById("selectedActivityLength");
+  const selectedDistanceElement = document.getElementById("selectedActivityDistance");
+  selectedLengthElement["value"] = selectedActivitiesLength;
+  selectedLengthElement.setAttribute("value", selectedActivitiesLength);
+  selectedDistanceElement["value"] = selectedActivitiesDistance;
+  selectedDistanceElement.setAttribute("value", selectedActivitiesDistance);
 }
 
 // Element IDs of parameter input elements that should cause a live update of

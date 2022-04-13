@@ -255,8 +255,11 @@ def render_generatePage():
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(flaskApp.config['UPLOAD_FOLDER'], filename))
 
+            totalLength = request.form["selectedActivityLength"]
+            totalDistance = request.form["selectedActivityDistance"]
+
             if session["networkName"] != "gpxFile":
-                userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=data, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"],silhouetteImage=formArgs["silhouetteImage"], duplicateActivities=formArgs["duplicateActivities"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=userCachedData[uniqueId]["timeElapsed"], totalDistance=userCachedData[uniqueId]["distanceTravelled"]))
+                userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=data, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"],silhouetteImage=formArgs["silhouetteImage"], duplicateActivities=formArgs["duplicateActivities"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=functions.getTimeStr(totalLength), totalDistance=str(totalDistance) + " mi."))
             else:
                 userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=data, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"], silhouetteImage=formArgs["silhouetteImage"], duplicateActivities=formArgs["duplicateActivities"], textBackgroundFade=formArgs["textBackgroundFade"]))
 
