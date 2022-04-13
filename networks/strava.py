@@ -112,7 +112,7 @@ class StravaApi:
         #numMinutes = math.floor(totalTime / 60)
         totalDistanceStr = str(round(functions.metersToMiles(totalDistance), 2)) + " mi."
 
-        print("TIMESTR", totalTime, totalTimeStr, functions.getTimeStr(259200))
+        #print("TIMESTR", totalTime, totalTimeStr, functions.getTimeStr(259200))
 
         return {
             "activities": activities, 
