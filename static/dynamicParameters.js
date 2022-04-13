@@ -79,4 +79,8 @@ setTimeout(function () {
     gridCheckBox.addEventListener("change", gridChecked, false);
     blurIntensity.addEventListener("input", blurIntensityChanged, false);
     clearBackgroundButton.addEventListener("click", clearBackground, false);
+
+    gridThicknessChanged();
+    pathThicknessChanged();
+    blurIntensityChanged();
 }, 500);
