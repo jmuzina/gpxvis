@@ -22,8 +22,8 @@ import glob
 import shutil
 
 # ---------------------------- #
-ALLOWED_EXTENSIONS = {'png', 'jpeg', 'jpg', 'gif', 'gpx'}
-IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
+ALLOWED_EXTENSIONS = {'png', 'jpeg', 'jpg', 'gpx'}
+#IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
 
 flaskApp = Flask(__name__)
 flaskApp.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -231,12 +231,9 @@ def render_generatePage():
         }
 
         # Set form args to received form submission
-        print(request.form)
         for key in formArgs:
             if key in request.form:
                 formArgs[key] = request.form[key]
-            else:
-                formArgs[key]
         
         selected = None
         if (session["networkName"] != "gpxFile"):

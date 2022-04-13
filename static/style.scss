@@ -42,10 +42,6 @@ h3 {
 
 }
 
-.navbar-brand {
-  font-size: 3rem;
-}
-
 .nav-sub {
   display: flex;
   justify-content: space-between;
@@ -626,9 +622,12 @@ html {
 // @media only screen and (max-width: 390px) and (-webkit-device-pixel-ratio: 3) 
 
 @media screen and (orientation: portrait) {
-
   body {
     font-size: 44px;
+  }
+
+  .navbar-brand {
+    font-size: 3rem;
   }
 
   .main-container {
