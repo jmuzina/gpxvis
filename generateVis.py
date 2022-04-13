@@ -138,7 +138,7 @@ class ImageCreator:
                 else:
                     backgroundImage = backgroundImage.resize((self.resolution,backgroundImage.height*(math.ceil(self.resolution/backgroundImage.width))))
             backgroundImage = backgroundImage.crop(((backgroundImage.width-self.resolution)/2,(backgroundImage.height-self.resolution)/2, (backgroundImage.width+self.resolution)/2,(backgroundImage.height+self.resolution)/2))
-            backgroundImage = backgroundImage.filter(pil_filter.GaussianBlur(20))
+            backgroundImage = backgroundImage.filter(pil_filter.GaussianBlur(int(backgroundBlur)))
             backgroundImage = backgroundImage.convert("RGBA")
             self.image = backgroundImage
         else:

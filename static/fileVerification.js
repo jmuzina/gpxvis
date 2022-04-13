@@ -2,7 +2,6 @@ const imageFormats = {
     "png": true,
     "jpg": true,
     "jpeg": true,
-    "gif": true
 };
 
 const fileRestrictions = {
@@ -11,7 +10,6 @@ const fileRestrictions = {
             "png": true,
             "jpg": true,
             "jpeg": true,
-            "gif": true
         },
         "maxSize": 50, // MB
         "totalLimit": 50
