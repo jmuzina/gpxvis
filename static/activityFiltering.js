@@ -117,7 +117,6 @@ function searchActivities(activities) {
       }
       selectedIDs[i] = filterMatches[i][0];
     }
-    console.log(selectedIDs);
 
     oldTableBody.parentNode.replaceChild(newTableBody, oldTableBody);
     tableHeader.hidden = false;
