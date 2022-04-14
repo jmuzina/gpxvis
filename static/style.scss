@@ -211,7 +211,7 @@ ul {
 
 #gpxFile {
   text-align: center;
-  max-width: 230px;
+  max-width: 250px;
 }
 
 #GPXSubmit {
@@ -436,6 +436,12 @@ ul {
   width: 25%;
 }
 
+.activityFilters {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+}
+
 .scrollable-table-container {
   position: absolute;
   overflow: auto;
@@ -448,7 +454,7 @@ ul {
 }
 
 #keyword {
-  width: 50%;
+  width: 60%;
 }
 
 #drawSettings, #backgroundSettings {
@@ -488,31 +494,6 @@ td {
   display: block !important;
 }
 
-// this code was used to give the strava button it's appearance but
-// is superfluous until we get the dev account for underarmour
-
-/*
-// Apply configured styles for each login button
-@each $name, $data in $app_themes {
-    ##{$name}-login > a {
-        @each $property, $val in $data {
-            #{$property}: #{$val};
-        }
-    }
-} 
-*/
-
-/*
-// Login button styles for each supported login network
-$app_themes: (
-    /*
-    "strava" : (
-        "background-color": #fc4c02,
-        "color": white
-    )
-    
-);
-*/
 //
 //
 //
@@ -647,6 +628,7 @@ html {
 
   .main-container {
     height: 95vh !important;
+    //height: auto;
     width: 95vw !important;
     min-height: 0px  !important;
     min-width: 0px !important;
@@ -661,6 +643,10 @@ html {
     min-height: 80%;
     width: 90%;
     min-width: 90%;
+  }
+
+  .parameters {
+    height: auto !important;
   }
 
   .parameter-container {
@@ -733,6 +719,9 @@ html {
   #shareHeader {
     font-size: 2rem !important;
     margin-top: 5px;
+  }
+  #activitiesTable th, td {
+    font-size: 2.2rem;
   }
 }
 

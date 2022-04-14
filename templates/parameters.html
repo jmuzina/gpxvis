@@ -37,7 +37,7 @@
 
 
 <div class="main-body">
-    <div class="main-container">
+    <div class="main-container parameters">
       <form class="parameter-container" action="/generatePage" method="POST" enctype="multipart/form-data">
         <div
           class="parameter-button-container nav flex-column nav-pills"
@@ -152,9 +152,9 @@
             aria-labelledby="v-pills-activities-tab"
           >
             <h3>Filter your Activities</h3>
-            <fieldset>
+            <fieldset class = "activityFilters">
               <div class="row" id="dateFilters">
-                <div class="col-md-4" >
+                <div class="col-md-6" >
                   <label for="start"
                     >Start date:
                     <input
@@ -167,7 +167,7 @@
                     />
                   </label>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <label for="end"
                     >End date: <span>&nbsp;</span>
                     <input
