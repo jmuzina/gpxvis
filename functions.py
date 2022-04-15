@@ -17,6 +17,7 @@ import app as main
 
 # ---------------------------- #
 
+# Keys that may be stored in the session dict
 sessionVars = ["accessKey", "networkName", "userData", "twitterAccessToken", "twitterUserID", "visualizationID"]
 
 def allowed_file(filename, extensions):
@@ -52,6 +53,7 @@ def uniqueUserId(networkName, idNum):
 def metersToMiles(meters):
     return meters / 1609.344
 
+# Return time since 1/1/1970
 def epoch():
     return int(time.time())
 
@@ -109,6 +111,7 @@ def validUserData(session):
 
     return False
 
+# Wipe all data from user session
 def wipeSession(session):
     sessionDataValidationResult = validUserData(session)
 

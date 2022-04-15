@@ -15,6 +15,7 @@ var overlayBackground;
 var clearBackgroundButton;
 var backgroundColor;
 
+// Wait for all HTML elements to load, and assign them to variables
 waitForElement("displayGridLines", function() { gridCheckBox = document.getElementById("displayGridLines"); });
 waitForElement("gridlineColor", function() { gridlineColorSelector = document.getElementById("gridlineColor").parentNode; });
 waitForElement("gridThickness", function() { gridThickness = document.getElementById("gridThickness"); gridlineThicknessSelector = gridThickness.parentNode; });
@@ -31,23 +32,29 @@ waitForElement("textBackgroundFade", function() { overlayBackground = document.g
 waitForElement("clearBackgroundButton", function() { clearBackgroundButton = document.getElementById("clearBackgroundButton"); });
 waitForElement("backgroundColor", function() { backgroundColor = document.getElementById("backgroundColor").parentNode; });
 
+// Show grid checkbox has been toggled
+// Checked: show gridline thickness and color
+// Unchecked: hide gridline thickness and color
 function gridChecked() {
     gridlineColorSelector.parentNode.hidden = !gridCheckBox.checked;
     gridlineThicknessSelector.parentNode.hidden = 
     gridlineColorSelector.parentNode.hidden;
 }
 
+// Given a range input value, return its value as a % between min and max
 function getSliderPercent(rangeElement) {
     return Math.ceil(((rangeElement.value / rangeElement.max) * 100)) + " %"
 }
 
+// Show overlay checkbox has been toggled
+// Checked: Show overlay backdrop checkbox
+// Unchecked: hide overlay backdrop checkbox
 function overlayChecked() {
     overlayBackground.parentNode.hidden = !overlayCheckBox.checked;
 }
 
 function gridThicknessChanged() {
     gridThicknessPreview.innerHTML = getSliderPercent(gridThickness);
-    
 }
 
 function pathThicknessChanged() {
@@ -57,6 +64,10 @@ function pathThicknessChanged() {
 function blurIntensityChanged() {
     blurIntensityPreview.innerHTML = getSliderPercent(blurIntensity);
 }
+
+// Silhoutte image value has changed
+// Has a value: show the duplicate activities checkbox
+// No value: hide the duplicate activities checkbox
 function silhouetteImageSelected() {
     silhouetteImage = document.getElementById("silhouetteImage")
     if (silhouetteImage.value!=""){
@@ -68,6 +79,7 @@ function silhouetteImageSelected() {
 
 }
 
+// Clear the background image from the background image upload input
 function clearBackground() {
     backgroundImage.value = null;
     clearBackgroundButton.hidden = true;
@@ -75,8 +87,9 @@ function clearBackground() {
     backgroundColor.hidden = false;
 }
 
+// Perform page-load setup
 setTimeout(function () {
-    // Bootstrap
+    // Set initial visibility of dependent form inpjuts
     overlayChecked();
     gridThicknessChanged();
     blurIntensityChanged();

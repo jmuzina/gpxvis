@@ -23,7 +23,6 @@ import shutil
 
 # ---------------------------- #
 ALLOWED_EXTENSIONS = {'png', 'jpeg', 'jpg', 'gpx'}
-#IS_SERVER = exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/fullchain.pem") and exists("/etc/letsencrypt/live/capstone3.cs.kent.edu/privkey.pem")
 
 flaskApp = Flask(__name__)
 flaskApp.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -93,6 +92,7 @@ apis = {
 
 shareAuthURLs = {}
 
+# Add API networks that should be logged in with (exercise trackers) to the homepage as log in buttons
 for networkName in apis:
     if not apis[networkName].loginWith:
         shareAuthURLs[networkName] = apis[networkName].authUrl
@@ -107,6 +107,7 @@ def render_index():
 	    return redirect(url_for("render_parameters"))
     elif sessionDataValidationResult == False or ("networkName" in session and session["networkName"] == "gpxFile"): # No user ID, not logged in.
         networks = {}
+        # Check for available third party networks; mark unavailable ones
         for networkName in apis:
             if apis[networkName].loginWith:
                 networkDetails = False
@@ -258,8 +259,10 @@ def render_generatePage():
             totalLength = request.form["selectedActivityLength"]
             totalDistance = request.form["selectedActivityDistance"]
 
+            # Activities pulled from API, include total time and distance
             if session["networkName"] != "gpxFile":
                 userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=data, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"],silhouetteImage=formArgs["silhouetteImage"], duplicateActivities=formArgs["duplicateActivities"], textBackgroundFade=formArgs["textBackgroundFade"], totalTime=functions.getTimeStr(totalLength), totalDistance=str(totalDistance) + " mi."))
+            # Activities pulled from GPX file, exclude total time and distance as they are not calculated this way
             else:
                 userCachedData[uniqueId]["visualizationResult"] = functions.getImageBase64String(generateVis.getVis(data=data, lineThickness=int(formArgs["pathThickness"]), gridOn=formArgs["displayGridLines"] == "on", backgroundColor=formArgs["backgroundColor"], backgroundImage = filename, backgroundBlur = formArgs["blurIntensity"], foregroundColor=formArgs["pathColor"], gridColor=formArgs["gridlineColor"], gridThickness=int(formArgs["gridThickness"]), infoText=formArgs["infoText"], silhouetteImage=formArgs["silhouetteImage"], duplicateActivities=formArgs["duplicateActivities"], textBackgroundFade=formArgs["textBackgroundFade"]))
 
@@ -332,5 +335,3 @@ def render_privacyPage():
 # Store any config items not related to API logins under app.config
 for key in config["DEFAULT"]:
     flaskApp.config[key] = config["DEFAULT"][key]
-
-#print(networks.twitter.twitterApi(config, flaskApp).getAccessKey())
