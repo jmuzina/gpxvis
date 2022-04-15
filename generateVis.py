@@ -1,6 +1,6 @@
-
 ####generateVis
-####code sources: https://github.com/pavel-perina/gpx_to_png
+####takes user paramters and generates visualization
+####code sources used: https://github.com/pavel-perina/gpx_to_png
 
 import base64
 import glob
@@ -25,11 +25,11 @@ from PIL.ImageFilter import (BLUR, CONTOUR, DETAIL, EDGE_ENHANCE,
 
 
 def get_black_pixels(im, isGifFrame = False):
-    """ get list of every black pixel in an image and their coordinate """
+    ## get list of every black pixel in an image and their coordinate ##
     width, height = im.size
     blackPixels = []
 
-    #gifs store color slightly differently.
+    #gifs store color slightly differently. thus we must check if it is a gif or not
     if isGifFrame:
         for x in range(width):
             for y in range(height):
@@ -45,19 +45,20 @@ def get_black_pixels(im, isGifFrame = False):
     return blackPixels
  
 
-## osm functions taken from https://github.com/pavel-perina/gpx_to_png
+## osm functions from https://github.com/pavel-perina/gpx_to_png. converts lat lon coordinates to tiles
+
 def osm_lat_lon_to_x_y_tile (lat_deg, lon_deg, zoom):
-    """ Gets tile containing given coordinate at given zoom level """
-    ## taken from http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames, works for OSM maps and mapy.cz
+    ## Gets tile containing given coordinate at given zoom level ##
+    ## http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames, works for OSM maps and mapy.cz
     lat_rad = math.radians(lat_deg)
     n = 2.0 ** zoom
     xtile = int((lon_deg + 180.0) / 360.0 * n)
     ytile = int((1.0 - math.log(math.tan(lat_rad) + (1 / math.cos(lat_rad))) / math.pi) / 2.0 * n)
     return (xtile, ytile)
 
-
+## osm functions based on https://github.com/pavel-perina/gpx_to_png. gets appropriate zoom level for GPS coordiantes.
 def osm_get_auto_zoom_level ( min_lat, max_lat, min_lon, max_lon, max_n_tiles):
-    """ Gets zoom level which contains at maximum `max_n_tiles` """
+    ## gets zoom level which contains at maximum `max_n_tiles` ##
     for z in range (0,17):
         x1, y1 = osm_lat_lon_to_x_y_tile (min_lat, min_lon, z)
         x2, y2 = osm_lat_lon_to_x_y_tile (max_lat, max_lon, z)
@@ -66,6 +67,7 @@ def osm_get_auto_zoom_level ( min_lat, max_lat, min_lon, max_lon, max_n_tiles):
             #print ("Max tiles: %d" % max_tiles)
             return z 
     return 17
+
 
 #given number of activities, return optimal grid dimensions for facets
 def get_dimensions(n):
@@ -77,6 +79,7 @@ def get_dimensions(n):
     print("failed to get dimensions")
     return(0)
 
+#save image
 def save_image(image, filename = ""):
     if filename != "":
             image.save (filename)
@@ -93,16 +96,13 @@ def save_image(image, filename = ""):
 ##this class is the canvas that the activities(tracks) will be drawn on.
 class ImageCreator:
     def __init__(self, tracks, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (255,255,255), gridThickness = 1,  title = "", silhouetteImage = None, duplicateActivities = False, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""):
-        
         self.tracks = tracks
-        
-        ##sizing##
+        ###sizing###
         self.resolution = 4000
         self.maxTileWidth = self.resolution/(self.get_max_track_width())
         if silhouetteImage==None: 
             self.maxRows = get_dimensions(len(tracks))
         else:
-            print(silhouetteImage)
             self.maxRows = silhouetteImage.height
         self.width = self.resolution #500 * self.maxRows
         self.height = self.width
@@ -111,7 +111,7 @@ class ImageCreator:
         #print("Max track width: " + str(self.get_max_track_width()))
         #print("Max tile width: " + str(self.maxTileWidth))
         
-        ##user parameters##
+        ###user parameters###
         self.lineThickness = lineThickness 
         self.gridColor = gridColor
         self.foregroundColor = foregroundColor
@@ -121,11 +121,11 @@ class ImageCreator:
         self.infoText = infoText
         self.duplicateActivities = duplicateActivities
 
-        ##statistics##
+        ###statistics###
         self.totalTime = totalTime
         self.totalDistance = totalDistance
         
-        ####background image####
+        ###background image###
         
         if backgroundImage!="":
             self.backgroundImageFilePath = "uploads/" + backgroundImage
@@ -148,13 +148,14 @@ class ImageCreator:
     def draw_overlay(self):
         ## draw things that overlay image, such as text, text backgroudn fade, and grid
 
+        ##draw text background fade
         if(self.textBackgroundFade == True):
             fade = pil_image.open("static/fade.png").resize((self.resolution,self.resolution))
             self.image = pil_image.alpha_composite(self.image, fade)
-
+        ##draw grid
         if (self.gridOn==True): 
             self.draw_grid()
-
+        ##draw statistics
         if (self.infoText==True):
             if self.totalDistance != "":
                 self.draw_statistic("distance",self.totalDistance, "left")
@@ -212,6 +213,7 @@ class ImageCreator:
             draw.line(line, fill=self.gridColor, width=self.gridThickness)
         del draw
     def draw_facets(self):
+        ## draw activities in a grid ##
         row = 0
         column = 0
         gridElementSize = self.width / self.maxRows
@@ -229,7 +231,7 @@ class ImageCreator:
         #self.image = self.image.filter(SMOOTH_MORE)
 
     def draw_shape(self, blackPxSequence):
-
+        ## draw activities in a shape ##
         step_count = self.maxRows
         row = 0
         column = 0
@@ -238,7 +240,6 @@ class ImageCreator:
         y_start = 0
         y_end = self.image.height
         step_size = int(self.image.width / step_count)
-        #for i in range(len(self.tracks)):
         j = 0
         for i in range(len(blackPxSequence)):
             if i < blackPxLength: 
@@ -271,12 +272,11 @@ class ImageCreator:
         return(len(self.tracks))
         
         
-            
-
-    #activity. only stores GPX data at the moment. eventually should also have data such as activity name, time, distance, etc....          
+##Track object stores activity GPS data, as well as functions to draw them on imageCreator. imageCreator contains a list of Track objects       
+##some latlong to pixel functionality based on https://github.com/pavel-perina/gpx_to_png  
 class Track:
     def __init__(self, activity, min_lat, max_lat, min_lon, max_lon, zoom):
-        """ constructor """
+        ## constructor ##
         self.activity = activity # list of coordinates
         x1, y1 = osm_lat_lon_to_x_y_tile (min_lat, min_lon, zoom)
         x2, y2 = osm_lat_lon_to_x_y_tile (max_lat, max_lon, zoom)
@@ -288,13 +288,12 @@ class Track:
         self.height = (self.y2 - self.y1 + 1)
         self.zoom = zoom
 
-    
         self.x_offset = 0
         self.y_offset = 0
 
         
     def lat_lon_to_image_xy (self, lat_deg, lon_deg, tile_res):
-        """ Internal. Converts lat, lon into dst_img coordinates in pixels """
+        ## convert lat, lon into pixel coordinates ##
         lat_rad = math.radians(lat_deg)
         n = 2.0 ** self.zoom
         xtile_frac = (lon_deg + 180.0) / 360.0 * n
@@ -304,7 +303,7 @@ class Track:
         return (img_x + self.x_offset, img_y + self.y_offset) #modified with offsets +300
 
     def draw_track (self, new_x_offset, new_y_offset, image, tile_res, lineThickness, lineColor):
-        
+        ## draws activity ##
         self.x_offset = new_x_offset #(self.width*tile_res)/2 
         self.y_offset = new_y_offset 
         draw = pil_draw.Draw(image)
@@ -333,6 +332,7 @@ class Track:
         return(self.height)
 
 def get_latlon_bounds(activity):
+    ## get lat long bounds of activity. used to help determine spacing of drawn activities##
     min_lat = None
     max_lat = None
     min_lon = None
@@ -353,6 +353,7 @@ def get_latlon_bounds(activity):
     return None
 
 def gpx_to_list(gpx):
+    ## convert GPX file to polyline list ##
     activity = []
     for gpxTrack in gpx.tracks:
         for segment in gpxTrack.segments:
@@ -363,13 +364,14 @@ def gpx_to_list(gpx):
 
 
 def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (0,0,0), gridThickness = 1,  title = "", silhouetteImage = "", duplicateActivities = False, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""): 
-    #print("sil image: " + silhouetteImage)
-    ### Un-comment these when Adam has fixed font/image dependencies
+    ## pass in user parameters and generate visualization based on parameters ##
+
+    ##convert strings from user input into bool
     infoText = (infoText == "on")
     textBackgroundFade = (textBackgroundFade == "on")
     duplicateActivities = (duplicateActivities == "on")
-    ###
-    tracks = [] #list to store activities
+
+    tracks = [] #list to store activities(Track object)
     #####POLYLINE LIST####
     if (type(data[0][0]) is tuple): #very rough way to check if it is a polyline list or a GPX file
         for activity in data:
@@ -411,7 +413,7 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
                 print('Error processing: %s' % gpx_file)
                 continue
 
-    ##if a silhouetteImage is provided, then the activities should be drawn in the shape of said silhouetteImage. else it should be drawn in a grid. somewhat messy and could be cleaned up
+    ##if a silhouetteImage is provided in the parameters, then the activities should be drawn in the shape of said silhouetteImage. else it should be drawn in a grid. 
     if silhouetteImage != "":
         silhouetteImage = pil_image.open("static/silhouette-images/"+silhouetteImage)
         if silhouetteImage.is_animated:
@@ -442,7 +444,7 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
             drawnImage = save_image(image_creator.get_image())
             
             
-    ##draw activities as facets (grid formation)
+    ##draw activities in grid (also known as facets)
     else:
         image_creator = ImageCreator(tracks, lineThickness, backgroundColor, backgroundImage, backgroundBlur, foregroundColor, gridOn, gridColor, gridThickness,  title, None,duplicateActivities, textBackgroundFade, infoText, totalTime, totalDistance)
         image_creator.draw_facets()
