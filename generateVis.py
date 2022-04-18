@@ -14,7 +14,8 @@ import urllib
 from ast import Str
 
 import gpxpy
-from PIL import GifImagePlugin as pil_gif
+from PIL import GifImagePlugin
+from PIL import ImageOps as pil_ops
 from PIL import Image as pil_image
 from PIL import ImageDraw as pil_draw
 from PIL import ImageFilter as pil_filter
@@ -130,6 +131,7 @@ class ImageCreator:
         if backgroundImage!="":
             self.backgroundImageFilePath = "uploads/" + backgroundImage
             backgroundImage = pil_image.open(self.backgroundImageFilePath)
+            backgroundImage = pil_ops.exif_transpose(backgroundImage) # Fix automatic background rotation
 
             ##resize and crop image to fit##
             if(backgroundImage.width < self.resolution or backgroundImage.height < self.resolution):
