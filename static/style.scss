@@ -110,6 +110,7 @@ ul {
   justify-content:center;
   flex-flow: row wrap;
   flex-wrap: wrap;
+  padding: 0px 30px 0px 30px;
   /* flex-flow: column nowrap; */
 }
 
@@ -177,7 +178,7 @@ ul {
   background-size: 100% 1px;
   background-clip: border-box;
   border-radius: 3px;
-  //padding: 15px 15px 15px 15px !important;
+  padding: 0px 0px 0px 0px !important;
 }
 
 .bi {
