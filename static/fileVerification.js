@@ -6,8 +6,8 @@ const fileRestrictions = {
             "jpg": true,
             "jpeg": true,
         },
-        "maxSize": 50, // MB
-        "totalLimit": 50
+        "maxSize": 5, // MB
+        "totalLimit": 5
     },
     "gpxFile": {
         "extensions": {
