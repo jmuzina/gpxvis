@@ -167,6 +167,18 @@ window.onload = function(){
             else {
                 $(gpxFileSubmit).removeClass("disabled-button");
             }
+            if (document.getElementById("login-buttons") !== null) {
+                var loginButtons = $("#login-buttons")[0].children;
+                var foundEnabledLoginButton = false;
+                for (var i = 0; i < loginButtons.length; ++i) {
+                    if (!foundEnabledLoginButton && !($(loginButtons[i].children[0]).hasClass("disabled-button"))) {
+                        foundEnabledLoginButton = true;
+                        break;
+                    }
+                }
+                document.getElementById("or").hidden = !foundEnabledLoginButton;
+            }
         }
+
     }
 }

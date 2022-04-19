@@ -310,6 +310,7 @@ ul {
 .disabled-button {
   opacity: 0.5;
   cursor: not-allowed;
+  color: white !important;
 }
 
 .material-icons {
@@ -343,12 +344,12 @@ ul {
   justify-content: flex-start;
 }
 
-#Strava {
+#strava {
   background: #fc5200 !important;
   text-align: center;
 }
 
-#Underarmour {
+#underarmour {
   background: #1d1d1d !important;
 }
 

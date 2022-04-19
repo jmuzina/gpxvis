@@ -35,19 +35,19 @@
                     {% for networkName, networkData in networks.items() %}
                     <div id="{{networkName}}-login">
                         {% if networkData != False %}
-                            <a button type="button" class="button-custom" id="Strava" href="https://{{networkData.strip('\"')}}">Login with {{networkName.title()}}</a>
+                            <a button type="button" class="button-custom" id="{{networkName}}" href="https://{{networkData.strip('\"')}}">Login with {{networkName.title()}}</a>
                         {% else %}
-                            <a button type="button" class="button-custom" id="Underarmour" disabled>{{networkName.title()}} unavailable</a>
+                            <a button type="button" class="button-custom disabled-button" id="{{networkName}}" disabled>{{networkName.title()}} unavailable</a>
                         {% endif %}
                     </div>
                     {% endfor %}
-                    <form id = "gpxUpload" action="/parameters" method="POST" enctype="multipart/form-data">
-                        <h6>OR</h6>
-                        <h5>Upload GPX Files</h5>
-                        <input type="file" id="gpxFile" name="gpxFile" onchange="verifyGPXFile()" multiple>
-                        <input type="submit" class="button-custom disabled-button" id="GPXSubmit" value="Submit GPX" disabled/>
-                    </form>
                 </div>
+                <form id = "gpxUpload" action="/parameters" method="POST" enctype="multipart/form-data">
+                    <h6 id = "or">OR</h6>
+                    <h5>Upload GPX Files</h5>
+                    <input type="file" id="gpxFile" name="gpxFile" onchange="verifyGPXFile()" multiple>
+                    <input type="submit" class="button-custom disabled-button" id="GPXSubmit" value="Submit GPX" disabled/>
+                </form>
             </div>
         </div>
     </div>
