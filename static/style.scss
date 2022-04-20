@@ -201,8 +201,9 @@ ul {
 }
 
 #gpxUpload {
+  display: flex;
+  flex-flow: column wrap;
   margin-top: 20px;
-  text-align: center;
 }
 
 #gpxUpload h6, h5 {
@@ -211,7 +212,7 @@ ul {
 
 #gpxFile {
   text-align: center;
-  max-width: 225px;
+  max-width: 250px;
 }
 
 #GPXSubmit {
