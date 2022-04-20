@@ -391,7 +391,7 @@ def getVis(data, lineThickness = 5, backgroundColor = (255,255,255), backgroundI
     #####GPX FILE#####
     ##convert GPX file to list
     else:
-        print("GPX File")
+        #print("GPX File")
         dir = "uploads/" + data + "/*.gpx"
         gpx_files = glob.glob("uploads/" + data + "/*.gpx") #get all GPX files in user upload directory
         
