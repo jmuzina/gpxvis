@@ -86,13 +86,13 @@ class StravaApi:
                             "name":  activitiesResponse[activityIndex]["name"],
                             "polyline": activitiesResponse[activityIndex]["map"]["summary_polyline"],
                             "displayTime": dto.strftime('%m/%d/%Y'),
-                            "duration": activitiesResponse[activityIndex]["elapsed_time"],
+                            "duration": activitiesResponse[activityIndex]["moving_time"],
                             "type": activitiesResponse[activityIndex]["type"],
                             "distance": round(functions.metersToMiles(activitiesResponse[activityIndex]["distance"]), 2)
                         }
 
                         #totalDistance += activitiesResponse[activityIndex]["distance"]
-                        #totalTime += activitiesResponse[activityIndex]["elapsed_time"]
+                        #totalTime += activitiesResponse[activityIndex]["moving_time"]
 
                         #print("\t" + str(activitiesResponse[activityIndex]["id"]) + "\t", result[activitiesResponse[activityIndex]["id"]])
 
