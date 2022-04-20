@@ -167,6 +167,7 @@ window.onload = function(){
             else {
                 $(gpxFileSubmit).removeClass("disabled-button");
             }
+            // Hide the "OR" on homepage if there are no available login networks
             if (document.getElementById("login-buttons") !== null) {
                 var loginButtons = $("#login-buttons")[0].children;
                 var foundEnabledLoginButton = false;
