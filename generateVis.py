@@ -99,7 +99,7 @@ class ImageCreator:
     def __init__(self, tracks, lineThickness = 5, backgroundColor = (255,255,255), backgroundImage = "", backgroundBlur = 5, foregroundColor = (0,0,0), gridOn = False, gridColor = (255,255,255), gridThickness = 1,  title = "", silhouetteImage = None, duplicateActivities = False, textBackgroundFade = False, infoText = False, totalTime = "", totalDistance = ""):
         self.tracks = tracks
         ###sizing###
-        self.resolution = 4000
+        self.resolution = 2000
         self.maxTileWidth = self.resolution/(self.get_max_track_width())
         if silhouetteImage==None: 
             self.maxRows = get_dimensions(len(tracks))
