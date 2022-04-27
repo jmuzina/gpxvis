@@ -16,7 +16,6 @@ h3 {
   font-size: 2.25rem;
 }
 
-
 .main-body {
   display: flex;
   align-items: center;
@@ -91,7 +90,8 @@ ul {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  /* flex-flow: column nowrap; */
+
+  flex-flow: column nowrap;
 }
 
 // this is used for the centered inner box in the main page, and parameters page

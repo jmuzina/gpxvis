@@ -307,6 +307,15 @@ def returnDynamicParameters():
 def returnResize():
     return send_file("./static/resize.js")
 
+@flaskApp.route("/logo")
+def returnLogo():
+    if not request.args.get("size"):
+        return send_file("./static/logo/logo_full.png")
+    elif request.args.get("size") == "300":
+        return send_file("./static/logo/logo_300.png")
+    elif request.args.get("size") == "favicon":
+        return send_file("./static/logo/favicons/favicon.ico")
+
 @flaskApp.route("/wait.js")
 def returnWait():
     return send_file("./static/wait.js")
