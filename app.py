@@ -315,6 +315,8 @@ def returnLogo():
         return send_file("./static/logo/logo_300.png")
     elif request.args.get("size") == "favicon":
         return send_file("./static/logo/favicons/favicon.ico")
+    else:
+        return functions.throwError("Invalid logo size argument given.")
 
 @flaskApp.route("/wait.js")
 def returnWait():
