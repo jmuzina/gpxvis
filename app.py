@@ -309,7 +309,7 @@ def returnResize():
 
 @flaskApp.route("/logo")
 def returnLogo():
-    if not request.args.get("size"):
+    if not request.args.get("size") or request.args.get("size") == "full":
         return send_file("./static/logo/logo_full.png")
     elif request.args.get("size") == "300":
         return send_file("./static/logo/logo_300.png")
