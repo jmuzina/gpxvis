@@ -28,82 +28,99 @@
     {% block content -%}
     {% include "navBar.html" %}
     {%- endblock content %}
+
+    <div class="about-section">
+      <h1 id="about-title">About Us</h1>
+      <p>The GPX Visualizer was created in part by Joe Muzina, James Meyer, Parker Fisher, Adam Petrich and Anothony Moore</p>
+      <p>Its goal was to reach Strava users around the globe giving them the ability to share their runs in a new and innovative way</p>
+      <p><a class="button btn button-custom hello-button" href="https://github.com/joemuzina/Capstone" target = "_blank" >Link To Project Github</a></p>
+    </div>
+    
+    <h2 class="our-team-title">Our Team</h2>
+    <div class="row about-container">
+      <div class="column">
+        <div class="card">
+          <div class="crop">
+              <img src="../static/profile-images/parker.jpg" alt = "James">
+          </div>
+          <div class="container">
+            <h2>Parker Fisher</h2>
+            <p class="title">Front End Developer</p>
+            <p><a class = "button btn button-custom hello-button" href="https://github.com/pfishe13" target = "_blank" >Github</a></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="card">
+          <div class="crop">
+              <img src="../static/profile-images/james.jpg" alt = "James">
+          </div>
+          <div class="container">
+            <h2>James Meyer</h2>
+            <p class="title">Front End Developer</p>
+            <p><a class = "button btn button-custom hello-button" href="https://github.com/jamesmeyer1021" target = "_blank" >Github</a></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="card">
+          <div class="crop">
+              <img src="../static/profile-images/anthony.jpg" alt = "James">
+          </div>
+          <div class="container">
+            <h2>Anthony Moore</h2>
+            <p class="title">Front End Developer</p>
+            <p><a class = "button btn button-custom hello-button" href="https://github.com/amoor131" target = "_blank" >Github</a></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="card">
+          <!--Could add picture of each person here -->
+          <div class="crop">
+              <img src="../static/profile-images/joe.jpg" alt = "James">
+          </div>
+          <div class="container">
+            <a class = "about-card-link" href = "https://joemuzina.com" target = "_blank">Joe Muzina</a>
+            <p class="title">Full-Stack Developer</p>
+            <p>
+              <a class = "button btn button-custom hello-button" href="https://github.com/joemuzina" target = "_blank" >Github</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="card">
+          <div class="crop">
+              <img src="../static/profile-images/adam.png" alt = "James">
+          </div>
+          <div class="container">
+            <h2>Adam Petrich</h2>
+            <p class="title">Back-End Developer</p>
+            <p><a class = "button btn button-custom hello-button" href="https://github.com/apetric1" target = "_blank" >Github</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
   </body>
-
-  <div class="about-section">
-    <h1 id="about-title">About Us</h1>
-    <p>The GPX Visualizer was created in part by Joe Muzina, James Meyer, Parker Fisher, Adam Petrich and Anothony Moore</p>
-    <p>Its goal was to reach Strava users around the globe giving them the ability to share their runs in a new and innovative way</p>
-    <p><a class="button btn button-custom hello-button" href="https://github.com/joemuzina/Capstone" target = "_blank" >Link To Project Github</a></p>
-  </div>
-  
-  <h2 class="our-team-title">Our Team</h2>
-  <div class="row about-container">
-    <div class="column">
-      <div class="card">
-        <div class="crop">
-            <img src="../static/profile-images/parker.jpg" alt = "James">
-        </div>
-        <div class="container">
-          <h2>Parker Fisher</h2>
-          <p class="title">Front End Developer</p>
-          <p><a class = "button btn button-custom hello-button" href="https://github.com/pfishe13" target = "_blank" >Github</a></p>
-        </div>
-      </div>
-    </div>
-
-    <div class="column">
-      <div class="card">
-        <div class="crop">
-            <img src="../static/profile-images/james.jpg" alt = "James">
-        </div>
-        <div class="container">
-          <h2>James Meyer</h2>
-          <p class="title">Front End Developer</p>
-          <p><a class = "button btn button-custom hello-button" href="https://github.com/jamesmeyer1021" target = "_blank" >Github</a></p>
-        </div>
-      </div>
-    </div>
-
-    <div class="column">
-      <div class="card">
-        <div class="crop">
-            <img src="../static/profile-images/anthony.jpg" alt = "James">
-        </div>
-        <div class="container">
-          <h2>Anthony Moore</h2>
-          <p class="title">Front End Developer</p>
-          <p><a class = "button btn button-custom hello-button" href="https://github.com/amoor131" target = "_blank" >Github</a></p>
-        </div>
-      </div>
-    </div>
-
-    <div class="column">
-      <div class="card">
-        <!--Could add picture of each person here -->
-        <div class="crop">
-            <img src="../static/profile-images/joe.jpg" alt = "James">
-        </div>
-        <div class="container">
-          <a class = "about-card-link" href = "https://joemuzina.com" target = "_blank">Joe Muzina</a>
-          <p class="title">Full-Stack Developer</p>
-          <p>
-            <a class = "button btn button-custom hello-button" href="https://github.com/joemuzina" target = "_blank" >Github</a>
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div class="column">
-      <div class="card">
-        <div class="crop">
-            <img src="../static/profile-images/adam.png" alt = "James">
-        </div>
-        <div class="container">
-          <h2>Adam Petrich</h2>
-          <p class="title">Back-End Developer</p>
-          <p><a class = "button btn button-custom hello-button" href="https://github.com/apetric1" target = "_blank" >Github</a></p>
-        </div>
-      </div>
-    </div>
-  </div>
+</html>
