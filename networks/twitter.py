@@ -154,7 +154,7 @@ class twitterApi:
         if "visualizationID" in main.session:
             client = self.getClient()
             if client:
-                tweetResult = client.create_tweet(media_ids=[main.session["visualizationID"]], text="Check out my GPX visualization! https://capstone3.cs.kent.edu", user_auth=True)
+                tweetResult = client.create_tweet(media_ids=[main.session["visualizationID"]], text="Check out my GPX visualization! https://gpxvis.com", user_auth=True)
                 main.session["visualizationID"] = None
 
                 data = None
