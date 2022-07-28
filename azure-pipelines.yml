@@ -1,0 +1,39 @@
+trigger:
+- main
+
+pool:
+  name: $(pool_name)
+  demands: 
+  - agent.name -equals $(agent_name)
+
+steps:
+- task: CopyFilesOverSSH@0
+  inputs:
+    sshEndpoint: 'NFO VM'
+    contents: '**'
+    targetFolder: $(target_directory)
+    cleanTargetFolder: true
+    readyTimeout: '20000'
+- task: SSH@0
+  inputs:
+    sshEndpoint: 'NFO VM'
+    interactiveSession: true
+    failOnStdErr: false
+    runOptions: 'commands'
+    commands: |
+      cd $(target_directory)
+      sudo systemctl disable $(daemon_name)
+      sudo systemctl stop $(daemon_name)
+      python3 -m pip install --upgrade pip
+      pip3 install flask
+      pip3 install Flask-Assets
+      pip3 install pyscss
+      pip3 install configparser
+      pip3 install requests
+      pip3 install gpxpy
+      pip3 install pandas
+      pip3 install tweepy
+      pip3 install gunicorn
+      sudo systemctl enable $(daemon_name)
+      sudo systemctl start $(daemon_name)
+    readyTimeout: '20000'
