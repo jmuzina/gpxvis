@@ -35,7 +35,7 @@ steps:
       pip3 install tweepy
       pip3 install gunicorn
 
-      rm $(CFG_FILE_NAME)
+      [ -e $(CFG_FILE_NAME) ] && rm -- $(CFG_FILE_NAME)
       echo "[strava]" >> $(CFG_FILE_NAME)
       echo 'AUTH_URL = "$(STRAVA_AUTH_URL)"' >> $(CFG_FILE_NAME)
       echo "TOKEN_URL = '$(STRAVA_TOKEN_URL)'" >> $(CFG_FILE_NAME)
