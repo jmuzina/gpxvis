@@ -29,8 +29,8 @@ steps:
     runOptions: 'commands'
     commands: |
       cd $(target_directory)
-      sudo systemctl disable $(daemon_name)
-      sudo systemctl stop $(daemon_name)
+      systemctl disable $(daemon_name)
+      systemctl stop $(daemon_name)
       python3 -m pip install --upgrade pip
       pip3 install flask
       pip3 install Flask-Assets
@@ -59,6 +59,6 @@ steps:
       echo "[DEFAULT]" >> $(CFG_FILE_NAME)
       echo 'SECRET_KEY = "$(SECRET_KEY)"' >> $(CFG_FILE_NAME)
 
-      sudo systemctl enable $(daemon_name)
-      sudo systemctl start $(daemon_name)
+      systemctl enable $(daemon_name)
+      systemctl start $(daemon_name)
     readyTimeout: '20000'
