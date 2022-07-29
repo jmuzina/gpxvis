@@ -9,7 +9,7 @@ pool:
 steps:
 - task: CopyFilesOverSSH@0
   inputs:
-    sshEndpoint: 'NFO VM'
+    sshEndpoint: $(pool_name)
     contents: '**'
     targetFolder: $(target_directory)
     cleanTargetFolder: true
@@ -23,7 +23,7 @@ steps:
     TWITTER_CONSUMER_SECRET: $(TWITTER_CONSUMER_SECRET)
     SECRET_KEY: $(SECRET_KEY)
   inputs:
-    sshEndpoint: 'NFO VM'
+    sshEndpoint: $(pool_name)
     interactiveSession: true
     failOnStdErr: false
     runOptions: 'commands'
