@@ -15,6 +15,13 @@ steps:
     cleanTargetFolder: true
     readyTimeout: '20000'
 - task: SSH@0
+  env:
+    STRAVA_CLIENT_SECRET: $(STRAVA_CLIENT_SECRET)
+    TWITTER_ACCESS_TOKEN_PUBLIC: $(TWITTER_ACCESS_TOKEN_PUBLIC)
+    TWITTER_ACCESS_TOKEN_SECRET: $(TWITTER_ACCESS_TOKEN_SECRET)
+    TWITTER_CONSUMER_KEY: $(TWITTER_CONSUMER_KEY)
+    TWITTER_CONSUMER_SECRET: $(TWITTER_CONSUMER_SECRET)
+    SECRET_KEY: $(SECRET_KEY)
   inputs:
     sshEndpoint: 'NFO VM'
     interactiveSession: true
@@ -34,6 +41,24 @@ steps:
       pip3 install pandas
       pip3 install tweepy
       pip3 install gunicorn
+
+      rm -f -- $(CFG_FILE_NAME)
+      echo "[strava]" >> $(CFG_FILE_NAME)
+      echo 'AUTH_URL = "$(STRAVA_AUTH_URL)"' >> $(CFG_FILE_NAME)
+      echo "TOKEN_URL = '$(STRAVA_TOKEN_URL)'" >> $(CFG_FILE_NAME)
+      echo "CLIENT_ID = '$(STRAVA_CLIENT_ID)'" >> $(CFG_FILE_NAME)
+      echo "CLIENT_SECRET = '$(STRAVA_CLIENT_SECRET)'" >> $(CFG_FILE_NAME)
+      echo "[twitter]" >> $(CFG_FILE_NAME)
+      echo "CALLBACK_URL = '$(TWITTER_CALLBACK_URL)'" >> $(CFG_FILE_NAME)
+      echo "AUTH_URL = '$(TWITTER_AUTH_URL)'" >> $(CFG_FILE_NAME)
+      echo "TOKEN_URL = '$(TWITTER_TOKEN_URL)'" >> $(CFG_FILE_NAME)
+      echo "CONSUMER_KEY = '$(TWITTER_CONSUMER_KEY)'" >> $(CFG_FILE_NAME)
+      echo "CONSUMER_SECRET = '$(TWITTER_CONSUMER_SECRET)'" >> $(CFG_FILE_NAME)
+      echo "ACCESS_TOKEN_PUBLIC = '$(TWITTER_ACCESS_TOKEN_PUBLIC)'" >> $(CFG_FILE_NAME)
+      echo "ACCESS_TOKEN_SECRET = '$(TWITTER_ACCESS_TOKEN_SECRET)'" >> $(CFG_FILE_NAME)
+      echo "[DEFAULT]" >> $(CFG_FILE_NAME)
+      echo 'SECRET_KEY = "$(SECRET_KEY)"' >> $(CFG_FILE_NAME)
+
       sudo systemctl enable $(daemon_name)
       sudo systemctl start $(daemon_name)
     readyTimeout: '20000'
