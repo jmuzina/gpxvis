@@ -81,13 +81,13 @@ config.read_file(open(r'./app.cfg'))
 # -------------------------------------------- #
 
 import networks.strava  # Must be imported after config has been read
-import networks.twitter
+#import networks.twitter
 
 userCachedData = {}
 
 apis = {
     'strava': networks.strava.StravaApi(config, flaskApp),
-    'twitter': networks.twitter.twitterApi(config, flaskApp)
+    #'twitter': networks.twitter.twitterApi(config, flaskApp)
 }
 
 shareAuthURLs = {}
