@@ -3,24 +3,23 @@ import binascii
 import math
 import os
 import time
-from flask import Flask, redirect, render_template, request, url_for, Response
+from flask import redirect, request, url_for
 import functions
-import generateVis
 import polyline
 import app as main
 import datetime
 # ---------------------------- #
 class StravaApi:
-    def __init__(self, cfg, app):
+    def __init__(self, app):
         # Configure strava-specific connection details
         self.configCode = 'strava'
-        self.configDetails = cfg[self.configCode]
-        self.tokenUrl = self.configDetails['TOKEN_URL'].strip('\'')
-        self.clientId = self.configDetails['CLIENT_ID'].strip('\'')
-        self.clientSecret = self.configDetails['CLIENT_SECRET'].strip('\'')
-        self.authUrl = self.configDetails['AUTH_URL'].strip('\'')
+        self.tokenUrl = 'https://www.strava.com/oauth/token'.strip('\'')
+        self.clientId = os.getenv('STRAVA_CLIENT_ID').strip('\'')
+        self.clientSecret = os.getenv('STRAVA_CLIENT_SECRET').strip('\'')
+        self.authUrl = "www.strava.com/oauth/authorize?client_id={client_id}&response_type=code&redirect_uri={app_address}/strava-login&approval_prompt=auto&scope=read,activity:read".format(client_id=os.getenv('STRAVA_CLIENT_ID'), app_address=os.getenv('APP_ADDRESS') or 'http://127.0.0.1:5000').strip('\'')
         self.verifyToken = str(binascii.hexlify(os.urandom(24)))[2:-1]
         self.loginWith = True
+
 
         # Handle Strava authentication. When users successfully log in to Strava, they are sent to {site-url}/strava-login
         @app.route('/' + self.configCode + '-login')
@@ -40,6 +39,8 @@ class StravaApi:
 
             # Store user activities
             main.userCachedData[uniqueId] = self.getActivitiesInRange()
+
+            print(main.userCachedData[uniqueId])
 
             if len(main.userCachedData[uniqueId]) > 0:            
                 # Render parameters page
