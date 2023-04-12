@@ -1,4 +1,4 @@
-# KSU Activity Art
+# GPX Visualizer
  
 # Windows Environment Setup
 Terminal commands in this section can be executed in Windows Powershell or Microsoft Visual Studio Code.
