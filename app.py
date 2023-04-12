@@ -1,17 +1,15 @@
 # App launch-point
 
 # ---- Dependency imports ---- #
-from enum import unique
 import logging
 import math
 import os
 import time
-from configparser import ConfigParser, RawConfigParser
 from datetime import datetime, timedelta
 from os.path import exists
 from werkzeug.utils import secure_filename
 
-from flask import (Flask, Response, redirect, render_template, request,
+from flask import (Flask, redirect, render_template, request,
                    send_file, session, url_for)
 from flask_assets import Bundle, Environment
 
@@ -20,6 +18,9 @@ import generateVis
 import SessionTimer
 import glob
 import shutil
+
+from dotenv import load_dotenv
+load_dotenv()
 
 # ---------------------------- #
 ALLOWED_EXTENSIONS = {'png', 'jpeg', 'jpg', 'gpx'}
@@ -71,13 +72,6 @@ assets.config['PYSCSS_ASSETS_URL'] = assets.url
 assets.config['PYSCSS_ASSETS_ROOT'] = assets.directory
 
 assets.register('scss_all', scss)
-# -------- Read and load config data -------- #
-configParser = RawConfigParser()   
-configFilePath = r'./app.cfg'
-configParser.read(configFilePath)
-
-config = ConfigParser()
-config.read_file(open(r'./app.cfg'))
 # -------------------------------------------- #
 
 import networks.strava  # Must be imported after config has been read
@@ -86,8 +80,8 @@ import networks.strava  # Must be imported after config has been read
 userCachedData = {}
 
 apis = {
-    'strava': networks.strava.StravaApi(config, flaskApp),
-    #'twitter': networks.twitter.twitterApi(config, flaskApp)
+    'strava': networks.strava.StravaApi(flaskApp),
+    #'twitter': networks.twitter.twitterApi(flaskApp)
 }
 
 shareAuthURLs = {}
@@ -159,7 +153,6 @@ def render_parameters():
         for file in request.files.getlist('gpxFile'):
             if file and functions.allowed_file(file.filename, ALLOWED_EXTENSIONS):
                 filename = secure_filename(functions.randomAlphanumericString(16) + "_" + file.filename)
-                #print(file)
                 file.save(os.path.join(flaskApp.config['UPLOAD_FOLDER'] + "/" + uniqueId, filename))     
 
         if not uniqueId in userCachedData:
@@ -341,7 +334,3 @@ def render_privacyPage():
         return render_template('privacyPage.html', userData = session['userData'])
     else:
         return render_template('privacyPage.html')
-
-# Store any config items not related to API logins under app.config
-for key in config["DEFAULT"]:
-    flaskApp.config[key] = config["DEFAULT"][key]
