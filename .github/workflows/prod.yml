@@ -2,7 +2,7 @@ name: gpxvis.com
 
 on:
   push:
-    branches: ['main']
+    branches: ['cicd']
 
 jobs:
   deploy:
@@ -15,6 +15,17 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
+      - name: Stop GPX Vis and force-remove previous artifact
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script: |
+            sudo systemctl stop ${{ secrets.DAEMON_NAME }}
+            sudo rm -rf ${{ secrets.DEPLOY_PATH }}
+
       - name: Upload updated flask code
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -25,7 +36,7 @@ jobs:
           source: "*"
           target: ${{ secrets.DEPLOY_PATH }}
           tar_tmp_path: ${{ secrets.TEMP_PATH }}
-          rm: true
+          rm: false
           timeout: 60s
 
       - name: Install Flask dependencies and restart Flask
@@ -37,4 +48,10 @@ jobs:
           port: ${{ secrets.DEPLOY_PORT }}
           script: |
             pip3 install -r ${{ secrets.DEPLOY_PATH }}/requirements.txt
-            sudo systemctl restart ${{ secrets.DAEMON_NAME }}
+
+            touch ${{ secrets.DEPLOY_PATH }}/.env
+            echo APP_ADDRESS="${{ secrets.APP_ADDRESS }}" >> ${{ secrets.DEPLOY_PATH}}/.env
+            echo STRAVA_CLIENT_ID="${{ secrets.STRAVA_CLIENT_ID }}" >> ${{ secrets.DEPLOY_PATH}}/.env
+            echo STRAVA_CLIENT_SECRET="${{ secrets.STRAVA_CLIENT_SECRET }}" >> ${{ secrets.DEPLOY_PATH}}/.env
+
+            sudo systemctl start ${{ secrets.DAEMON_NAME }}
