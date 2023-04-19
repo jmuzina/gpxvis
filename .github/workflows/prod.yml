@@ -2,7 +2,7 @@ name: gpxvis.com
 
 on:
   push:
-    branches: ['cicd']
+    branches: ['main']
 
 jobs:
   deploy:
@@ -54,4 +54,4 @@ jobs:
             echo STRAVA_CLIENT_ID="${{ secrets.STRAVA_CLIENT_ID }}" >> ${{ secrets.DEPLOY_PATH}}/.env
             echo STRAVA_CLIENT_SECRET="${{ secrets.STRAVA_CLIENT_SECRET }}" >> ${{ secrets.DEPLOY_PATH}}/.env
 
-            sudo systemctl start ${{ secrets.DAEMON_NAME }}
+            sudo systemctl restart ${{ secrets.DAEMON_NAME }}
