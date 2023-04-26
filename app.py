@@ -310,6 +310,10 @@ def returnLogo():
         return send_file("./static/logo/favicons/favicon.ico")
     else:
         return functions.throwError("Invalid logo size argument given.")
+    
+@flaskApp.route("/favicon.ico")
+def returnFavicon():
+    return send_file("./static/logo/favicons/favicon.ico")
 
 @flaskApp.route("/wait.js")
 def returnWait():

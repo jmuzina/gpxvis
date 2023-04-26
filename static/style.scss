@@ -566,16 +566,21 @@ html {
   overflow: hidden;
   margin: auto;
   padding-bottom: 20px;
-
-}
-
-.crop img {
   width: 200px;
   height: 200px;
-  background-position: center;
-  /* Make the background image cover the area of the <div>, and clip the excess */
-  background-size: cover;
-  border-radius: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  img {
+    width: auto;
+    height: 100%;
+    background-position: center;
+    /* Make the background image cover the area of the <div>, and clip the excess */
+    background-size: cover;
+    border-radius: 100%;
+  }
+
 }
 
 .container {
