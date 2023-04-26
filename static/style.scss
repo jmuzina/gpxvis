@@ -568,8 +568,12 @@ html {
   padding-bottom: 20px;
   width: 200px;
   height: 200px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
   img {
-    width: 100%;
+    width: auto;
     height: 100%;
     background-position: center;
     /* Make the background image cover the area of the <div>, and clip the excess */
