@@ -20,7 +20,8 @@ jobs:
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USERNAME }}
-          password: ${{ secrets.DEPLOY_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           port: ${{ secrets.DEPLOY_PORT }}
           script: |
             sudo systemctl stop ${{ secrets.DAEMON_NAME }}
@@ -31,7 +32,8 @@ jobs:
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USERNAME }}
-          password: ${{ secrets.DEPLOY_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           port: ${{ secrets.DEPLOY_PORT }}
           source: "*"
           target: ${{ secrets.DEPLOY_PATH }}
@@ -44,7 +46,8 @@ jobs:
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USERNAME }}
-          password: ${{ secrets.DEPLOY_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           port: ${{ secrets.DEPLOY_PORT }}
           script: |
             pip3 install -r ${{ secrets.DEPLOY_PATH }}/requirements.txt
