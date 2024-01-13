@@ -1,0 +1,6 @@
+src/logs
+src/uploads
+start.sh
+start.bat
+venv
+Dockerfile-local

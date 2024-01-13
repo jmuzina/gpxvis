@@ -286,38 +286,38 @@ def refreshSessionTimer():
 
 @flaskApp.route("/activityFiltering.js")
 def returnActivityFiltering():
-    return send_file("./static/activityFiltering.js")
+    return send_file("static/activityFiltering.js")
 
 @flaskApp.route("/fileVerification.js")
 def returnFileVerification():
-    return send_file("./static/fileVerification.js")
+    return send_file("static/fileVerification.js")
 
 @flaskApp.route("/dynamicParameters.js")
 def returnDynamicParameters():
-    return send_file("./static/dynamicParameters.js")
+    return send_file("static/dynamicParameters.js")
 
 @flaskApp.route("/resize.js")
 def returnResize():
-    return send_file("./static/resize.js")
+    return send_file("static/resize.js")
 
 @flaskApp.route("/logo")
 def returnLogo():
     if not request.args.get("size") or request.args.get("size") == "full":
-        return send_file("./static/logo/logo_full.png")
+        return send_file("static/logo/logo_full.png")
     elif request.args.get("size") == "300":
-        return send_file("./static/logo/logo_300.png")
+        return send_file("static/logo/logo_300.png")
     elif request.args.get("size") == "favicon":
-        return send_file("./static/logo/favicons/favicon.ico")
+        return send_file("static/logo/favicons/favicon.ico")
     else:
         return functions.throwError("Invalid logo size argument given.")
     
 @flaskApp.route("/favicon.ico")
 def returnFavicon():
-    return send_file("./static/logo/favicons/favicon.ico")
+    return send_file("static/logo/favicons/favicon.ico")
 
 @flaskApp.route("/wait.js")
 def returnWait():
-    return send_file("./static/wait.js")
+    return send_file("static/wait.js")
 
 @flaskApp.route('/aboutPage')
 def render_aboutPage():

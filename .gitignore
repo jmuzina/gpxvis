@@ -2,17 +2,18 @@
 *venv*
 
 # User uploaded files directory
-uploads/
+src/uploads/
 # sensitive auth data
 *.cfg
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-static/all.css
+src/static/all.css
 
 # logging data
-logs/
+src/logs
+src/uploads
 
 # C extensions
 *.so
@@ -113,7 +114,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+src/.env
 .venv
 env/
 venv/
@@ -139,3 +140,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 *.cfg
+
+# IDEs
+/.vscode
+/.idea
