@@ -152,7 +152,7 @@ class ImageCreator:
 
         ##draw text background fade
         if(self.textBackgroundFade == True):
-            fade = pil_image.open("static/fade.png").resize((self.resolution,self.resolution))
+            fade = pil_image.open("static/fade.png").resize((self.resolution, self.resolution))
             self.image = pil_image.alpha_composite(self.image, fade)
         ##draw grid
         if (self.gridOn==True): 
