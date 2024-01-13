@@ -35,7 +35,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           port: ${{ secrets.DEPLOY_PORT }}
-          source: "*"
+          source: "src"
           target: ${{ secrets.DEPLOY_PATH }}
           tar_tmp_path: ${{ secrets.TEMP_PATH }}
           rm: false
@@ -50,11 +50,11 @@ jobs:
           passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           port: ${{ secrets.DEPLOY_PORT }}
           script: |
-            pip3 install -r ${{ secrets.DEPLOY_PATH }}/requirements.txt
+            pip3 install -r ${{ secrets.DEPLOY_PATH }}/src/requirements.txt
 
-            touch ${{ secrets.DEPLOY_PATH }}/.env
-            echo APP_ADDRESS="${{ secrets.APP_ADDRESS }}" >> ${{ secrets.DEPLOY_PATH}}/.env
-            echo STRAVA_CLIENT_ID="${{ secrets.STRAVA_CLIENT_ID }}" >> ${{ secrets.DEPLOY_PATH}}/.env
-            echo STRAVA_CLIENT_SECRET="${{ secrets.STRAVA_CLIENT_SECRET }}" >> ${{ secrets.DEPLOY_PATH}}/.env
+            touch ${{ secrets.DEPLOY_PATH }}/src/.env
+            echo APP_ADDRESS="${{ secrets.APP_ADDRESS }}" >> ${{ secrets.DEPLOY_PATH}}/src/.env
+            echo STRAVA_CLIENT_ID="${{ secrets.STRAVA_CLIENT_ID }}" >> ${{ secrets.DEPLOY_PATH}}/src/.env
+            echo STRAVA_CLIENT_SECRET="${{ secrets.STRAVA_CLIENT_SECRET }}" >> ${{ secrets.DEPLOY_PATH}}/src/.env
 
             sudo systemctl restart ${{ secrets.DAEMON_NAME }}
