@@ -9,7 +9,7 @@
 ------------------
 ## Running in developer environment
 - Set environment variables (src/.env):
-  - `APP_ADDRESS`: Base address of the application where it is being served. If unset, the app will use `http://127.0.0.1:5000`.
+  - `APP_ADDRESS`: Base address of the application where it is being served. If unset, the app will use [http://localhost](http://localhost).
   - Strava auth data (see [Developer Dashboard](https://www.strava.com/settings/api))
     - `STRAVA_CLIENT_ID`: Strava OAUTH Client ID
     - `STRAVA_CLIENT_SECRET`: Strava OAUTH Client Secret

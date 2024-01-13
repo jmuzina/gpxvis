@@ -16,7 +16,7 @@ class StravaApi:
         self.tokenUrl = 'https://www.strava.com/oauth/token'.strip('\'')
         self.clientId = os.getenv('STRAVA_CLIENT_ID').strip('\'')
         self.clientSecret = os.getenv('STRAVA_CLIENT_SECRET').strip('\'')
-        self.authUrl = "www.strava.com/oauth/authorize?client_id={client_id}&response_type=code&redirect_uri={app_address}/strava-login&approval_prompt=auto&scope=read,activity:read".format(client_id=os.getenv('STRAVA_CLIENT_ID'), app_address=os.getenv('APP_ADDRESS') or 'http://127.0.0.1:5000').strip('\'')
+        self.authUrl = "www.strava.com/oauth/authorize?client_id={client_id}&response_type=code&redirect_uri={app_address}/strava-login&approval_prompt=auto&scope=read,activity:read".format(client_id=os.getenv('STRAVA_CLIENT_ID'), app_address=os.getenv('APP_ADDRESS') or 'http://localhost').strip('\'')
         self.verifyToken = str(binascii.hexlify(os.urandom(24)))[2:-1]
         self.loginWith = True
 
